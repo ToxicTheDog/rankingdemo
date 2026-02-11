@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Trophy, LogOut, LogIn } from "lucide-react";
+import { Moon, Sun, TrendingUp, LogOut, LogIn } from "lucide-react";
 
 const Header = () => {
   const { theme, toggleTheme } = useTheme();
@@ -13,14 +13,19 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
-          <Trophy className="h-6 w-6 text-yellow-500" />
-          <span>RankBoard</span>
+          <TrendingUp className="h-6 w-6 text-emerald-500" />
+          <span>TradeAcademy</span>
         </Link>
 
-        <nav className="flex items-center gap-2">
+        <nav className="flex items-center gap-1 sm:gap-2">
           <Link to="/">
             <Button variant={location.pathname === "/" ? "secondary" : "ghost"} size="sm">
-              Ranking
+              Početna
+            </Button>
+          </Link>
+          <Link to="/mentori">
+            <Button variant={location.pathname === "/mentori" ? "secondary" : "ghost"} size="sm">
+              Mentori
             </Button>
           </Link>
 

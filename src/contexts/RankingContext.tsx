@@ -6,6 +6,8 @@ export interface RankedUser {
   description: string;
   score: number;
   imageUrl: string;
+  specialty: string;
+  students: number;
 }
 
 interface RankingContextType {
@@ -16,11 +18,11 @@ interface RankingContextType {
 }
 
 const initialUsers: RankedUser[] = [
-  { id: "1", name: "Marko Petrović", description: "Full-stack developer sa 8 godina iskustva", score: 98, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marko" },
-  { id: "2", name: "Ana Jovanović", description: "UI/UX dizajnerka i frontend specijalista", score: 95, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ana" },
-  { id: "3", name: "Nikola Đorđević", description: "Backend inženjer i DevOps entuzijasta", score: 91, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Nikola" },
-  { id: "4", name: "Jelena Nikolić", description: "Data scientist i ML inženjerka", score: 87, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jelena" },
-  { id: "5", name: "Stefan Ilić", description: "Mobile developer - React Native & Flutter", score: 82, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Stefan" },
+  { id: "1", name: "Marko Petrović", description: "Ekspert za forex tržište sa 12 godina iskustva. Specijalizovan za price action i smart money koncepte.", score: 98, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marko", specialty: "Forex", students: 342 },
+  { id: "2", name: "Ana Jovanović", description: "Profesionalni trader kripto tržišta. Fokus na tehničku analizu i swing trading strategije.", score: 95, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ana", specialty: "Kripto", students: 278 },
+  { id: "3", name: "Nikola Đorđević", description: "Mentor za berzu i akcije. Fundamentalna analiza i dugoročno investiranje.", score: 91, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Nikola", specialty: "Akcije", students: 215 },
+  { id: "4", name: "Jelena Nikolić", description: "Specijalista za commodities i futures tržište. Risk management ekspert.", score: 87, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jelena", specialty: "Commodities", students: 156 },
+  { id: "5", name: "Stefan Ilić", description: "Day trader sa fokusom na indekse. Scalping i intraday strategije.", score: 82, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Stefan", specialty: "Indeksi", students: 189 },
 ];
 
 const RankingContext = createContext<RankingContextType>({
