@@ -17,14 +17,14 @@ const Admin = () => {
   const { toast } = useToast();
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const [form, setForm] = useState({ name: "", description: "", score: "", imageUrl: "" });
+  const [form, setForm] = useState({ name: "", description: "", score: "", imageUrl: "", specialty: "", students: "" });
 
   if (!isAdmin) return <Navigate to="/login" replace />;
 
   const sorted = [...users].sort((a, b) => b.score - a.score);
 
   const resetForm = () => {
-    setForm({ name: "", description: "", score: "", imageUrl: "" });
+    setForm({ name: "", description: "", score: "", imageUrl: "", specialty: "", students: "" });
     setEditingId(null);
   };
 
@@ -35,6 +35,8 @@ const Admin = () => {
       description: form.description,
       score: Number(form.score),
       imageUrl: form.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${form.name}`,
+      specialty: form.specialty,
+      students: Number(form.students) || 0,
     };
 
     if (editingId) {
@@ -49,7 +51,7 @@ const Admin = () => {
 
   const startEdit = (user: RankedUser) => {
     setEditingId(user.id);
-    setForm({ name: user.name, description: user.description, score: String(user.score), imageUrl: user.imageUrl });
+    setForm({ name: user.name, description: user.description, score: String(user.score), imageUrl: user.imageUrl, specialty: user.specialty, students: String(user.students) });
   };
 
   const handleDelete = (id: string, name: string) => {
@@ -68,7 +70,7 @@ const Admin = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               {editingId ? <Pencil className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
-              {editingId ? "Izmeni korisnika" : "Dodaj novog korisnika"}
+              {editingId ? "Izmeni mentora" : "Dodaj novog mentora"}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -81,9 +83,17 @@ const Admin = () => {
                 <Label>Ocena</Label>
                 <Input type="number" min="0" max="100" value={form.score} onChange={(e) => setForm({ ...form, score: e.target.value })} placeholder="0-100" required />
               </div>
+              <div className="space-y-2">
+                <Label>Specijalnost</Label>
+                <Input value={form.specialty} onChange={(e) => setForm({ ...form, specialty: e.target.value })} placeholder="npr. Forex, Kripto..." required />
+              </div>
+              <div className="space-y-2">
+                <Label>Broj studenata</Label>
+                <Input type="number" min="0" value={form.students} onChange={(e) => setForm({ ...form, students: e.target.value })} placeholder="0" />
+              </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label>Opis</Label>
-                <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Kratak opis korisnika" required />
+                <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Kratak opis mentora" required />
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label>URL slike (opciono)</Label>
@@ -103,7 +113,7 @@ const Admin = () => {
           </CardContent>
         </Card>
 
-        <h2 className="mb-4 text-xl font-semibold">Postojeći korisnici ({users.length})</h2>
+        <h2 className="mb-4 text-xl font-semibold">Postojeći mentori ({users.length})</h2>
         <div className="space-y-3">
           {sorted.map((user, i) => (
             <Card key={user.id} className="flex items-center justify-between p-4">
@@ -111,7 +121,7 @@ const Admin = () => {
                 <span className="w-6 text-center text-sm font-bold text-muted-foreground">#{i + 1}</span>
                 <div>
                   <p className="font-medium">{user.name}</p>
-                  <p className="text-sm text-muted-foreground">Ocena: {user.score}</p>
+                  <p className="text-sm text-muted-foreground">{user.specialty} • Ocena: {user.score}</p>
                 </div>
               </div>
               <div className="flex gap-2">

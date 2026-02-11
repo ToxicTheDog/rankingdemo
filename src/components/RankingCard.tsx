@@ -1,7 +1,8 @@
 import { RankedUser } from "@/contexts/RankingContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Trophy, Medal, Award } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Trophy, Medal, Award, Users } from "lucide-react";
 
 interface RankingCardProps {
   user: RankedUser;
@@ -42,11 +43,17 @@ const RankingCard = ({ user, rank }: RankingCardProps) => {
             {style.icon}
           </div>
           <p className="truncate text-sm text-muted-foreground">{user.description}</p>
+          <div className="mt-1 flex items-center gap-2">
+            <Badge variant="secondary" className="text-xs">{user.specialty}</Badge>
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Users className="h-3 w-3" /> {user.students} studenata
+            </span>
+          </div>
         </div>
 
         <div className="shrink-0 text-right">
           <div className="text-2xl font-bold">{user.score}</div>
-          <div className="text-xs text-muted-foreground">poena</div>
+          <div className="text-xs text-muted-foreground">ocena</div>
         </div>
       </CardContent>
     </Card>
