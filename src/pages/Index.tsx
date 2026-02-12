@@ -200,6 +200,33 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Partners / Prop Firms */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="text-center mb-12">
+          <Badge variant="secondary" className="mb-4 text-emerald-600">Partneri</Badge>
+          <h2 className="text-3xl font-bold md:text-4xl">Prop firme koje koristimo</h2>
+          <p className="mt-3 text-muted-foreground max-w-lg mx-auto">Sarađujemo sa vodećim prop trading firmama kako bi naši studenti mogli da trguju sa većim kapitalom</p>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-4xl mx-auto">
+          {[
+            { name: "FTMO", desc: "Najpoznatija prop firma sa rigoroznim evaluation procesom i odličnim uslovima." },
+            { name: "Funded Trader Markets", desc: "Fleksibilni uslovi finansiranja i brz evaluation za sve nivoe tradera." },
+            { name: "TopStep", desc: "Specijalizovani za futures trading sa podrškom za početnike i profesionalce." },
+            { name: "Instant Funding", desc: "Bez evaluation faze — trenutni pristup funded računu sa konkurentnim uslovima." },
+          ].map((p) => (
+            <Card key={p.name} className="group transition-all hover:shadow-lg hover:border-emerald-500/30 text-center">
+              <CardContent className="p-6">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500 transition-colors group-hover:bg-emerald-500/20">
+                  <TrendingUp className="h-7 w-7" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">{p.name}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
       {/* CTA */}
       <section>
         <div className="container mx-auto px-4 py-20 text-center">
