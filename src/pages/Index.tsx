@@ -2,7 +2,10 @@ import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { TrendingUp, BarChart3, BookOpen, Users, ArrowRight, Shield, Target, Zap } from "lucide-react";
+import { TrendingUp, BarChart3, BookOpen, Users, ArrowRight, Shield, Target, Zap, CheckCircle, Star, Play, GraduationCap, Clock, Globe } from "lucide-react";
+import { useRanking } from "@/contexts/RankingContext";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 const features = [
   { icon: <BarChart3 className="h-8 w-8 text-emerald-500" />, title: "Tehnička Analiza", desc: "Naučite da čitate grafikone, prepoznajete paterne i donosite informisane odluke." },
@@ -14,53 +17,80 @@ const features = [
 ];
 
 const stats = [
-  { value: "1,200+", label: "Studenata" },
-  { value: "5", label: "Mentora" },
-  { value: "95%", label: "Zadovoljstvo" },
-  { value: "3+", label: "Godina iskustva" },
+  { value: "1,200+", label: "Studenata", icon: <GraduationCap className="h-5 w-5" /> },
+  { value: "5", label: "Mentora", icon: <Users className="h-5 w-5" /> },
+  { value: "95%", label: "Zadovoljstvo", icon: <Star className="h-5 w-5" /> },
+  { value: "3+", label: "Godina iskustva", icon: <Clock className="h-5 w-5" /> },
+];
+
+const testimonials = [
+  { name: "Milan R.", text: "Zahvaljujući TradeAcademy, naučio sam da trgtujem forex za samo 3 meseca. Mentori su fantastični!", rating: 5 },
+  { name: "Jovana M.", text: "Najbolja investicija u sebe. Live sesije su mi promenile pristup tradingu potpuno.", rating: 5 },
+  { name: "Đorđe K.", text: "Zajednica je neverovatna. Uvek ima neko ko može da pomogne i odgovori na pitanja.", rating: 4 },
+];
+
+const steps = [
+  { step: "01", title: "Registruj se", desc: "Napravi besplatan nalog i pristupi uvodnim materijalima." },
+  { step: "02", title: "Izaberi mentora", desc: "Pronađi mentora koji odgovara tvom stilu i ciljevima." },
+  { step: "03", title: "Uči i vežbaj", desc: "Prati kurseve, gledaj live sesije i vežbaj na demo računu." },
+  { step: "04", title: "Trguj profitabilno", desc: "Primeni naučeno i počni da ostvaruješ rezultate." },
 ];
 
 const Index = () => {
+  const { users } = useRanking();
+  const topMentors = [...users].sort((a, b) => b.score - a.score).slice(0, 3);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-emerald-900/5" />
-        <div className="container relative mx-auto px-4 py-20 text-center md:py-28">
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-emerald-900/10" />
+        <div className="absolute top-20 -right-40 h-80 w-80 rounded-full bg-emerald-500/5 blur-3xl" />
+        <div className="absolute bottom-10 -left-40 h-80 w-80 rounded-full bg-emerald-500/5 blur-3xl" />
+        <div className="container relative mx-auto px-4 py-24 text-center md:py-36">
           <div className="mx-auto inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm text-muted-foreground mb-6">
             <TrendingUp className="h-4 w-4 text-emerald-500" />
             Škola Tradinga — Uči od najboljih
           </div>
-          <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight md:text-6xl">
+          <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight md:text-6xl lg:text-7xl">
             Postani uspešan{" "}
-            <span className="bg-gradient-to-r from-emerald-500 to-emerald-700 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
               trader
             </span>
+            {" "}uz naše mentore
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
             Nauči trading od iskusnih mentora kroz strukturisane kurseve, live sesije i podršku zajednice. Bez obzira da li si početnik ili napredni trader.
           </p>
-          <div className="mt-8 flex justify-center gap-3">
+          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link to="/mentori">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                Upoznaj mentore <ArrowRight className="ml-1 h-4 w-4" />
+              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 h-12 text-base">
+                Upoznaj mentore <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Button size="lg" variant="outline">
-              Saznaj više
+            <Button size="lg" variant="outline" className="h-12 px-8 text-base">
+              <Play className="mr-2 h-5 w-5" /> Pogledaj intro video
             </Button>
+          </div>
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
+            <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-500" /> Besplatan početak</span>
+            <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-500" /> Live podrška</span>
+            <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-500" /> 1000+ studenata</span>
           </div>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="border-b">
-        <div className="container mx-auto grid grid-cols-2 gap-4 px-4 py-12 md:grid-cols-4">
+      <section className="border-b bg-muted/30">
+        <div className="container mx-auto grid grid-cols-2 gap-6 px-4 py-14 md:grid-cols-4">
           {stats.map((s) => (
             <div key={s.label} className="text-center">
-              <div className="text-3xl font-bold text-emerald-500">{s.value}</div>
+              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500">
+                {s.icon}
+              </div>
+              <div className="text-3xl font-bold">{s.value}</div>
               <div className="mt-1 text-sm text-muted-foreground">{s.label}</div>
             </div>
           ))}
@@ -68,40 +98,133 @@ const Index = () => {
       </section>
 
       {/* Features */}
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="mb-2 text-center text-3xl font-bold">Šta nudimo</h2>
-        <p className="mb-10 text-center text-muted-foreground">Sve što ti treba da započneš i usavršiš trading karijeru</p>
+      <section className="container mx-auto px-4 py-20">
+        <div className="text-center mb-12">
+          <Badge variant="secondary" className="mb-4 text-emerald-600">Naše usluge</Badge>
+          <h2 className="text-3xl font-bold md:text-4xl">Sve što ti treba za trading</h2>
+          <p className="mt-3 text-muted-foreground max-w-lg mx-auto">Kompletna platforma za učenje i usavršavanje trading veština</p>
+        </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
-            <Card key={f.title} className="transition-all hover:shadow-lg">
+            <Card key={f.title} className="group transition-all hover:shadow-lg hover:border-emerald-500/30">
               <CardContent className="p-6">
-                <div className="mb-4">{f.icon}</div>
-                <h3 className="mb-1 text-lg font-semibold">{f.title}</h3>
-                <p className="text-sm text-muted-foreground">{f.desc}</p>
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-500/10 transition-colors group-hover:bg-emerald-500/20">
+                  {f.icon}
+                </div>
+                <h3 className="mb-2 text-lg font-semibold">{f.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
               </CardContent>
             </Card>
           ))}
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="border-t">
-        <div className="container mx-auto px-4 py-16 text-center">
-          <h2 className="text-3xl font-bold">Spreman da počneš?</h2>
-          <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-            Pogledaj naše mentore, izaberi svog voditelja i započni trading putovanje već danas.
-          </p>
+      {/* How it works */}
+      <section className="border-y bg-muted/30">
+        <div className="container mx-auto px-4 py-20">
+          <div className="text-center mb-12">
+            <Badge variant="secondary" className="mb-4 text-emerald-600">Kako funkcioniše</Badge>
+            <h2 className="text-3xl font-bold md:text-4xl">Počni za 4 koraka</h2>
+          </div>
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {steps.map((s) => (
+              <div key={s.step} className="text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/10 text-2xl font-bold text-emerald-500">
+                  {s.step}
+                </div>
+                <h3 className="mb-2 font-semibold text-lg">{s.title}</h3>
+                <p className="text-sm text-muted-foreground">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Top Mentors Preview */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="text-center mb-12">
+          <Badge variant="secondary" className="mb-4 text-emerald-600">Top mentori</Badge>
+          <h2 className="text-3xl font-bold md:text-4xl">Upoznaj naše najbolje</h2>
+          <p className="mt-3 text-muted-foreground">Iskusni profesionalci koji će te voditi kroz svet tradinga</p>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-3 max-w-3xl mx-auto">
+          {topMentors.map((mentor, i) => (
+            <Card key={mentor.id} className="text-center transition-all hover:shadow-lg hover:border-emerald-500/30">
+              <CardContent className="p-6">
+                <Avatar className="mx-auto h-20 w-20 mb-4">
+                  <AvatarImage src={mentor.imageUrl} alt={mentor.name} />
+                  <AvatarFallback>{mentor.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <h3 className="font-semibold text-lg">{mentor.name}</h3>
+                <Badge variant="secondary" className="mt-2 text-xs">{mentor.specialty}</Badge>
+                <div className="mt-3 flex items-center justify-center gap-1 text-sm text-muted-foreground">
+                  <Users className="h-3.5 w-3.5" /> {mentor.students} studenata
+                </div>
+                <div className="mt-2 text-2xl font-bold text-emerald-500">{mentor.score}</div>
+                <div className="text-xs text-muted-foreground">ocena</div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="mt-8 text-center">
           <Link to="/mentori">
-            <Button size="lg" className="mt-6 bg-emerald-600 hover:bg-emerald-700 text-white">
-              Pogledaj mentore <ArrowRight className="ml-1 h-4 w-4" />
+            <Button variant="outline" size="lg">
+              Pogledaj sve mentore <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
       </section>
 
+      {/* Testimonials */}
+      <section className="border-y bg-muted/30">
+        <div className="container mx-auto px-4 py-20">
+          <div className="text-center mb-12">
+            <Badge variant="secondary" className="mb-4 text-emerald-600">Iskustva</Badge>
+            <h2 className="text-3xl font-bold md:text-4xl">Šta kažu naši studenti</h2>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-3 max-w-4xl mx-auto">
+            {testimonials.map((t) => (
+              <Card key={t.name} className="transition-all hover:shadow-lg">
+                <CardContent className="p-6">
+                  <div className="mb-3 flex gap-0.5">
+                    {Array.from({ length: t.rating }).map((_, j) => (
+                      <Star key={j} className="h-4 w-4 fill-emerald-500 text-emerald-500" />
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">"{t.text}"</p>
+                  <p className="font-semibold text-sm">{t.name}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section>
+        <div className="container mx-auto px-4 py-20 text-center">
+          <div className="mx-auto max-w-2xl rounded-2xl border bg-gradient-to-br from-emerald-500/5 to-emerald-900/5 p-10 md:p-14">
+            <Globe className="mx-auto h-12 w-12 text-emerald-500 mb-6" />
+            <h2 className="text-3xl font-bold md:text-4xl">Spreman da počneš?</h2>
+            <p className="mx-auto mt-4 max-w-md text-muted-foreground">
+              Pogledaj naše mentore, izaberi svog voditelja i započni trading putovanje već danas.
+            </p>
+            <Link to="/mentori">
+              <Button size="lg" className="mt-8 bg-emerald-600 hover:bg-emerald-700 text-white h-12 px-8 text-base">
+                Pogledaj mentore <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="border-t py-8">
+      <footer className="border-t py-10">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <TrendingUp className="h-5 w-5 text-emerald-500" />
+            <span className="font-semibold text-foreground">TradeAcademy</span>
+          </div>
           © 2026 TradeAcademy. Sva prava zadržana.
         </div>
       </footer>
