@@ -38,6 +38,10 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
+    --gold: 43 77% 38%;
+    --gold-foreground: 0 0% 100%;
+    --gold-light: 43 80% 90%;
+
     --sidebar-background: 0 0% 98%;
 
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -91,6 +95,10 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --gold: 43 77% 45%;
+    --gold-foreground: 0 0% 100%;
+    --gold-light: 43 40% 20%;
   }
 }
 

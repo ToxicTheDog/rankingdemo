@@ -9,12 +9,12 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
 const features = [
-  { icon: <BarChart3 className="h-8 w-8 text-emerald-500" />, title: "Tehnička Analiza", desc: "Naučite da čitate grafikone, prepoznajete paterne i donosite informisane odluke." },
-  { icon: <BookOpen className="h-8 w-8 text-emerald-500" />, title: "Edukativni Materijali", desc: "Video lekcije, e-knjige i webinari dostupni 24/7 za sve nivoe znanja." },
-  { icon: <Shield className="h-8 w-8 text-emerald-500" />, title: "Risk Management", desc: "Zaštitite svoj kapital sa proverenim strategijama upravljanja rizikom." },
-  { icon: <Target className="h-8 w-8 text-emerald-500" />, title: "Live Trading", desc: "Pratite naše mentore uživo dok trguju i učite iz njihovih odluka u realnom vremenu." },
-  { icon: <Users className="h-8 w-8 text-emerald-500" />, title: "Zajednica", desc: "Pridružite se zajednici od 1000+ aktivnih tradera koji dele iskustva i strategije." },
-  { icon: <Zap className="h-8 w-8 text-emerald-500" />, title: "Signali", desc: "Dnevni trading signali sa jasnim ulaznim i izlaznim tačkama za brz start." },
+  { icon: <BarChart3 className="h-8 w-8 text-gold" />, title: "Tehnička Analiza", desc: "Naučite da čitate grafikone, prepoznajete paterne i donosite informisane odluke." },
+  { icon: <BookOpen className="h-8 w-8 text-gold" />, title: "Edukativni Materijali", desc: "Video lekcije, e-knjige i webinari dostupni 24/7 za sve nivoe znanja." },
+  { icon: <Shield className="h-8 w-8 text-gold" />, title: "Risk Management", desc: "Zaštitite svoj kapital sa proverenim strategijama upravljanja rizikom." },
+  { icon: <Target className="h-8 w-8 text-gold" />, title: "Live Trading", desc: "Pratite naše mentore uživo dok trguju i učite iz njihovih odluka u realnom vremenu." },
+  { icon: <Users className="h-8 w-8 text-gold" />, title: "Zajednica", desc: "Pridružite se zajednici od 1000+ aktivnih tradera koji dele iskustva i strategije." },
+  { icon: <Zap className="h-8 w-8 text-gold" />, title: "Signali", desc: "Dnevni trading signali sa jasnim ulaznim i izlaznim tačkama za brz start." },
 ];
 
 const stats = [
@@ -47,17 +47,17 @@ const Index = () => {
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-emerald-900/10" />
-        <div className="absolute top-20 -right-40 h-80 w-80 rounded-full bg-emerald-500/5 blur-3xl" />
-        <div className="absolute bottom-10 -left-40 h-80 w-80 rounded-full bg-emerald-500/5 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-gold/5" />
+        <div className="absolute top-20 -right-40 h-80 w-80 rounded-full bg-gold/5 blur-3xl" />
+        <div className="absolute bottom-10 -left-40 h-80 w-80 rounded-full bg-gold/5 blur-3xl" />
         <div className="container relative mx-auto px-4 py-24 text-center md:py-36">
           <div className="mx-auto inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm text-muted-foreground mb-6">
-            <TrendingUp className="h-4 w-4 text-emerald-500" />
+            <TrendingUp className="h-4 w-4 text-gold" />
             Škola Tradinga — Uči od najboljih
           </div>
           <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight md:text-6xl lg:text-7xl">
             Postani uspešan{" "}
-            <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-gold to-yellow-500 bg-clip-text text-transparent">
               trader
             </span>
             {" "}uz naše mentore
@@ -67,7 +67,7 @@ const Index = () => {
           </p>
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link to="/mentori">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 h-12 text-base">
+              <Button size="lg" className="bg-gold hover:bg-gold/90 text-gold-foreground px-8 h-12 text-base">
                 Upoznaj mentore <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -76,9 +76,9 @@ const Index = () => {
             </Button>
           </div>
           <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-500" /> Besplatan početak</span>
-            <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-500" /> Live podrška</span>
-            <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-500" /> 1000+ studenata</span>
+            <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-gold" /> Besplatan početak</span>
+            <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-gold" /> Live podrška</span>
+            <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-gold" /> 1000+ studenata</span>
           </div>
         </div>
       </section>
@@ -88,7 +88,7 @@ const Index = () => {
         <div className="container mx-auto grid grid-cols-2 gap-6 px-4 py-14 md:grid-cols-4">
           {stats.map((s) => (
             <div key={s.label} className="text-center">
-              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500">
+              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-gold/10 text-gold">
                 {s.icon}
               </div>
               <div className="text-3xl font-bold">{s.value}</div>
@@ -101,15 +101,15 @@ const Index = () => {
       {/* Features */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-12">
-          <Badge variant="secondary" className="mb-4 text-emerald-600">Naše usluge</Badge>
+          <Badge variant="secondary" className="mb-4 text-gold">Naše usluge</Badge>
           <h2 className="text-3xl font-bold md:text-4xl">Sve što ti treba za trading</h2>
           <p className="mt-3 text-muted-foreground max-w-lg mx-auto">Kompletna platforma za učenje i usavršavanje trading veština</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
-            <Card key={f.title} className="group transition-all hover:shadow-lg hover:border-emerald-500/30">
+            <Card key={f.title} className="group transition-all hover:shadow-lg hover:border-gold/30">
               <CardContent className="p-6">
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-500/10 transition-colors group-hover:bg-emerald-500/20">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gold/10 transition-colors group-hover:bg-gold/20">
                   {f.icon}
                 </div>
                 <h3 className="mb-2 text-lg font-semibold">{f.title}</h3>
@@ -124,13 +124,13 @@ const Index = () => {
       <section className="border-y bg-muted/30">
         <div className="container mx-auto px-4 py-20">
           <div className="text-center mb-12">
-            <Badge variant="secondary" className="mb-4 text-emerald-600">Kako funkcioniše</Badge>
+            <Badge variant="secondary" className="mb-4 text-gold">Kako funkcioniše</Badge>
             <h2 className="text-3xl font-bold md:text-4xl">Počni za 4 koraka</h2>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((s) => (
               <div key={s.step} className="text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/10 text-2xl font-bold text-emerald-500">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10 text-2xl font-bold text-gold">
                   {s.step}
                 </div>
                 <h3 className="mb-2 font-semibold text-lg">{s.title}</h3>
@@ -144,13 +144,13 @@ const Index = () => {
       {/* Top Mentors Preview */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-12">
-          <Badge variant="secondary" className="mb-4 text-emerald-600">Top mentori</Badge>
+          <Badge variant="secondary" className="mb-4 text-gold">Top mentori</Badge>
           <h2 className="text-3xl font-bold md:text-4xl">Upoznaj naše najbolje</h2>
           <p className="mt-3 text-muted-foreground">Iskusni profesionalci koji će te voditi kroz svet tradinga</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3 max-w-3xl mx-auto">
-          {topMentors.map((mentor, i) => (
-            <Card key={mentor.id} className="text-center transition-all hover:shadow-lg hover:border-emerald-500/30">
+          {topMentors.map((mentor) => (
+            <Card key={mentor.id} className="text-center transition-all hover:shadow-lg hover:border-gold/30">
               <CardContent className="p-6">
                 <Avatar className="mx-auto h-20 w-20 mb-4">
                   <AvatarImage src={mentor.imageUrl} alt={mentor.name} />
@@ -161,7 +161,7 @@ const Index = () => {
                 <div className="mt-3 flex items-center justify-center gap-1 text-sm text-muted-foreground">
                   <Users className="h-3.5 w-3.5" /> {mentor.students} studenata
                 </div>
-                <div className="mt-2 text-2xl font-bold text-emerald-500">{mentor.score}</div>
+                <div className="mt-2 text-2xl font-bold text-gold">{mentor.score}</div>
                 <div className="text-xs text-muted-foreground">ocena</div>
               </CardContent>
             </Card>
@@ -180,7 +180,7 @@ const Index = () => {
       <section className="border-y bg-muted/30">
         <div className="container mx-auto px-4 py-20">
           <div className="text-center mb-12">
-            <Badge variant="secondary" className="mb-4 text-emerald-600">Iskustva</Badge>
+            <Badge variant="secondary" className="mb-4 text-gold">Iskustva</Badge>
             <h2 className="text-3xl font-bold md:text-4xl">Šta kažu naši studenti</h2>
           </div>
           <div className="grid gap-6 sm:grid-cols-3 max-w-4xl mx-auto">
@@ -189,7 +189,7 @@ const Index = () => {
                 <CardContent className="p-6">
                   <div className="mb-3 flex gap-0.5">
                     {Array.from({ length: t.rating }).map((_, j) => (
-                      <Star key={j} className="h-4 w-4 fill-emerald-500 text-emerald-500" />
+                      <Star key={j} className="h-4 w-4 fill-gold text-gold" />
                     ))}
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-4">"{t.text}"</p>
@@ -206,14 +206,14 @@ const Index = () => {
       {/* CTA */}
       <section>
         <div className="container mx-auto px-4 py-20 text-center">
-          <div className="mx-auto max-w-2xl rounded-2xl border bg-gradient-to-br from-emerald-500/5 to-emerald-900/5 p-10 md:p-14">
-            <Globe className="mx-auto h-12 w-12 text-emerald-500 mb-6" />
+          <div className="mx-auto max-w-2xl rounded-2xl border bg-gradient-to-br from-gold/5 to-yellow-900/5 p-10 md:p-14">
+            <Globe className="mx-auto h-12 w-12 text-gold mb-6" />
             <h2 className="text-3xl font-bold md:text-4xl">Spreman da počneš?</h2>
             <p className="mx-auto mt-4 max-w-md text-muted-foreground">
               Pogledaj naše mentore, izaberi svog voditelja i započni trading putovanje već danas.
             </p>
             <Link to="/mentori">
-              <Button size="lg" className="mt-8 bg-emerald-600 hover:bg-emerald-700 text-white h-12 px-8 text-base">
+              <Button size="lg" className="mt-8 bg-gold hover:bg-gold/90 text-gold-foreground h-12 px-8 text-base">
                 Pogledaj mentore <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -225,7 +225,7 @@ const Index = () => {
       <footer className="border-t py-10">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <TrendingUp className="h-5 w-5 text-emerald-500" />
+            <TrendingUp className="h-5 w-5 text-gold" />
             <span className="font-semibold text-foreground">TradeAcademy</span>
           </div>
           © 2026 TradeAcademy. Sva prava zadržana.

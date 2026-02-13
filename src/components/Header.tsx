@@ -13,7 +13,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
-          <TrendingUp className="h-6 w-6 text-emerald-500" />
+          <TrendingUp className="h-6 w-6 text-gold" />
           <span>TradeAcademy</span>
         </Link>
 
