@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRanking, RankedUser } from "@/contexts/RankingContext";
 import Header from "@/components/Header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,33 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin } from "lucide-react";
+import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, Car } from "lucide-react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell
+} from 'recharts';
+import {
+  DollarSign,
+  TrendingUp,
+  TrendingDown,
+  FileText,
+  AlertTriangle,
+  ArrowUpRight,
+  ArrowDownRight,
+  RefreshCw,
+  Wifi,
+  WifiOff
+} from 'lucide-react';
 
 // Mock affiliate data
 interface AffiliateUser {
@@ -39,9 +65,11 @@ const mockAffiliateUsers: AffiliateUser[] = [
   {
     id: "a2", name: "Milica Đorđević", email: "milica@email.com", imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Milica", active: true, joinDate: "2025-10-20", points: 230,
     referrals: [
-      { id: "a2-1", name: "Lazar Nikolić", email: "lazar@email.com", imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lazar", active: true, joinDate: "2026-01-05", points: 80, referrals: [
-        { id: "a2-1-1", name: "Sara Ilić", email: "sara@email.com", imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sara", active: true, joinDate: "2026-01-20", points: 15, referrals: [] },
-      ]},
+      {
+        id: "a2-1", name: "Lazar Nikolić", email: "lazar@email.com", imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lazar", active: true, joinDate: "2026-01-05", points: 80, referrals: [
+          { id: "a2-1-1", name: "Sara Ilić", email: "sara@email.com", imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sara", active: true, joinDate: "2026-01-20", points: 15, referrals: [] },
+        ]
+      },
     ],
   },
   {
@@ -56,6 +84,34 @@ const mockAffiliateUsers: AffiliateUser[] = [
       { id: "a4-3", name: "Marko Vasić", email: "marko.v@email.com", imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=MarkoV", active: true, joinDate: "2026-02-01", points: 30, referrals: [] },
     ],
   },
+];
+
+const pieData = [
+  { name: 'Forex', value: 32, color: '#0a45a3' },
+  { name: 'Crypto', value: 75, color: '#6b0aa3' },
+  { name: 'Commodities', value: 12, color: '#9c4a03' },
+  { name: 'Metals', value: 34, color: '#b80b59' }
+];
+
+interface Transaction {
+  id: string;
+  date: string;
+  type: 'income' | 'expense';
+  category: string;
+  description: string;
+  amount: number;
+  status: 'pending' | 'completed' | 'cancelled';
+}
+
+const demoTransactions: Transaction[] = [
+  { id: '1', date: '2024-01-15', type: 'income', category: 'Prodaja', description: 'Uplata fakture FAK-2024-001', amount: 9600, status: 'completed' },
+  { id: '2', date: '2024-01-20', type: 'expense', category: 'Nabavka', description: 'Kupovina opreme', amount: 25000, status: 'completed' },
+  { id: '3', date: '2024-02-01', type: 'expense', category: 'Plate', description: 'Isplata plata za januar', amount: 820000, status: 'completed' },
+  { id: '4', date: '2024-02-10', type: 'income', category: 'Prodaja', description: 'Uplata fakture FAK-2024-005', amount: 550, status: 'completed' },
+  { id: '5', date: '2024-02-15', type: 'expense', category: 'Režije', description: 'Struja i grejanje', amount: 45000, status: 'completed' },
+  { id: '6', date: '2024-03-01', type: 'expense', category: 'Plate', description: 'Isplata plata za februar', amount: 820000, status: 'completed' },
+  { id: '7', date: '2024-03-05', type: 'income', category: 'Usluge', description: 'Konsultantske usluge', amount: 15000, status: 'pending' },
+  { id: '8', date: '2024-03-10', type: 'expense', category: 'Marketing', description: 'Reklamna kampanja', amount: 35000, status: 'completed' }
 ];
 
 const UserCard = ({ user, onPreview }: { user: AffiliateUser; onPreview: (u: AffiliateUser) => void }) => (
@@ -157,22 +213,223 @@ const Admin = () => {
     setPayoutMethod("");
   };
 
+  const dashboardStats = {
+    totalRevenue: 2450000,
+    totalExpenses: 1780000,
+    profit: 670000,
+    pendingInvoices: 5,
+    overdueInvoices: 2,
+    totalClients: 45,
+    totalEmployees: 12,
+    lowStockItems: 3,
+    vatToPay: 125000,
+    monthlyData: [
+      { month: 'Jan', revenue: 380000, expenses: 290000 },
+      { month: 'Feb', revenue: 420000, expenses: 310000 },
+      { month: 'Mar', revenue: 390000, expenses: 280000 },
+      { month: 'Apr', revenue: 450000, expenses: 320000 },
+      { month: 'Maj', revenue: 410000, expenses: 300000 },
+      { month: 'Jun', revenue: 400000, expenses: 280000 }
+    ]
+  };
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('sr-RS', {
+      style: 'currency',
+      currency: 'RSD',
+      minimumFractionDigits: 0
+    }).format(value);
+  };
+
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="container mx-auto max-w-4xl px-4 py-8">
+      <main className="container mx-auto max-w-7xl px-7 py-8">
         <h1 className="mb-6 text-3xl font-bold">Admin Panel</h1>
 
-        <Tabs defaultValue="mentori" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="dashboard" className="space-y-6">
+
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="dashboard">Dasbhboard</TabsTrigger>
             <TabsTrigger value="mentori">Mentori</TabsTrigger>
             <TabsTrigger value="affiliate">
-              <Link2 className="h-4 w-4 mr-1" /> Affiliate
+              <Link2 className="h-4 w-3 mr-1" /> Affiliate
             </TabsTrigger>
             <TabsTrigger value="payout">
-              <Wallet className="h-4 w-4 mr-1" /> Payout
+              <Wallet className="h-4 w-3 mr-1" /> Payout
             </TabsTrigger>
           </TabsList>
+
+
+          {/* =========== DASHBOARD TAB ============ */}
+          <TabsContent value="dashboard" className="space-y-6">
+            {/* KPI kartice */}
+            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+              <Card className="card-hover">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Ukupni prihodi</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{formatCurrency(dashboardStats.totalRevenue)}</div>
+                  <p className="text-xs text-muted-foreground flex items-center mt-1">
+                    <ArrowUpRight className="h-3 w-3 text-success mr-1" />
+                    <span className="text-success">+12.5%</span>
+                    <span className="ml-1">u odnosu na prošli mesec</span>
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="card-hover">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Ukupni payout</CardTitle>
+                  <TrendingDown className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{formatCurrency(dashboardStats.totalExpenses)}</div>
+                  <p className="text-xs text-muted-foreground flex items-center mt-1">
+                    <ArrowDownRight className="h-3 w-3 text-destructive mr-1" />
+                    <span className="text-destructive">+5.2%</span>
+                    <span className="ml-1">u odnosu na prošli mesec</span>
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="card-hover">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Profit</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-success">{formatCurrency(dashboardStats.profit)}</div>
+                  <p className="text-xs text-muted-foreground flex items-center mt-1">
+                    <ArrowUpRight className="h-3 w-3 text-success mr-1" />
+                    <span className="text-success">+18.3%</span>
+                    <span className="ml-1">u odnosu na prošli mesec</span>
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Brze statistike */}
+            <div className="grid gap-3 md:grid-cols-3">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Deaktivirani nalozi</p>
+                      <p className="text-2xl font-bold">{dashboardStats.pendingInvoices}</p>
+                    </div>
+                    <Label className="h-8 w-8 text-warning" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Izbaceni nalozi</p>
+                      <p className="text-2xl font-bold text-destructive">{dashboardStats.overdueInvoices}</p>
+                    </div>
+                    <AlertTriangle className="h-8 w-8 text-destructive" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Ukupno klijenata</p>
+                      <p className="text-2xl font-bold">{dashboardStats.totalClients}</p>
+                    </div>
+                    <Users className="h-8 w-8 text-primary" />
+                  </div>
+                </CardContent>
+              </Card>
+
+            </div>
+
+            <Card className="md:col-span-3">
+              <CardHeader>
+                <CardTitle>Struktura prihoda</CardTitle>
+                <CardDescription>Prikaz prodatih proizvoda / planova po kategorijama</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={100}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'black',
+                        border: '2px solid #381d64',
+                        borderRadius: '8px',
+                      }}
+                      itemStyle={{ color: 'white' }}
+                      labelStyle={{ color: 'white' }}
+                      formatter={(value: number) => `${value}`}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="flex flex-wrap justify-center gap-4 mt-4">
+                  {pieData.map((entry, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
+                      <span className="text-sm text-muted-foreground">{entry.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Tabele */}
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Nedavne transakcije</CardTitle>
+                    <CardDescription>Poslednja kretanja</CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {demoTransactions.slice(0, 5).map((transaction) => (
+                      <div key={transaction.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                        <div className="flex items-center gap-3">
+                          <div className={`p-2 rounded-full ${transaction.type === 'income' ? 'bg-success/20' : 'bg-destructive/20'}`}>
+                            {transaction.type === 'income' ? (
+                              <ArrowUpRight className={`h-4 w-4 text-success`} />
+                            ) : (
+                              <ArrowDownRight className={`h-4 w-4 text-destructive`} />
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-medium">{transaction.description}</p>
+                            <p className="text-sm text-muted-foreground">{transaction.category}</p>
+                          </div>
+                        </div>
+                        <div className={`font-medium ${transaction.type === 'income' ? 'text-success' : 'text-destructive'}`}>
+                          {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
           {/* ============ MENTORI TAB ============ */}
           <TabsContent value="mentori" className="space-y-6">
