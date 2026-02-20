@@ -2,60 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* ═══════════════════════════════════════════════════════════════
+   THEME CONFIGURATION — Edit colors here to change the entire theme.
+   All values must be HSL (without hsl() wrapper).
+   
+   🎨 QUICK THEME CHANGE:
+   - Primary accent (gold): change --gold values below
+   - Background: change --background
+   - Text: change --foreground
+   ═══════════════════════════════════════════════════════════════ */
 
 @layer base {
   :root {
+    /* ── Base ── */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
+    /* ── Card / Surface ── */
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
+    /* ── Primary (used for buttons, links) ── */
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
 
+    /* ── Secondary ── */
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
+    /* ── Muted ── */
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
+    /* ── Accent ── */
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
+    /* ── Destructive ── */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
+    /* ── Borders / Input ── */
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
-
     --radius: 0.5rem;
 
+    /* ── 🎨 GOLD ACCENT — Change these 3 lines to retheme the site ── */
     --gold: 43 77% 38%;
     --gold-foreground: 0 0% 100%;
     --gold-light: 43 80% 90%;
 
+    /* ── Sidebar ── */
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -65,7 +72,6 @@ All colors MUST be HSL.
 
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
@@ -87,6 +93,12 @@ All colors MUST be HSL.
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
+    /* ── 🎨 GOLD ACCENT (dark mode) ── */
+    --gold: 43 77% 45%;
+    --gold-foreground: 0 0% 100%;
+    --gold-light: 43 40% 20%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -95,10 +107,6 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
-
-    --gold: 43 77% 45%;
-    --gold-foreground: 0 0% 100%;
-    --gold-light: 43 40% 20%;
   }
 }
 
@@ -106,8 +114,88 @@ All colors MUST be HSL.
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RANK BADGE ANIMATIONS
+   Used by <RankBadge /> component.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Rank 1: Floating gold particles ── */
+@keyframes rank-particle-float {
+  0% {
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0) scale(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-14px) scale(1);
+  }
+  80% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) rotate(calc(var(--angle) + 60deg)) translateY(-22px) scale(0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(calc(var(--angle) + 90deg)) translateY(-28px) scale(0);
+  }
+}
+
+.rank-particle {
+  --angle: 0deg;
+  animation: rank-particle-float 2s ease-in-out infinite;
+}
+.rank-particle:nth-child(1) { --angle: 0deg; }
+.rank-particle:nth-child(2) { --angle: 45deg; }
+.rank-particle:nth-child(3) { --angle: 90deg; }
+.rank-particle:nth-child(4) { --angle: 135deg; }
+.rank-particle:nth-child(5) { --angle: 180deg; }
+.rank-particle:nth-child(6) { --angle: 225deg; }
+.rank-particle:nth-child(7) { --angle: 270deg; }
+.rank-particle:nth-child(8) { --angle: 315deg; }
+
+/* ── Rank 2: Lightning / electric pulse ── */
+@keyframes rank-lightning-flash {
+  0%, 100% { opacity: 0; }
+  5% { opacity: 1; }
+  10% { opacity: 0; }
+  15% { opacity: 0.8; }
+  20% { opacity: 0; }
+  70% { opacity: 0; }
+  75% { opacity: 1; }
+  80% { opacity: 0; }
+}
+
+.rank-lightning-bolt {
+  width: 2px;
+  height: 8px;
+  margin-left: -1px;
+  margin-top: -20px;
+  background: linear-gradient(to bottom, transparent, hsl(210 60% 75%), transparent);
+  border-radius: 2px;
+  animation: rank-lightning-flash 2.5s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+.rank-lightning-bolt:nth-child(1) { animation-delay: 0s; }
+.rank-lightning-bolt:nth-child(2) { animation-delay: 0.6s; }
+.rank-lightning-bolt:nth-child(3) { animation-delay: 1.2s; }
+.rank-lightning-bolt:nth-child(4) { animation-delay: 1.8s; }
+
+/* ── Rank 3: Pulsing glow ── */
+@keyframes rank-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 4px 1px hsl(30 80% 45% / 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 16px 4px hsl(30 80% 45% / 0.4);
+    transform: scale(1.08);
+  }
+}
+
+.animate-rank-pulse-glow {
+  animation: rank-pulse-glow 2s ease-in-out infinite;
 }
