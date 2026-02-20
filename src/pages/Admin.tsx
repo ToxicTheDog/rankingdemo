@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRanking, RankedUser } from "@/contexts/RankingContext";
 import Header from "@/components/Header";
+import RankBadge from "@/components/RankBadge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,35 +15,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, Car } from "lucide-react";
+import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin } from "lucide-react";
 import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell
-} from 'recharts';
+  PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
+} from "recharts";
 import {
-  DollarSign,
-  TrendingUp,
-  TrendingDown,
-  FileText,
-  AlertTriangle,
-  ArrowUpRight,
-  ArrowDownRight,
-  RefreshCw,
-  Wifi,
-  WifiOff
-} from 'lucide-react';
+  DollarSign, TrendingUp, TrendingDown, AlertTriangle, ArrowUpRight, ArrowDownRight,
+} from "lucide-react";
 
-// Mock affiliate data
+/* ═══════════════════════════════════════
+   MOCK DATA — Replace with real API data
+   ═══════════════════════════════════════ */
+
 interface AffiliateUser {
   id: string;
   name: string;
@@ -87,51 +71,54 @@ const mockAffiliateUsers: AffiliateUser[] = [
 ];
 
 const pieData = [
-  { name: 'Forex', value: 32, color: '#0a45a3' },
-  { name: 'Crypto', value: 75, color: '#6b0aa3' },
-  { name: 'Commodities', value: 12, color: '#9c4a03' },
-  { name: 'Metals', value: 34, color: '#b80b59' }
+  { name: "Forex", value: 32, color: "hsl(43, 77%, 38%)" },
+  { name: "Crypto", value: 75, color: "hsl(43, 77%, 55%)" },
+  { name: "Commodities", value: 12, color: "hsl(43, 40%, 25%)" },
+  { name: "Metals", value: 34, color: "hsl(30, 60%, 45%)" },
 ];
 
 interface Transaction {
   id: string;
   date: string;
-  type: 'income' | 'expense';
+  type: "income" | "expense";
   category: string;
   description: string;
   amount: number;
-  status: 'pending' | 'completed' | 'cancelled';
+  status: "pending" | "completed" | "cancelled";
 }
 
 const demoTransactions: Transaction[] = [
-  { id: '1', date: '2024-01-15', type: 'income', category: 'Prodaja', description: 'Uplata fakture FAK-2024-001', amount: 9600, status: 'completed' },
-  { id: '2', date: '2024-01-20', type: 'expense', category: 'Nabavka', description: 'Kupovina opreme', amount: 25000, status: 'completed' },
-  { id: '3', date: '2024-02-01', type: 'expense', category: 'Plate', description: 'Isplata plata za januar', amount: 820000, status: 'completed' },
-  { id: '4', date: '2024-02-10', type: 'income', category: 'Prodaja', description: 'Uplata fakture FAK-2024-005', amount: 550, status: 'completed' },
-  { id: '5', date: '2024-02-15', type: 'expense', category: 'Režije', description: 'Struja i grejanje', amount: 45000, status: 'completed' },
-  { id: '6', date: '2024-03-01', type: 'expense', category: 'Plate', description: 'Isplata plata za februar', amount: 820000, status: 'completed' },
-  { id: '7', date: '2024-03-05', type: 'income', category: 'Usluge', description: 'Konsultantske usluge', amount: 15000, status: 'pending' },
-  { id: '8', date: '2024-03-10', type: 'expense', category: 'Marketing', description: 'Reklamna kampanja', amount: 35000, status: 'completed' }
+  { id: "1", date: "2024-01-15", type: "income", category: "Prodaja", description: "Uplata fakture FAK-2024-001", amount: 9600, status: "completed" },
+  { id: "2", date: "2024-01-20", type: "expense", category: "Nabavka", description: "Kupovina opreme", amount: 25000, status: "completed" },
+  { id: "3", date: "2024-02-01", type: "expense", category: "Plate", description: "Isplata plata za januar", amount: 820000, status: "completed" },
+  { id: "4", date: "2024-02-10", type: "income", category: "Prodaja", description: "Uplata fakture FAK-2024-005", amount: 550, status: "completed" },
+  { id: "5", date: "2024-02-15", type: "expense", category: "Režije", description: "Struja i grejanje", amount: 45000, status: "completed" },
 ];
 
-const UserCard = ({ user, onPreview }: { user: AffiliateUser; onPreview: (u: AffiliateUser) => void }) => (
+/* ═══════════════════════════════════════
+   SUB-COMPONENTS
+   ═══════════════════════════════════════ */
+
+/** Affiliate user card with rank badge */
+const UserCard = ({ user, rank, onPreview }: { user: AffiliateUser; rank: number; onPreview: (u: AffiliateUser) => void }) => (
   <Card className={`transition-all ${user.active ? "hover:border-gold/30 hover:shadow-md" : "opacity-60"}`}>
-    <CardContent className="flex items-center gap-4 p-4">
-      <Avatar className={`h-12 w-12 ${!user.active ? "grayscale" : ""}`}>
+    <CardContent className="flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
+      <RankBadge rank={rank} size="sm" />
+      <Avatar className={`h-10 w-10 sm:h-12 sm:w-12 shrink-0 ${!user.active ? "grayscale" : ""}`}>
         <AvatarImage src={user.imageUrl} alt={user.name} />
         <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
       </Avatar>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <p className="font-medium truncate">{user.name}</p>
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="font-medium truncate text-sm sm:text-base">{user.name}</p>
           {!user.active && (
             <Badge variant="destructive" className="text-[10px] px-1.5 py-0">
               <Ban className="h-2.5 w-2.5 mr-0.5" /> DEACTIVATED
             </Badge>
           )}
         </div>
-        <p className="text-xs text-muted-foreground">{user.email}</p>
-        <div className="flex items-center gap-3 mt-1">
+        <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+        <div className="flex items-center gap-2 sm:gap-3 mt-1 flex-wrap">
           <span className="text-xs text-muted-foreground">{user.joinDate}</span>
           <span className="text-xs text-gold font-medium">{user.points} poena</span>
           {user.referrals.length > 0 && (
@@ -141,12 +128,17 @@ const UserCard = ({ user, onPreview }: { user: AffiliateUser; onPreview: (u: Aff
           )}
         </div>
       </div>
-      <Button size="sm" variant="outline" onClick={() => onPreview(user)} className="shrink-0">
-        <Eye className="h-4 w-4 mr-1" /> Pregled
+      <Button size="sm" variant="outline" onClick={() => onPreview(user)} className="shrink-0 text-xs sm:text-sm">
+        <Eye className="h-4 w-4 sm:mr-1" />
+        <span className="hidden sm:inline">Pregled</span>
       </Button>
     </CardContent>
   </Card>
 );
+
+/* ═══════════════════════════════════════
+   MAIN ADMIN COMPONENT
+   ═══════════════════════════════════════ */
 
 const Admin = () => {
   const { isAdmin } = useAuth();
@@ -196,15 +188,13 @@ const Admin = () => {
     if (editingId === id) resetForm();
   };
 
-  // Affiliate filtering
-  const filteredAffiliates = mockAffiliateUsers.filter(
-    (u) => u.name.toLowerCase().includes(affSearch.toLowerCase()) || u.email.toLowerCase().includes(affSearch.toLowerCase())
-  );
+  const filteredAffiliates = mockAffiliateUsers
+    .filter((u) => u.name.toLowerCase().includes(affSearch.toLowerCase()) || u.email.toLowerCase().includes(affSearch.toLowerCase()))
+    .sort((a, b) => b.points - a.points);
 
-  // Mock admin stats
   const adminPoints = 1450;
   const totalReferrals = mockAffiliateUsers.length;
-  const availablePayout = Math.floor(adminPoints * 0.5); // 50% conversion
+  const availablePayout = Math.floor(adminPoints * 0.5);
 
   const handlePayoutRequest = (e: React.FormEvent) => {
     e.preventDefault();
@@ -217,71 +207,53 @@ const Admin = () => {
     totalRevenue: 2450000,
     totalExpenses: 1780000,
     profit: 670000,
-    pendingInvoices: 5,
-    overdueInvoices: 2,
+    deactivated: 5,
+    banned: 2,
     totalClients: 45,
-    totalEmployees: 12,
-    lowStockItems: 3,
-    vatToPay: 125000,
-    monthlyData: [
-      { month: 'Jan', revenue: 380000, expenses: 290000 },
-      { month: 'Feb', revenue: 420000, expenses: 310000 },
-      { month: 'Mar', revenue: 390000, expenses: 280000 },
-      { month: 'Apr', revenue: 450000, expenses: 320000 },
-      { month: 'Maj', revenue: 410000, expenses: 300000 },
-      { month: 'Jun', revenue: 400000, expenses: 280000 }
-    ]
   };
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('sr-RS', {
-      style: 'currency',
-      currency: 'RSD',
-      minimumFractionDigits: 0
-    }).format(value);
-  };
-
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("sr-RS", { style: "currency", currency: "RSD", minimumFractionDigits: 0 }).format(value);
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="container mx-auto max-w-7xl px-7 py-8">
-        <h1 className="mb-6 text-3xl font-bold">Admin Panel</h1>
+      <main className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
+        <h1 className="mb-6 text-2xl font-bold sm:text-3xl">Admin Panel</h1>
 
         <Tabs defaultValue="dashboard" className="space-y-6">
-
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="dashboard">Dasbhboard</TabsTrigger>
-            <TabsTrigger value="mentori">Mentori</TabsTrigger>
-            <TabsTrigger value="affiliate">
-              <Link2 className="h-4 w-3 mr-1" /> Affiliate
+          {/* Responsive tab list — scrollable on mobile */}
+          <TabsList className="flex w-full overflow-x-auto">
+            <TabsTrigger value="dashboard" className="flex-1 min-w-[80px] text-xs sm:text-sm">Dashboard</TabsTrigger>
+            <TabsTrigger value="mentori" className="flex-1 min-w-[80px] text-xs sm:text-sm">Mentori</TabsTrigger>
+            <TabsTrigger value="affiliate" className="flex-1 min-w-[80px] text-xs sm:text-sm">
+              <Link2 className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Affiliate
             </TabsTrigger>
-            <TabsTrigger value="payout">
-              <Wallet className="h-4 w-3 mr-1" /> Payout
+            <TabsTrigger value="payout" className="flex-1 min-w-[80px] text-xs sm:text-sm">
+              <Wallet className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Payout
             </TabsTrigger>
           </TabsList>
 
-
-          {/* =========== DASHBOARD TAB ============ */}
+          {/* ═══ DASHBOARD TAB ═══ */}
           <TabsContent value="dashboard" className="space-y-6">
-            {/* KPI kartice */}
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="card-hover">
+            {/* KPI cards */}
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+              <Card className="border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Ukupni prihodi</CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                  <DollarSign className="h-4 w-4 text-gold" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{formatCurrency(dashboardStats.totalRevenue)}</div>
                   <p className="text-xs text-muted-foreground flex items-center mt-1">
-                    <ArrowUpRight className="h-3 w-3 text-success mr-1" />
-                    <span className="text-success">+12.5%</span>
-                    <span className="ml-1">u odnosu na prošli mesec</span>
+                    <ArrowUpRight className="h-3 w-3 text-green-500 mr-1" />
+                    <span className="text-green-500">+12.5%</span>
+                    <span className="ml-1">od prošlog meseca</span>
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="card-hover">
+              <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Ukupni payout</CardTitle>
                   <TrendingDown className="h-4 w-4 text-muted-foreground" />
@@ -291,137 +263,116 @@ const Admin = () => {
                   <p className="text-xs text-muted-foreground flex items-center mt-1">
                     <ArrowDownRight className="h-3 w-3 text-destructive mr-1" />
                     <span className="text-destructive">+5.2%</span>
-                    <span className="ml-1">u odnosu na prošli mesec</span>
+                    <span className="ml-1">od prošlog meseca</span>
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="card-hover">
+              <Card className="border-gold/20">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Profit</CardTitle>
-                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                  <TrendingUp className="h-4 w-4 text-gold" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-success">{formatCurrency(dashboardStats.profit)}</div>
+                  <div className="text-2xl font-bold text-gold">{formatCurrency(dashboardStats.profit)}</div>
                   <p className="text-xs text-muted-foreground flex items-center mt-1">
-                    <ArrowUpRight className="h-3 w-3 text-success mr-1" />
-                    <span className="text-success">+18.3%</span>
-                    <span className="ml-1">u odnosu na prošli mesec</span>
+                    <ArrowUpRight className="h-3 w-3 text-green-500 mr-1" />
+                    <span className="text-green-500">+18.3%</span>
+                    <span className="ml-1">od prošlog meseca</span>
                   </p>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Brze statistike */}
-            <div className="grid gap-3 md:grid-cols-3">
+            {/* Quick stats */}
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
               <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Deaktivirani nalozi</p>
-                      <p className="text-2xl font-bold">{dashboardStats.pendingInvoices}</p>
-                    </div>
-                    <Label className="h-8 w-8 text-warning" />
+                <CardContent className="flex items-center gap-4 p-5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/10">
+                    <Users className="h-5 w-5 text-gold" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">{dashboardStats.totalClients}</p>
+                    <p className="text-sm text-muted-foreground">Ukupno klijenata</p>
                   </div>
                 </CardContent>
               </Card>
               <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Izbaceni nalozi</p>
-                      <p className="text-2xl font-bold text-destructive">{dashboardStats.overdueInvoices}</p>
-                    </div>
-                    <AlertTriangle className="h-8 w-8 text-destructive" />
+                <CardContent className="flex items-center gap-4 p-5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+                    <Ban className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">{dashboardStats.deactivated}</p>
+                    <p className="text-sm text-muted-foreground">Deaktivirani</p>
                   </div>
                 </CardContent>
               </Card>
               <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Ukupno klijenata</p>
-                      <p className="text-2xl font-bold">{dashboardStats.totalClients}</p>
-                    </div>
-                    <Users className="h-8 w-8 text-primary" />
+                <CardContent className="flex items-center gap-4 p-5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-destructive/10">
+                    <AlertTriangle className="h-5 w-5 text-destructive" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-destructive">{dashboardStats.banned}</p>
+                    <p className="text-sm text-muted-foreground">Izbačeni</p>
                   </div>
                 </CardContent>
               </Card>
-
             </div>
 
-            <Card className="md:col-span-3">
-              <CardHeader>
-                <CardTitle>Struktura prihoda</CardTitle>
-                <CardDescription>Prikaz prodatih proizvoda / planova po kategorijama</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={pieData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: 'black',
-                        border: '2px solid #381d64',
-                        borderRadius: '8px',
-                      }}
-                      itemStyle={{ color: 'white' }}
-                      labelStyle={{ color: 'white' }}
-                      formatter={(value: number) => `${value}`}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-                <div className="flex flex-wrap justify-center gap-4 mt-4">
-                  {pieData.map((entry, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
-                      <span className="text-sm text-muted-foreground">{entry.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Tabele */}
-            <div className="grid gap-4 md:grid-cols-2">
+            {/* Charts row */}
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle>Nedavne transakcije</CardTitle>
-                    <CardDescription>Poslednja kretanja</CardDescription>
-                  </div>
+                <CardHeader>
+                  <CardTitle className="text-base">Struktura prihoda</CardTitle>
+                  <CardDescription>Po kategorijama</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {demoTransactions.slice(0, 5).map((transaction) => (
-                      <div key={transaction.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                        <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-full ${transaction.type === 'income' ? 'bg-success/20' : 'bg-destructive/20'}`}>
-                            {transaction.type === 'income' ? (
-                              <ArrowUpRight className={`h-4 w-4 text-success`} />
-                            ) : (
-                              <ArrowDownRight className={`h-4 w-4 text-destructive`} />
-                            )}
+                  <ResponsiveContainer width="100%" height={250}>
+                    <PieChart>
+                      <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={85} paddingAngle={5} dataKey="value">
+                        {pieData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px" }}
+                        formatter={(value: number) => `${value}`}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="flex flex-wrap justify-center gap-3 mt-2">
+                    {pieData.map((entry, i) => (
+                      <div key={i} className="flex items-center gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: entry.color }} />
+                        <span className="text-xs text-muted-foreground">{entry.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Nedavne transakcije</CardTitle>
+                  <CardDescription>Poslednja kretanja</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {demoTransactions.slice(0, 5).map((t) => (
+                      <div key={t.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${t.type === "income" ? "bg-green-500/15" : "bg-destructive/15"}`}>
+                            {t.type === "income" ? <ArrowUpRight className="h-4 w-4 text-green-500" /> : <ArrowDownRight className="h-4 w-4 text-destructive" />}
                           </div>
-                          <div>
-                            <p className="font-medium">{transaction.description}</p>
-                            <p className="text-sm text-muted-foreground">{transaction.category}</p>
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium truncate">{t.description}</p>
+                            <p className="text-xs text-muted-foreground">{t.category}</p>
                           </div>
                         </div>
-                        <div className={`font-medium ${transaction.type === 'income' ? 'text-success' : 'text-destructive'}`}>
-                          {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount)}
+                        <div className={`shrink-0 text-sm font-medium ${t.type === "income" ? "text-green-500" : "text-destructive"}`}>
+                          {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                         </div>
                       </div>
                     ))}
@@ -431,7 +382,7 @@ const Admin = () => {
             </div>
           </TabsContent>
 
-          {/* ============ MENTORI TAB ============ */}
+          {/* ═══ MENTORI TAB ═══ */}
           <TabsContent value="mentori" className="space-y-6">
             <Card>
               <CardHeader>
@@ -441,7 +392,7 @@ const Admin = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
+                <form onSubmit={handleSubmit} className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>Ime</Label>
                     <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ime i prezime" required />
@@ -480,43 +431,43 @@ const Admin = () => {
               </CardContent>
             </Card>
 
-            <h2 className="text-xl font-semibold">Postojeći mentori ({users.length})</h2>
+            <h2 className="text-lg font-semibold sm:text-xl">Postojeći mentori ({users.length})</h2>
             <div className="space-y-3">
               {sorted.map((user, i) => (
-                <Card key={user.id} className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    <span className="w-6 text-center text-sm font-bold text-muted-foreground">#{i + 1}</span>
-                    <div>
-                      <p className="font-medium">{user.name}</p>
-                      <p className="text-sm text-muted-foreground">{user.specialty} • Ocena: {user.score}</p>
+                <Card key={user.id} className="transition-all hover:shadow-md">
+                  <CardContent className="flex items-center gap-3 p-3 sm:p-4">
+                    <RankBadge rank={i + 1} size="sm" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium truncate">{user.name}</p>
+                      <p className="text-xs text-muted-foreground sm:text-sm">{user.specialty} • Ocena: {user.score}</p>
                     </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline" onClick={() => startEdit(user)}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="destructive" onClick={() => handleDelete(user.id, user.name)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+                    <div className="flex gap-1 sm:gap-2">
+                      <Button size="sm" variant="outline" onClick={() => startEdit(user)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button size="sm" variant="destructive" onClick={() => handleDelete(user.id, user.name)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
                 </Card>
               ))}
             </div>
           </TabsContent>
 
-          {/* ============ AFFILIATE TAB ============ */}
+          {/* ═══ AFFILIATE TAB ═══ */}
           <TabsContent value="affiliate" className="space-y-6">
             {/* Admin profile */}
             <Card className="border-gold/30 bg-gradient-to-r from-gold/5 to-transparent">
-              <CardContent className="flex items-center gap-4 p-6">
-                <Avatar className="h-16 w-16 ring-2 ring-gold/30">
+              <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:p-6">
+                <Avatar className="h-14 w-14 ring-2 ring-gold/30 shrink-0 sm:h-16 sm:w-16">
                   <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin" alt="Admin" />
                   <AvatarFallback>AD</AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <h2 className="text-xl font-bold">Admin Profil</h2>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg font-bold sm:text-xl">Admin Profil</h2>
                   <p className="text-sm text-muted-foreground">admin@ranking.com</p>
-                  <div className="flex items-center gap-4 mt-2">
+                  <div className="flex items-center gap-3 mt-2 flex-wrap">
                     <Badge className="bg-gold/15 text-gold border-gold/30">
                       <Coins className="h-3 w-3 mr-1" /> {adminPoints} poena
                     </Badge>
@@ -525,9 +476,9 @@ const Admin = () => {
                     </Badge>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-muted-foreground">Affiliate link</p>
-                  <code className="text-xs bg-muted px-2 py-1 rounded">tradeacademy.com/ref/admin</code>
+                <div className="text-left sm:text-right">
+                  <p className="text-xs text-muted-foreground">Affiliate link</p>
+                  <code className="text-xs bg-muted px-2 py-1 rounded break-all">tradeacademy.com/ref/admin</code>
                 </div>
               </CardContent>
             </Card>
@@ -538,14 +489,11 @@ const Admin = () => {
               <Input placeholder="Pretraži korisnike..." value={affSearch} onChange={(e) => setAffSearch(e.target.value)} className="pl-9" />
             </div>
 
-            <p className="text-sm text-muted-foreground">
-              Moji korisnici ({filteredAffiliates.length})
-            </p>
+            <p className="text-sm text-muted-foreground">Moji korisnici ({filteredAffiliates.length})</p>
 
-            {/* User cards */}
             <div className="space-y-3">
-              {filteredAffiliates.map((user) => (
-                <UserCard key={user.id} user={user} onPreview={setPreviewUser} />
+              {filteredAffiliates.map((user, i) => (
+                <UserCard key={user.id} user={user} rank={i + 1} onPreview={setPreviewUser} />
               ))}
               {filteredAffiliates.length === 0 && (
                 <div className="py-12 text-center text-muted-foreground">
@@ -556,26 +504,25 @@ const Admin = () => {
             </div>
           </TabsContent>
 
-          {/* ============ PAYOUT TAB ============ */}
+          {/* ═══ PAYOUT TAB ═══ */}
           <TabsContent value="payout" className="space-y-6">
-            {/* Stats cards */}
-            <div className="grid gap-4 sm:grid-cols-3">
-              <Card>
-                <CardContent className="p-6 text-center">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+              <Card className="border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
+                <CardContent className="p-5 text-center sm:p-6">
                   <Coins className="mx-auto h-8 w-8 text-gold mb-2" />
                   <div className="text-3xl font-bold text-gold">{adminPoints}</div>
                   <p className="text-sm text-muted-foreground">Ukupno poena</p>
                 </CardContent>
               </Card>
               <Card>
-                <CardContent className="p-6 text-center">
+                <CardContent className="p-5 text-center sm:p-6">
                   <Wallet className="mx-auto h-8 w-8 text-gold mb-2" />
                   <div className="text-3xl font-bold">${availablePayout}</div>
                   <p className="text-sm text-muted-foreground">Dostupno za payout</p>
                 </CardContent>
               </Card>
               <Card>
-                <CardContent className="p-6 text-center">
+                <CardContent className="p-5 text-center sm:p-6">
                   <Users className="mx-auto h-8 w-8 text-gold mb-2" />
                   <div className="text-3xl font-bold">{totalReferrals}</div>
                   <p className="text-sm text-muted-foreground">Ukupno korisnika</p>
@@ -583,7 +530,6 @@ const Admin = () => {
               </Card>
             </div>
 
-            {/* Payout request form */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
@@ -591,23 +537,14 @@ const Admin = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handlePayoutRequest} className="space-y-4">
+                <form onSubmit={handlePayoutRequest} className="space-y-4 max-w-lg">
                   <div className="space-y-2">
                     <Label>Iznos ($)</Label>
-                    <Input
-                      type="number"
-                      min="10"
-                      max={availablePayout}
-                      value={payoutForm.amount}
-                      onChange={(e) => setPayoutForm({ ...payoutForm, amount: e.target.value })}
-                      placeholder={`Max: $${availablePayout}`}
-                      required
-                    />
+                    <Input type="number" min="10" max={availablePayout} value={payoutForm.amount} onChange={(e) => setPayoutForm({ ...payoutForm, amount: e.target.value })} placeholder={`Max: $${availablePayout}`} required />
                   </div>
-
                   <div className="space-y-2">
                     <Label>Metod isplate</Label>
-                    <Select value={payoutMethod} onValueChange={setPayoutMethod} required>
+                    <Select value={payoutMethod} onValueChange={setPayoutMethod}>
                       <SelectTrigger>
                         <SelectValue placeholder="Izaberi metod isplate" />
                       </SelectTrigger>
@@ -623,7 +560,7 @@ const Admin = () => {
                   </div>
 
                   {payoutMethod === "bank" && (
-                    <>
+                    <div className="space-y-4 animate-fade-in">
                       <div className="space-y-2">
                         <Label>Naziv banke</Label>
                         <Input value={payoutForm.bankName} onChange={(e) => setPayoutForm({ ...payoutForm, bankName: e.target.value })} placeholder="npr. UniCredit Bank" required />
@@ -636,14 +573,14 @@ const Admin = () => {
                         <Label>SWIFT/BIC</Label>
                         <Input value={payoutForm.swift} onChange={(e) => setPayoutForm({ ...payoutForm, swift: e.target.value })} placeholder="BACXRSBG" required />
                       </div>
-                    </>
+                    </div>
                   )}
 
                   {payoutMethod === "crypto" && (
-                    <>
+                    <div className="space-y-4 animate-fade-in">
                       <div className="space-y-2">
                         <Label>Mreža</Label>
-                        <Select value={payoutForm.network} onValueChange={(v) => setPayoutForm({ ...payoutForm, network: v })} required>
+                        <Select value={payoutForm.network} onValueChange={(v) => setPayoutForm({ ...payoutForm, network: v })}>
                           <SelectTrigger>
                             <SelectValue placeholder="Izaberi mrežu" />
                           </SelectTrigger>
@@ -660,14 +597,10 @@ const Admin = () => {
                         <Label>Wallet adresa</Label>
                         <Input value={payoutForm.walletAddress} onChange={(e) => setPayoutForm({ ...payoutForm, walletAddress: e.target.value })} placeholder="0x..." required />
                       </div>
-                    </>
+                    </div>
                   )}
 
-                  <Button
-                    type="submit"
-                    className="w-full bg-gold hover:bg-gold/90 text-gold-foreground"
-                    disabled={!payoutMethod || !payoutForm.amount}
-                  >
+                  <Button type="submit" className="w-full bg-gold hover:bg-gold/90 text-gold-foreground" disabled={!payoutMethod || !payoutForm.amount}>
                     Podnesi zahtev za payout
                   </Button>
                 </form>
@@ -679,30 +612,26 @@ const Admin = () => {
 
       {/* User Preview Modal */}
       <Dialog open={!!previewUser} onOpenChange={(open) => !open && setPreviewUser(null)}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Profil korisnika</DialogTitle>
           </DialogHeader>
           {previewUser && (
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <Avatar className={`h-16 w-16 ${!previewUser.active ? "grayscale" : ""}`}>
+                <Avatar className={`h-14 w-14 sm:h-16 sm:w-16 shrink-0 ${!previewUser.active ? "grayscale" : ""}`}>
                   <AvatarImage src={previewUser.imageUrl} alt={previewUser.name} />
                   <AvatarFallback>{previewUser.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
-                <div>
-                  <div className="flex items-center gap-2">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="text-lg font-bold">{previewUser.name}</h3>
-                    {!previewUser.active && (
-                      <Badge variant="destructive" className="text-[10px]">DEACTIVATED</Badge>
-                    )}
+                    {!previewUser.active && <Badge variant="destructive" className="text-[10px]">DEACTIVATED</Badge>}
                   </div>
                   <p className="text-sm text-muted-foreground">{previewUser.email}</p>
-                  <div className="flex items-center gap-3 mt-1">
+                  <div className="flex items-center gap-3 mt-1 flex-wrap">
                     <span className="text-xs text-muted-foreground">Pridružen: {previewUser.joinDate}</span>
-                    <Badge className="bg-gold/15 text-gold border-gold/30 text-xs">
-                      {previewUser.points} poena
-                    </Badge>
+                    <Badge className="bg-gold/15 text-gold border-gold/30 text-xs">{previewUser.points} poena</Badge>
                   </div>
                 </div>
               </div>
@@ -716,20 +645,20 @@ const Admin = () => {
                     {previewUser.referrals.map((ref) => (
                       <Card key={ref.id} className={`${!ref.active ? "opacity-60" : ""}`}>
                         <CardContent className="flex items-center gap-3 p-3">
-                          <Avatar className={`h-8 w-8 ${!ref.active ? "grayscale" : ""}`}>
+                          <Avatar className={`h-8 w-8 shrink-0 ${!ref.active ? "grayscale" : ""}`}>
                             <AvatarImage src={ref.imageUrl} alt={ref.name} />
                             <AvatarFallback className="text-xs">{ref.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                           </Avatar>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1.5 flex-wrap">
                               <p className="text-sm font-medium truncate">{ref.name}</p>
                               {!ref.active && <Badge variant="destructive" className="text-[9px] px-1 py-0">DEACTIVATED</Badge>}
                             </div>
-                            <p className="text-xs text-muted-foreground">{ref.email}</p>
+                            <p className="text-xs text-muted-foreground truncate">{ref.email}</p>
                           </div>
-                          <span className="text-xs text-gold font-medium">{ref.points}p</span>
+                          <span className="text-xs text-gold font-medium shrink-0">{ref.points}p</span>
                           {ref.referrals.length > 0 && (
-                            <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => setPreviewUser(ref)}>
+                            <Button size="sm" variant="ghost" className="h-7 px-2 shrink-0" onClick={() => setPreviewUser(ref)}>
                               <Eye className="h-3 w-3" />
                             </Button>
                           )}
