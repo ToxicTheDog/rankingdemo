@@ -4,6 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Award, Users } from "lucide-react";
 import RankBadge from "@/components/RankBadge";
+import RankTitleBadge from "@/components/RankTitleBadge";
 
 interface RankingCardProps {
   user: RankedUser;
@@ -53,9 +54,9 @@ const RankingCard = ({ user, rank }: RankingCardProps) => {
           </div>
         </div>
 
-        <div className="shrink-0 text-right">
+        <div className="shrink-0 text-right flex flex-col items-end gap-1">
           <div className="text-xl font-bold sm:text-2xl">{user.score}</div>
-          <div className="text-xs text-muted-foreground">ocena</div>
+          <RankTitleBadge score={user.score} />
         </div>
       </CardContent>
     </Card>

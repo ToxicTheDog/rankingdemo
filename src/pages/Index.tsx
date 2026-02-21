@@ -7,6 +7,7 @@ import PropFirmsSection from "@/components/PropFirmsSection";
 import { useRanking } from "@/contexts/RankingContext";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import RankTitleBadge from "@/components/RankTitleBadge";
 
 const features = [
   { icon: <BarChart3 className="h-8 w-8 text-gold" />, title: "Tehnička Analiza", desc: "Naučite da čitate grafikone, prepoznajete paterne i donosite informisane odluke." },
@@ -51,21 +52,21 @@ const Index = () => {
         <div className="absolute top-20 -right-40 h-80 w-80 rounded-full bg-gold/5 blur-3xl" />
         <div className="absolute bottom-10 -left-40 h-80 w-80 rounded-full bg-gold/5 blur-3xl" />
         <div className="container relative mx-auto px-4 py-24 text-center md:py-36">
-          <div className="mx-auto inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm text-muted-foreground mb-6">
+          <div className="animate-slide-up mx-auto inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm text-muted-foreground mb-6">
             <TrendingUp className="h-4 w-4 text-gold" />
             Škola Tradinga — Uči od najboljih
           </div>
-          <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight md:text-6xl lg:text-7xl">
+          <h1 className="animate-slide-up mx-auto max-w-4xl text-4xl font-extrabold tracking-tight md:text-6xl lg:text-7xl" style={{ animationDelay: '0.1s' }}>
             Postani uspešan{" "}
             <span className="bg-gradient-to-r from-gold to-yellow-500 bg-clip-text text-transparent">
               trader
             </span>
             {" "}uz naše mentore
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
+          <p className="animate-slide-up mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl" style={{ animationDelay: '0.2s' }}>
             Nauči trading od iskusnih mentora kroz strukturisane kurseve, live sesije i podršku zajednice. Bez obzira da li si početnik ili napredni trader.
           </p>
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <div className="animate-slide-up mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center" style={{ animationDelay: '0.3s' }}>
             <Link to="/mentori">
               <Button size="lg" className="bg-gold hover:bg-gold/90 text-gold-foreground px-8 h-12 text-base">
                 Upoznaj mentore <ArrowRight className="ml-2 h-5 w-5" />
@@ -85,9 +86,9 @@ const Index = () => {
 
       {/* Stats */}
       <section className="border-b bg-muted/30">
-        <div className="container mx-auto grid grid-cols-2 gap-6 px-4 py-14 md:grid-cols-4">
+        <div className="container mx-auto grid grid-cols-2 gap-6 px-4 py-14 md:grid-cols-4 stagger-children">
           {stats.map((s) => (
-            <div key={s.label} className="text-center">
+            <div key={s.label} className="animate-scale-fade-in text-center">
               <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-gold/10 text-gold">
                 {s.icon}
               </div>
@@ -105,9 +106,9 @@ const Index = () => {
           <h2 className="text-3xl font-bold md:text-4xl">Sve što ti treba za trading</h2>
           <p className="mt-3 text-muted-foreground max-w-lg mx-auto">Kompletna platforma za učenje i usavršavanje trading veština</p>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 stagger-children">
           {features.map((f) => (
-            <Card key={f.title} className="group transition-all hover:shadow-lg hover:border-gold/30">
+            <Card key={f.title} className="animate-slide-up group transition-all hover:shadow-lg hover:border-gold/30">
               <CardContent className="p-6">
                 <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gold/10 transition-colors group-hover:bg-gold/20">
                   {f.icon}
@@ -127,10 +128,10 @@ const Index = () => {
             <Badge variant="secondary" className="mb-4 text-gold">Kako funkcioniše</Badge>
             <h2 className="text-3xl font-bold md:text-4xl">Počni za 4 koraka</h2>
           </div>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 stagger-children">
             {steps.map((s) => (
-              <div key={s.step} className="text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10 text-2xl font-bold text-gold">
+              <div key={s.step} className="animate-slide-up text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10 text-2xl font-bold text-gold animate-float">
                   {s.step}
                 </div>
                 <h3 className="mb-2 font-semibold text-lg">{s.title}</h3>
@@ -148,9 +149,9 @@ const Index = () => {
           <h2 className="text-3xl font-bold md:text-4xl">Upoznaj naše najbolje</h2>
           <p className="mt-3 text-muted-foreground">Iskusni profesionalci koji će te voditi kroz svet tradinga</p>
         </div>
-        <div className="grid gap-6 sm:grid-cols-3 max-w-3xl mx-auto">
+        <div className="grid gap-6 sm:grid-cols-3 max-w-3xl mx-auto stagger-children">
           {topMentors.map((mentor) => (
-            <Card key={mentor.id} className="text-center transition-all hover:shadow-lg hover:border-gold/30">
+            <Card key={mentor.id} className="animate-scale-fade-in text-center transition-all hover:shadow-lg hover:border-gold/30">
               <CardContent className="p-6">
                 <Avatar className="mx-auto h-20 w-20 mb-4">
                   <AvatarImage src={mentor.imageUrl} alt={mentor.name} />
@@ -162,7 +163,7 @@ const Index = () => {
                   <Users className="h-3.5 w-3.5" /> {mentor.students} studenata
                 </div>
                 <div className="mt-2 text-2xl font-bold text-gold">{mentor.score}</div>
-                <div className="text-xs text-muted-foreground">ocena</div>
+                <RankTitleBadge score={mentor.score} className="mt-1" />
               </CardContent>
             </Card>
           ))}
