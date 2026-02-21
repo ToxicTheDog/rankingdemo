@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRanking, RankedUser } from "@/contexts/RankingContext";
 import Header from "@/components/Header";
 import RankBadge from "@/components/RankBadge";
+import RankTitleBadge from "@/components/RankTitleBadge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -121,6 +122,7 @@ const UserCard = ({ user, rank, onPreview }: { user: AffiliateUser; rank: number
         <div className="flex items-center gap-2 sm:gap-3 mt-1 flex-wrap">
           <span className="text-xs text-muted-foreground">{user.joinDate}</span>
           <span className="text-xs text-gold font-medium">{user.points} poena</span>
+          <RankTitleBadge score={user.points} />
           {user.referrals.length > 0 && (
             <span className="text-xs text-muted-foreground flex items-center gap-0.5">
               <Users className="h-3 w-3" /> {user.referrals.length}
@@ -439,7 +441,7 @@ const Admin = () => {
                     <RankBadge rank={i + 1} size="sm" />
                     <div className="flex-1 min-w-0">
                       <p className="font-medium truncate">{user.name}</p>
-                      <p className="text-xs text-muted-foreground sm:text-sm">{user.specialty} • Ocena: {user.score}</p>
+                      <p className="text-xs text-muted-foreground sm:text-sm">{user.specialty} • Ocena: {user.score} <RankTitleBadge score={user.score} className="ml-1" /></p>
                     </div>
                     <div className="flex gap-1 sm:gap-2">
                       <Button size="sm" variant="outline" onClick={() => startEdit(user)}>
