@@ -16,13 +16,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin } from "lucide-react";
+import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, CheckCircle, Clock, History } from "lucide-react";
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
 } from "recharts";
 import {
   DollarSign, TrendingUp, TrendingDown, AlertTriangle, ArrowUpRight, ArrowDownRight,
 } from "lucide-react";
+import { getRankTitle } from "@/lib/rank-titles";
 
 /* ═══════════════════════════════════════
    MOCK DATA — Replace with real API data
@@ -97,6 +98,40 @@ const demoTransactions: Transaction[] = [
 ];
 
 /* ═══════════════════════════════════════
+   PAYOUT REQUEST TYPES & MOCK DATA
+   ═══════════════════════════════════════ */
+
+interface PayoutRequest {
+  id: string;
+  userId: string;
+  name: string;
+  email: string;
+  imageUrl: string;
+  amount: number;
+  points: number;
+  rank: string;
+  method: "bank" | "crypto";
+  bankName?: string;
+  iban?: string;
+  swift?: string;
+  network?: string;
+  walletAddress?: string;
+  referralCount: number;
+  joinDate: string;
+  requestDate: string;
+}
+
+interface PayoutHistoryItem extends PayoutRequest {
+  approvedDate: string;
+}
+
+const initialPayoutRequests: PayoutRequest[] = [
+  { id: "pr1", userId: "a1", name: "Petar Simić", email: "petar@email.com", imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Petar", amount: 250, points: 120, rank: "VIP", method: "bank", bankName: "UniCredit Bank", iban: "RS35260005601001611379", swift: "BACXRSBG", referralCount: 2, joinDate: "2025-11-15", requestDate: "2026-02-20" },
+  { id: "pr2", userId: "a2", name: "Milica Đorđević", email: "milica@email.com", imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Milica", amount: 500, points: 230, rank: "Master", method: "crypto", network: "USDT (TRC-20)", walletAddress: "TXqZ8g1rN2vYz3kLP5dBn7mF4wJ6sE9cRa", referralCount: 1, joinDate: "2025-10-20", requestDate: "2026-02-21" },
+  { id: "pr3", userId: "a4", name: "Tamara Janković", email: "tamara@email.com", imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Tamara", amount: 175, points: 175, rank: "Master", method: "bank", bankName: "Raiffeisen Bank", iban: "RS35265100000012345678", swift: "RZBSRSBG", referralCount: 3, joinDate: "2025-12-25", requestDate: "2026-02-22" },
+];
+
+/* ═══════════════════════════════════════
    SUB-COMPONENTS
    ═══════════════════════════════════════ */
 
@@ -152,6 +187,9 @@ const Admin = () => {
   const [previewUser, setPreviewUser] = useState<AffiliateUser | null>(null);
   const [payoutMethod, setPayoutMethod] = useState<string>("");
   const [payoutForm, setPayoutForm] = useState({ bankName: "", iban: "", swift: "", walletAddress: "", network: "", amount: "" });
+  const [payoutRequests, setPayoutRequests] = useState<PayoutRequest[]>(initialPayoutRequests);
+  const [payoutHistory, setPayoutHistory] = useState<PayoutHistoryItem[]>([]);
+  const [requestDetail, setRequestDetail] = useState<PayoutRequest | null>(null);
 
   if (!isAdmin) return <Navigate to="/login" replace />;
 
@@ -205,6 +243,13 @@ const Admin = () => {
     setPayoutMethod("");
   };
 
+  const handleApproveRequest = (req: PayoutRequest) => {
+    setPayoutRequests((prev) => prev.filter((r) => r.id !== req.id));
+    setPayoutHistory((prev) => [{ ...req, approvedDate: new Date().toISOString().split("T")[0] }, ...prev]);
+    setRequestDetail(null);
+    toast({ title: "Isplata poslata ✅", description: `$${req.amount} za ${req.name} je odobreno i poslato.` });
+  };
+
   const dashboardStats = {
     totalRevenue: 2450000,
     totalExpenses: 1780000,
@@ -226,13 +271,22 @@ const Admin = () => {
         <Tabs defaultValue="dashboard" className="space-y-6">
           {/* Responsive tab list — scrollable on mobile */}
           <TabsList className="flex w-full overflow-x-auto">
-            <TabsTrigger value="dashboard" className="flex-1 min-w-[80px] text-xs sm:text-sm">Dashboard</TabsTrigger>
-            <TabsTrigger value="mentori" className="flex-1 min-w-[80px] text-xs sm:text-sm">Mentori</TabsTrigger>
-            <TabsTrigger value="affiliate" className="flex-1 min-w-[80px] text-xs sm:text-sm">
+            <TabsTrigger value="dashboard" className="flex-1 min-w-[70px] text-xs sm:text-sm">Dashboard</TabsTrigger>
+            <TabsTrigger value="mentori" className="flex-1 min-w-[70px] text-xs sm:text-sm">Mentori</TabsTrigger>
+            <TabsTrigger value="affiliate" className="flex-1 min-w-[70px] text-xs sm:text-sm">
               <Link2 className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Affiliate
             </TabsTrigger>
-            <TabsTrigger value="payout" className="flex-1 min-w-[80px] text-xs sm:text-sm">
+            <TabsTrigger value="payout" className="flex-1 min-w-[70px] text-xs sm:text-sm">
               <Wallet className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Payout
+            </TabsTrigger>
+            <TabsTrigger value="requests" className="flex-1 min-w-[70px] text-xs sm:text-sm">
+              <Clock className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Requests
+              {payoutRequests.length > 0 && (
+                <Badge className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-gold text-gold-foreground border-0">{payoutRequests.length}</Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="history" className="flex-1 min-w-[70px] text-xs sm:text-sm">
+              <History className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> History
             </TabsTrigger>
           </TabsList>
 
@@ -609,6 +663,117 @@ const Admin = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* ═══ REQUESTS TAB ═══ */}
+          <TabsContent value="requests" className="space-y-4">
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <Clock className="h-5 w-5 text-gold" /> Zahtevi za isplatu ({payoutRequests.length})
+            </h2>
+
+            {payoutRequests.length === 0 && (
+              <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  <CheckCircle className="mx-auto h-10 w-10 mb-3 opacity-40" />
+                  <p>Nema aktivnih zahteva za isplatu.</p>
+                </CardContent>
+              </Card>
+            )}
+
+            <div className="space-y-3">
+              {payoutRequests.map((req) => {
+                const rankInfo = getRankTitle(req.points);
+                return (
+                  <Card key={req.id} className="hover:border-gold/30 transition-all">
+                    <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+                      <Avatar className="h-10 w-10 shrink-0">
+                        <AvatarImage src={req.imageUrl} alt={req.name} />
+                        <AvatarFallback>{req.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="font-medium text-sm sm:text-base">{req.name}</p>
+                          <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${rankInfo.bg} ${rankInfo.border} ${rankInfo.color}`}>
+                            {rankInfo.icon} {rankInfo.label}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3 mt-1 flex-wrap text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            {req.method === "bank" ? <CreditCard className="h-3 w-3" /> : <Bitcoin className="h-3 w-3" />}
+                            {req.method === "bank" ? "Bank" : "Crypto"}
+                          </span>
+                          <span>{req.requestDate}</span>
+                          <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {req.referralCount}</span>
+                        </div>
+                      </div>
+                      <div className="text-xl font-bold text-gold shrink-0">${req.amount}</div>
+                      <div className="flex gap-2 shrink-0">
+                        <Button size="sm" variant="outline" onClick={() => setRequestDetail(req)}>
+                          <Eye className="h-4 w-4 sm:mr-1" />
+                          <span className="hidden sm:inline">Detalji</span>
+                        </Button>
+                        <Button size="sm" className="bg-gold hover:bg-gold/90 text-gold-foreground" onClick={() => handleApproveRequest(req)}>
+                          <CheckCircle className="h-4 w-4 sm:mr-1" />
+                          <span className="hidden sm:inline">Approve</span>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </TabsContent>
+
+          {/* ═══ HISTORY TAB ═══ */}
+          <TabsContent value="history" className="space-y-4">
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <History className="h-5 w-5 text-gold" /> Istorija isplata ({payoutHistory.length})
+            </h2>
+
+            {payoutHistory.length === 0 && (
+              <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  <History className="mx-auto h-10 w-10 mb-3 opacity-40" />
+                  <p>Nema završenih isplata. Odobrite zahtev na Requests tabu.</p>
+                </CardContent>
+              </Card>
+            )}
+
+            <div className="space-y-3">
+              {payoutHistory.map((item) => {
+                const rankInfo = getRankTitle(item.points);
+                return (
+                  <Card key={item.id + item.approvedDate} className="border-green-500/20">
+                    <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-500/15 shrink-0">
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                      </div>
+                      <Avatar className="h-10 w-10 shrink-0">
+                        <AvatarImage src={item.imageUrl} alt={item.name} />
+                        <AvatarFallback>{item.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="font-medium text-sm">{item.name}</p>
+                          <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${rankInfo.bg} ${rankInfo.border} ${rankInfo.color}`}>
+                            {rankInfo.icon} {rankInfo.label}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3 mt-1 flex-wrap text-xs text-muted-foreground">
+                          <span>{item.method === "bank" ? "Bank" : "Crypto"}</span>
+                          <span>Zahtev: {item.requestDate}</span>
+                          <span className="text-green-500">Odobreno: {item.approvedDate}</span>
+                        </div>
+                      </div>
+                      <div className="text-lg font-bold text-green-500 shrink-0">${item.amount}</div>
+                      <Button size="sm" variant="ghost" onClick={() => setRequestDetail(item)}>
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </TabsContent>
         </Tabs>
       </main>
 
@@ -678,6 +843,81 @@ const Admin = () => {
               )}
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+      {/* Payout Request Detail Modal */}
+      <Dialog open={!!requestDetail} onOpenChange={(open) => !open && setRequestDetail(null)}>
+        <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Detalji zahteva za isplatu</DialogTitle>
+          </DialogHeader>
+          {requestDetail && (() => {
+            const rankInfo = getRankTitle(requestDetail.points);
+            return (
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-14 w-14 shrink-0">
+                    <AvatarImage src={requestDetail.imageUrl} alt={requestDetail.name} />
+                    <AvatarFallback>{requestDetail.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h3 className="text-lg font-bold">{requestDetail.name}</h3>
+                    <p className="text-sm text-muted-foreground">{requestDetail.email}</p>
+                    <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-semibold mt-1 ${rankInfo.bg} ${rankInfo.border} ${rankInfo.color}`}>
+                      {rankInfo.icon} {rankInfo.label}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-lg bg-muted p-3">
+                    <p className="text-xs text-muted-foreground">Iznos</p>
+                    <p className="text-xl font-bold text-gold">${requestDetail.amount}</p>
+                  </div>
+                  <div className="rounded-lg bg-muted p-3">
+                    <p className="text-xs text-muted-foreground">Poeni</p>
+                    <p className="text-xl font-bold">{requestDetail.points}</p>
+                  </div>
+                  <div className="rounded-lg bg-muted p-3">
+                    <p className="text-xs text-muted-foreground">Referrals</p>
+                    <p className="text-xl font-bold">{requestDetail.referralCount}</p>
+                  </div>
+                  <div className="rounded-lg bg-muted p-3">
+                    <p className="text-xs text-muted-foreground">Član od</p>
+                    <p className="text-sm font-medium">{requestDetail.joinDate}</p>
+                  </div>
+                </div>
+
+                <div className="rounded-lg border p-4 space-y-2">
+                  <h4 className="text-sm font-semibold flex items-center gap-2">
+                    {requestDetail.method === "bank" ? <CreditCard className="h-4 w-4" /> : <Bitcoin className="h-4 w-4" />}
+                    {requestDetail.method === "bank" ? "Bankarski podaci" : "Crypto podaci"}
+                  </h4>
+                  {requestDetail.method === "bank" ? (
+                    <>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Banka:</span><span className="font-medium">{requestDetail.bankName}</span></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">IBAN:</span><span className="font-mono text-xs">{requestDetail.iban}</span></div>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">SWIFT:</span><span className="font-mono text-xs">{requestDetail.swift}</span></div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Mreža:</span><span className="font-medium">{requestDetail.network}</span></div>
+                      <div className="text-sm"><span className="text-muted-foreground">Adresa:</span><p className="font-mono text-xs break-all mt-1">{requestDetail.walletAddress}</p></div>
+                    </>
+                  )}
+                </div>
+
+                <p className="text-xs text-muted-foreground">Zahtev poslat: {requestDetail.requestDate}</p>
+
+                {/* Only show approve button if it's still in requests (not history) */}
+                {payoutRequests.some((r) => r.id === requestDetail.id) && (
+                  <Button className="w-full bg-gold hover:bg-gold/90 text-gold-foreground" onClick={() => handleApproveRequest(requestDetail)}>
+                    <CheckCircle className="h-4 w-4 mr-2" /> Odobri isplatu
+                  </Button>
+                )}
+              </div>
+            );
+          })()}
         </DialogContent>
       </Dialog>
     </div>
