@@ -90,6 +90,36 @@ export const authRegister = async (data: RegisterRequest) => {
 }
 
 /* ═══════════════════════════════════════
+   IMAGE UPLOAD
+   ═══════════════════════════════════════ */
+
+/** POST /upload/image
+ * Body: FormData with field "image" (file)
+ * Returns: { url: string }
+ */
+export const uploadImage = async (file: File, token: string): Promise<{ url: string }> => {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const headers: Record<string, string> = {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  const res = await fetch(`${BASE_URL}/upload/image`, {
+    method: "POST",
+    headers,
+    credentials: "include",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || `Upload failed: ${res.status}`);
+  }
+
+  return res.json();
+};
+
+/* ═══════════════════════════════════════
    MENTORS ENDPOINTS
    ═══════════════════════════════════════ */
 

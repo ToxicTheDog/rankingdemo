@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRanking, RankedUser } from "@/contexts/RankingContext";
@@ -16,7 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, CheckCircle, Clock, History } from "lucide-react";
+import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, CheckCircle, Clock, History, Upload, ImageIcon } from "lucide-react";
+import { uploadImage } from "@/lib/api";
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
 } from "recharts";
@@ -178,11 +179,16 @@ const UserCard = ({ user, rank, onPreview }: { user: AffiliateUser; rank: number
    ═══════════════════════════════════════ */
 
 const Admin = () => {
-  const { isAdmin } = useAuth();
+  const { isAdmin, token } = useAuth();
   const { users, addUser, updateUser, deleteUser } = useRanking();
   const { toast } = useToast();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", description: "", score: "", imageUrl: "", specialty: "", students: "" });
+  const [imageMode, setImageMode] = useState<"link" | "upload">("link");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [affSearch, setAffSearch] = useState("");
   const [previewUser, setPreviewUser] = useState<AffiliateUser | null>(null);
   const [payoutMethod, setPayoutMethod] = useState<string>("");
@@ -198,13 +204,40 @@ const Admin = () => {
   const resetForm = () => {
     setForm({ name: "", description: "", score: "", imageUrl: "", specialty: "", students: "" });
     setEditingId(null);
+    setImageFile(null);
+    setImagePreview("");
+    setImageMode("link");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    let imageUrl = form.imageUrl;
+
+    // If upload mode and file selected, upload first
+    if (imageMode === "upload" && imageFile && token) {
+      try {
+        setUploading(true);
+        const res = await uploadImage(imageFile, token);
+        imageUrl = res.url;
+      } catch (err: any) {
+        toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+        setUploading(false);
+        return;
+      }
+      setUploading(false);
+    }
+
     const data = {
       name: form.name, description: form.description, score: Number(form.score),
-      imageUrl: form.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${form.name}`,
+      imageUrl: imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${form.name}`,
       specialty: form.specialty, students: Number(form.students) || 0,
     };
     if (editingId) {
@@ -469,13 +502,36 @@ const Admin = () => {
                     <Label>Opis</Label>
                     <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Kratak opis mentora" required />
                   </div>
-                  <div className="space-y-2 sm:col-span-2">
-                    <Label>URL slike (opciono)</Label>
-                    <Input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} placeholder="https://..." />
+                  <div className="space-y-3 sm:col-span-2">
+                    <Label>Slika mentora</Label>
+                    <div className="flex gap-2 mb-2">
+                      <Button type="button" size="sm" variant={imageMode === "link" ? "default" : "outline"} onClick={() => setImageMode("link")}>
+                        <Link2 className="h-3.5 w-3.5 mr-1" /> Link
+                      </Button>
+                      <Button type="button" size="sm" variant={imageMode === "upload" ? "default" : "outline"} onClick={() => setImageMode("upload")}>
+                        <Upload className="h-3.5 w-3.5 mr-1" /> Upload
+                      </Button>
+                    </div>
+                    {imageMode === "link" ? (
+                      <Input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} placeholder="https://..." />
+                    ) : (
+                      <div className="space-y-2">
+                        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                        <Button type="button" variant="outline" className="w-full border-dashed" onClick={() => fileInputRef.current?.click()}>
+                          <ImageIcon className="h-4 w-4 mr-2" />
+                          {imageFile ? imageFile.name : "Izaberi sliku..."}
+                        </Button>
+                        {imagePreview && (
+                          <div className="relative w-20 h-20 rounded-md overflow-hidden border border-border">
+                            <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <div className="flex gap-2 sm:col-span-2">
-                    <Button type="submit" className="bg-gold hover:bg-gold/90 text-gold-foreground">
-                      {editingId ? <><Save className="mr-1 h-4 w-4" /> Sačuvaj</> : <><Plus className="mr-1 h-4 w-4" /> Dodaj</>}
+                    <Button type="submit" className="bg-gold hover:bg-gold/90 text-gold-foreground" disabled={uploading}>
+                      {uploading ? "Uploading..." : editingId ? <><Save className="mr-1 h-4 w-4" /> Sačuvaj</> : <><Plus className="mr-1 h-4 w-4" /> Dodaj</>}
                     </Button>
                     {editingId && (
                       <Button type="button" variant="outline" onClick={resetForm}>
