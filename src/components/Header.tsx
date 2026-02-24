@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, TrendingUp, LogOut, LogIn, Menu, X } from "lucide-react";
+import { TrendingUp, LogOut, LogIn, Menu, X } from "lucide-react";
 
 const Header = () => {
-  const { theme, toggleTheme } = useTheme();
   const { isLoggedIn, isAdmin, logout } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -34,9 +32,6 @@ const Header = () => {
               </Button>
             </Link>
           ))}
-          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
           {isLoggedIn ? (
             <Button variant="outline" size="sm" onClick={logout}>
               <LogOut className="mr-1 h-4 w-4" /> Odjavi se
@@ -68,9 +63,6 @@ const Header = () => {
               </Link>
             ))}
             <div className="flex items-center gap-2 pt-2 border-t mt-2">
-              <Button variant="ghost" size="icon" onClick={toggleTheme}>
-                {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              </Button>
               {isLoggedIn ? (
                 <Button variant="outline" size="sm" onClick={() => { logout(); setMobileOpen(false); }} className="flex-1">
                   <LogOut className="mr-1 h-4 w-4" /> Odjavi se
