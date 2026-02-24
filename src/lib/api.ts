@@ -27,6 +27,7 @@ async function request<T>(
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     method,
     headers,
+    credentials: "include",
     body: body ? JSON.stringify(body) : undefined,
   });
 
@@ -43,21 +44,22 @@ async function request<T>(
    ═══════════════════════════════════════ */
 
 export interface LoginRequest {
-  email: string;
+  mail: string;
   password: string;
 }
 
 export interface RegisterRequest {
-  email: string;
+  mail: string;
   password: string;
   name: string;
 }
 
 export interface AuthResponse {
+  error: any;
   token: string;
   user: {
     id: string;
-    email: string;
+    mail: string;
     name: string;
     role: string; // "admin" | "user" etc.
   };
@@ -67,15 +69,25 @@ export interface AuthResponse {
  * Body: { email: string, password: string }
  * Returns: { token, user: { id, email, name, role } }
  */
-export const authLogin = (data: LoginRequest) =>
-  request<AuthResponse>("/authorization/login", { method: "POST", body: data });
+export const authLogin = async (data: LoginRequest) => {
+  const res = await request<AuthResponse>("/auth/login", { method: "POST", body: data });
+  if (res.error) {
+    throw new Error(res.error);
+  }
+  return res;
+};
 
 /** POST /authorization/register
  * Body: { email: string, password: string, name: string }
  * Returns: { token, user: { id, email, name, role } }
  */
-export const authRegister = (data: RegisterRequest) =>
-  request<AuthResponse>("/authorization/register", { method: "POST", body: data });
+export const authRegister = async (data: RegisterRequest) => {
+  const res = await request<AuthResponse>("/auth/register", { method: "POST", body: data });
+  if (res.error) {
+    throw new Error(res.error);
+  }
+  return res;
+}
 
 /* ═══════════════════════════════════════
    MENTORS ENDPOINTS

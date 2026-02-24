@@ -19,7 +19,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   login: async () => false,
   register: async () => false,
-  logout: () => {},
+  logout: () => { },
   loginError: null,
 });
 
@@ -46,28 +46,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     else localStorage.removeItem("auth_user");
   }, [user]);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (mail: string, password: string): Promise<boolean> => {
     setLoginError(null);
     try {
-      const res = await authLogin({ email, password });
+      const res = await authLogin({ mail, password });
       setToken(res.token);
       setUser(res.user);
       return true;
     } catch (err: any) {
-      setLoginError(err.message || "Greška pri prijavi");
+      setLoginError(err.error || "Error logging in");
       return false;
     }
   };
 
-  const register = async (email: string, password: string, name: string): Promise<boolean> => {
+  const register = async (mail: string, password: string, name: string): Promise<boolean> => {
     setLoginError(null);
     try {
-      const res = await authRegister({ email, password, name });
+      const res = await authRegister({ mail, password, name });
       setToken(res.token);
       setUser(res.user);
       return true;
     } catch (err: any) {
-      setLoginError(err.message || "Greška pri registraciji");
+      setLoginError(err.message || "Error registering user");
       return false;
     }
   };

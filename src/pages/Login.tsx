@@ -23,10 +23,11 @@ const Login = () => {
     const success = await login(email, password);
     setLoading(false);
     if (success) {
-      toast({ title: "Uspešna prijava!", description: "Dobrodošli." });
+      toast({ title: "Success!", description: "Welcome Back." });
+      
       navigate("/admin");
     } else {
-      toast({ title: "Greška", description: "Pogrešan email ili lozinka.", variant: "destructive" });
+      toast({ title: "Error", description: "Wrong Email or Password", variant: "destructive" });
     }
   };
 
@@ -48,11 +49,11 @@ const Login = () => {
                 <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@example.com" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Lozinka</Label>
+                <Label htmlFor="password">Password</Label>
                 <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••" required />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Prijava..." : "Prijavi se"}
+                {loading ? "Logging in..." : "Login"}
               </Button>
             </form>
           </CardContent>
