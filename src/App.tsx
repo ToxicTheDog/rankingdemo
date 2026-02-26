@@ -11,6 +11,7 @@ import Mentori from "./pages/Mentori";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Tests from "./pages/pyramidVisualizer";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
                 <Route path="/mentori" element={<Mentori />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/testing" element={<Tests />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
