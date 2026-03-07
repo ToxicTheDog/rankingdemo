@@ -30,6 +30,12 @@ const testimonials = [
   { name: "Milan R.", text: "Zahvaljujući TradeAcademy, naučio sam da trgtujem forex za samo 3 meseca. Mentori su fantastični!", rating: 5 },
   { name: "Jovana M.", text: "Najbolja investicija u sebe. Live sesije su mi promenile pristup tradingu potpuno.", rating: 5 },
   { name: "Đorđe K.", text: "Zajednica je neverovatna. Uvek ima neko ko može da pomogne i odgovori na pitanja.", rating: 4 },
+  { name: "Stefan P.", text: "Za 6 meseci sam prošao FTMO challenge zahvaljujući strategijama koje sam naučio ovde. Preporučujem svima!", rating: 5 },
+  { name: "Ana V.", text: "Mentori su uvek dostupni i strpljivi. Kao potpuni početnik, sada imam funded račun od $100K.", rating: 5 },
+  { name: "Marko T.", text: "Risk management lekcije su mi bukvalno spasile račun. Sada trgtujem disciplinovano i profitabilno.", rating: 5 },
+  { name: "Nikola S.", text: "Signali su odlični — prate ih detaljne analize tako da uvek znam zašto ulazim u trade.", rating: 4 },
+  { name: "Jelena D.", text: "Premium paket je vredeo svaki cent. Personalizovani plan mi je pomogao da nađem svoj stil tradinga.", rating: 5 },
+  { name: "Lazar M.", text: "Prešao sam sa gubitaka na konzistentne profite za 4 meseca. Zajednica i mentori su ključ.", rating: 5 },
 ];
 
 const steps = [
