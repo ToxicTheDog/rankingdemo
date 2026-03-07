@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { TrendingUp, BarChart3, BookOpen, Users, ArrowRight, Shield, Target, Zap, CheckCircle, Star, Play, GraduationCap, Clock, Globe } from "lucide-react";
+import { TrendingUp, BarChart3, BookOpen, Users, ArrowRight, Shield, Target, Zap, CheckCircle, Star, Play, GraduationCap, Clock, Globe, Quote } from "lucide-react";
 import PropFirmsSection from "@/components/PropFirmsSection";
 import PackagesSection from "@/components/PackagesSection";
 import { useRanking } from "@/contexts/RankingContext";
