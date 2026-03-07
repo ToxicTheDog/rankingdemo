@@ -188,20 +188,24 @@ const Index = () => {
       <section className="border-y bg-muted/30">
         <div className="container mx-auto px-4 py-20">
           <div className="text-center mb-12">
-            <Badge variant="secondary" className="mb-4 text-gold">Iskustva</Badge>
+           <Badge variant="secondary" className="mb-4 text-gold">Iskustva</Badge>
             <h2 className="text-3xl font-bold md:text-4xl">Šta kažu naši studenti</h2>
+            <p className="mt-3 text-muted-foreground max-w-lg mx-auto">Stvarna iskustva članova naše zajednice</p>
           </div>
-          <div className="grid gap-6 sm:grid-cols-3 max-w-4xl mx-auto">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto stagger-children">
             {testimonials.map((t) => (
-              <Card key={t.name} className="transition-all hover:shadow-lg">
-                <CardContent className="p-6">
-                  <div className="mb-3 flex gap-0.5">
-                    {Array.from({ length: t.rating }).map((_, j) => (
-                      <Star key={j} className="h-4 w-4 fill-gold text-gold" />
-                    ))}
+              <Card key={t.name} className="animate-slide-up transition-all hover:shadow-lg hover:border-gold/30">
+                <CardContent className="p-5">
+                  <div className="mb-3 flex items-center justify-between">
+                    <div className="flex gap-0.5">
+                      {Array.from({ length: t.rating }).map((_, j) => (
+                        <Star key={j} className="h-3.5 w-3.5 fill-gold text-gold" />
+                      ))}
+                    </div>
+                    <Quote className="h-4 w-4 text-gold/30" />
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">"{t.text}"</p>
-                  <p className="font-semibold text-sm">{t.name}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-3">"{t.text}"</p>
+                  <p className="font-semibold text-sm text-gold">{t.name}</p>
                 </CardContent>
               </Card>
             ))}
