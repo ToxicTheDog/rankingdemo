@@ -1,7 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "lucide-react";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { ExternalLink, Quote } from "lucide-react";
 
 import ftmoLogo from "@/assets/ftmo-logo.png";
 import ftmoPayouts from "@/assets/ftmo-payouts.jpg";
@@ -18,17 +17,26 @@ const propFirms = [
   { name: "Instant Funding", desc: "Bez evaluation faze — trenutni pristup funded računu. Idealno za iskusne tradere koji žele brz start.", logo: null, url: "https://instantfunding.io", highlight: "Bez evaluacije" },
 ];
 
-const payoutImages = [
-  { src: ftmoPayouts, alt: "FTMO milionski payouti traderima", label: "FTMO Payouti" },
-  { src: ftmoPayoutBanner, alt: "FTMO $200K račun", label: "FTMO $200K" },
-  { src: ftmScreenshot, alt: "Funded Trader Markets platforma", label: "FTM Platforma" },
-  { src: topstepPayout, alt: "TopStep payout potvrda", label: "TopStep Payout" },
-  { src: instantfundingPayout, alt: "Instant Funding payout", label: "Instant Funding Payout" },
+const row1Images = [
+  { src: ftmoPayouts, alt: "FTMO milionski payouti" },
+  { src: ftmoPayoutBanner, alt: "FTMO $200K račun" },
+  { src: ftmScreenshot, alt: "FTM platforma" },
+  { src: topstepPayout, alt: "TopStep payout" },
+  { src: instantfundingPayout, alt: "Instant Funding payout" },
+];
+
+const row2Images = [
+  { src: instantfundingPayout, alt: "Instant Funding payout" },
+  { src: ftmoPayouts, alt: "FTMO payouti" },
+  { src: topstepPayout, alt: "TopStep payout potvrda" },
+  { src: ftmScreenshot, alt: "FTM screenshot" },
+  { src: ftmoPayoutBanner, alt: "FTMO banner" },
 ];
 
 const PropFirmsSection = () => {
   return (
     <>
+      {/* Partners */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-12">
           <Badge variant="secondary" className="mb-4 text-gold">Partneri</Badge>
@@ -66,25 +74,36 @@ const PropFirmsSection = () => {
         </div>
       </section>
 
-      <section className="border-y bg-muted/30">
-        <div className="container mx-auto px-4 py-20">
-          <div className="text-center mb-12">
+      {/* Payout Proof — Marquee */}
+      <section className="border-y bg-muted/30 py-20 overflow-hidden">
+        <div className="container mx-auto px-4 mb-12">
+          <div className="text-center">
             <Badge variant="secondary" className="mb-4 text-gold">Dokazi isplata</Badge>
             <h2 className="text-3xl font-bold md:text-4xl">Stvarni payouti naših partnera</h2>
             <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
-              Evo dokaza da naši partneri zaista isplaćuju tradere — milioni dolara mesečno
+              Milioni dolara isplaćeni mesečno — evo dokaza da naši partneri zaista plaćaju
             </p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
-            {payoutImages.map((img, i) => (
-              <Card key={i} className="overflow-hidden group transition-all hover:shadow-lg hover:border-gold/30">
-                <AspectRatio ratio={16 / 10}>
-                  <img src={img.src} alt={img.alt} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
-                </AspectRatio>
-                <CardContent className="p-3">
-                  <p className="text-sm font-medium text-center">{img.label}</p>
-                </CardContent>
-              </Card>
+        </div>
+
+        {/* Row 1 — Left to Right */}
+        <div className="marquee-container mb-4">
+          <div className="marquee-track animate-marquee-left">
+            {[...row1Images, ...row1Images].map((img, i) => (
+              <div key={i} className="flex-shrink-0 w-72 rounded-xl overflow-hidden border border-border/50 shadow-lg shadow-background/50 hover:border-gold/30 transition-colors">
+                <img src={img.src} alt={img.alt} className="w-full h-44 object-cover" loading="lazy" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2 — Right to Left */}
+        <div className="marquee-container">
+          <div className="marquee-track animate-marquee-right">
+            {[...row2Images, ...row2Images].map((img, i) => (
+              <div key={i} className="flex-shrink-0 w-72 rounded-xl overflow-hidden border border-border/50 shadow-lg shadow-background/50 hover:border-gold/30 transition-colors">
+                <img src={img.src} alt={img.alt} className="w-full h-44 object-cover" loading="lazy" />
+              </div>
             ))}
           </div>
         </div>
