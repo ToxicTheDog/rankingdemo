@@ -4,12 +4,18 @@ import { ExternalLink } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 import ftmoLogo from "@/assets/ftmo-logo.png";
-import ftmoPayouts from "@/assets/ftmo-payouts.jpg";
-import ftmoPayoutBanner from "@/assets/ftmo-payout-banner.jpg";
-import ftmScreenshot from "@/assets/ftm-screenshot.png";
 import topstepLogo from "@/assets/topstep-logo.svg";
-import topstepPayout from "@/assets/topstep-payout.jpg";
-import instantfundingPayout from "@/assets/instantfunding-payout.jpg";
+
+import chart1 from "@/assets/chart1.png";
+import chart2 from "@/assets/chart2.png";
+import myfxbook1 from "@/assets/myfxbook1.png";
+import myfxbook2 from "@/assets/myfxbook2.png";
+import payout1 from "@/assets/payout1.png";
+import payout2 from "@/assets/payout2.png";
+import payout3 from "@/assets/payout3.png";
+import payout4 from "@/assets/payout4.png";
+import result1 from "@/assets/result1.png";
+
 
 const propFirms = [
   { name: "FTMO", desc: "Najpoznatija prop firma sa rigoroznim evaluation procesom. Do 90% profit split i računi do $200,000.", logo: ftmoLogo, url: "https://ftmo.com", highlight: "Do $200K račun" },
@@ -19,11 +25,15 @@ const propFirms = [
 ];
 
 const payoutImages = [
-  { src: ftmoPayouts, alt: "FTMO milionski payouti traderima", label: "FTMO Payouti" },
-  { src: ftmoPayoutBanner, alt: "FTMO $200K račun", label: "FTMO $200K" },
-  { src: ftmScreenshot, alt: "Funded Trader Markets platforma", label: "FTM Platforma" },
-  { src: topstepPayout, alt: "TopStep payout potvrda", label: "TopStep Payout" },
-  { src: instantfundingPayout, alt: "Instant Funding payout", label: "Instant Funding Payout" },
+  { src: chart1, alt: "Live trading sa nasim mentorima", label: "Live Trading" },
+  { src: myfxbook1, alt: "Statistika jednog od nasih studenata", label: "MyFXBook Statistika Studenta" },
+  { src: payout1, alt: "Jedan od mnogih payouta kao rezultat nasih studenata", label: "Payout Naseg Studenta" },
+  { src: payout3, alt: "Jedan od mnogih payouta kao rezultat nasih studenata", label: "Payout Naseg Studenta" },
+  { src: myfxbook2, alt: "Statistika jednog od nasih studenata", label: "MyFXBook Statistika Studenta" },
+  { src: payout2, alt: "Jedan od mnogih payouta kao rezultat nasih studenata", label: "Payout Naseg Studenta" },
+  { src: result1, alt: "Rezultat jednog od nasih trejdova", label: "Rezultat Jednog Od Nasih Trejdera" },
+  { src: payout4, alt: "Jedan od mnogih payouta kao rezultat nasih studenata", label: "Payout Naseg Studenta" },
+  { src: chart2, alt: "Live trading sa nasim mentorima", label: "Live Trading" },
 ];
 
 const PropFirmsSection = () => {
@@ -78,7 +88,7 @@ const PropFirmsSection = () => {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
             {payoutImages.map((img, i) => (
               <Card key={i} className="overflow-hidden group transition-all hover:shadow-lg hover:border-gold/30">
-                <AspectRatio ratio={16 / 10}>
+                <AspectRatio ratio={24 / 16}>
                   <img src={img.src} alt={img.alt} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
                 </AspectRatio>
                 <CardContent className="p-3">

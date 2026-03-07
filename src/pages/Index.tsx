@@ -121,6 +121,22 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Call to action */}
+      <section className="bg-gold/10">
+        <div className="container mx-auto px-4 py-20">
+          <div className="text-center mb-12">
+            <Badge variant="secondary" className="mb-4 text-gold">KUPI</Badge>
+            <h2 className="text-3xl font-bold md:text-4xl">Dokazi isplatu</h2>
+            <p className="mt-3 text-muted-foreground max-w-lg mx-auto">Iskoristi ovaj mogućnost i ostvari svoj novac</p>
+            <div className="mt-6 flex justify-center">
+              <Button className="w-full md:w-auto bg-gold hover:bg-gold/20" href="https://academy.trade.hr/kupi" target="_blank" rel="noopener noreferrer">
+                KUPI
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* How it works */}
       <section className="border-y bg-muted/30">
         <div className="container mx-auto px-4 py-20">
