@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { TrendingUp, BarChart3, BookOpen, Users, ArrowRight, Shield, Target, Zap, CheckCircle, Star, Play, GraduationCap, Clock, Globe } from "lucide-react";
 import PropFirmsSection from "@/components/PropFirmsSection";
+import PackagesSection from "@/components/PackagesSection";
 import { useRanking } from "@/contexts/RankingContext";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
