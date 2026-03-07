@@ -15,6 +15,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = (location.state as any)?.redirect || "/admin";
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
