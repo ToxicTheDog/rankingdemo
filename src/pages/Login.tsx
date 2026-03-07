@@ -27,7 +27,7 @@ const Login = () => {
     if (success) {
       toast({ title: "Success!", description: "Welcome Back." });
       
-      navigate("/admin");
+      navigate(redirectTo);
     } else {
       toast({ title: "Error", description: "Wrong Email or Password", variant: "destructive" });
     }
