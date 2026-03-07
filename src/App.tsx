@@ -11,6 +11,7 @@ import Mentori from "./pages/Mentori";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Payment from "./pages/Payment";
 import Tests from "./pages/pyramidVisualizer";
 
 const queryClient = new QueryClient();
