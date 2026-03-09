@@ -61,7 +61,7 @@ const Index = () => {
         <div className="container relative mx-auto px-4 py-24 text-center md:py-36">
           <div className="animate-slide-up mx-auto inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm text-muted-foreground mb-6">
             <TrendingUp className="h-4 w-4 text-gold" />
-            Škola Tradinga — Uči od najboljih
+            Akademija Tradinga — Uči od najboljih
           </div>
           <h1 className="animate-slide-up mx-auto max-w-4xl text-4xl font-extrabold tracking-tight md:text-6xl lg:text-7xl" style={{ animationDelay: '0.1s' }}>
             Postani uspešan{" "}
@@ -71,7 +71,7 @@ const Index = () => {
             {" "}uz naše mentore
           </h1>
           <p className="animate-slide-up mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl" style={{ animationDelay: '0.2s' }}>
-            Nauči trading od iskusnih mentora kroz strukturisane kurseve, live sesije i podršku zajednice. Bez obzira da li si početnik ili napredni trader.
+            Nauči trading od iskusnih edukatora kroz struktuirane nivoe znanja i napredovanja, live sesije i podršku zajednice. Bez obzira da li si početnik ili napredni trader. Zaradi dok učiš, jer sve što trguju oni, trguj i ti - sve je transparentno.
           </p>
           <div className="animate-slide-up mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center" style={{ animationDelay: '0.3s' }}>
             <Link to="/mentori">

@@ -16,8 +16,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, CheckCircle, Clock, History, Upload, ImageIcon } from "lucide-react";
+import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, CheckCircle, Clock, History, Upload, ImageIcon, Network } from "lucide-react";
 import { uploadImage } from "@/lib/api";
+import { Link, useLocation } from "react-router-dom";
+
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
 } from "recharts";
@@ -321,6 +323,11 @@ const Admin = () => {
             <TabsTrigger value="history" className="flex-1 min-w-[70px] text-xs sm:text-sm">
               <History className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> History
             </TabsTrigger>
+            <Link key="/testing" to="/testing">
+              <TabsTrigger value="network" className="flex-1 min-w-[70px] text-xs sm:text-sm">
+                <Network className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Network
+              </TabsTrigger>
+            </Link>
           </TabsList>
 
           {/* ═══ DASHBOARD TAB ═══ */}
