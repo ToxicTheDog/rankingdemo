@@ -9,6 +9,7 @@ import { useRanking } from "@/contexts/RankingContext";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import RankTitleBadge from "@/components/RankTitleBadge";
+import MarketTicker from "@/components/MarketTicker";
 
 const features = [
   { icon: <BarChart3 className="h-8 w-8 text-gold" />, title: "Tehnička Analiza", desc: "Naučite da čitate grafikone, prepoznajete paterne i donosite informisane odluke." },
@@ -89,6 +90,10 @@ const Index = () => {
             <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-gold" /> 1000+ studenata</span>
           </div>
         </div>
+      </section>
+
+      <section>
+        <MarketTicker />
       </section>
 
       {/* Stats */}

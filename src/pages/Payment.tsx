@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 const packageData: Record<string, { name: string; firstMonthPrice: number; monthlyPrice: number; oneTimeFee: number; points: string; icon: React.ReactNode; color: string }> = {
-  elitni: { name: "Elitni Paket", firstMonthPrice: 230, monthlyPrice: 189.99, oneTimeFee: 50, points: "19VB", icon: <Crown className="h-6 w-6" />, color: "from-yellow-400 to-amber-600" },
+  elitni: { name: "Elitni Paket", firstMonthPrice: 239, monthlyPrice: 189.99, oneTimeFee: 50, points: "19VB", icon: <Crown className="h-6 w-6" />, color: "from-yellow-400 to-amber-600" },
   premium: { name: "Premium Paket", firstMonthPrice: 199, monthlyPrice: 149.99, oneTimeFee: 35, points: "15VB", icon: <Star className="h-6 w-6" />, color: "from-purple-400 to-purple-600" },
   liderski: { name: "Liderski Paket", firstMonthPrice: 159, monthlyPrice: 109.99, oneTimeFee: 25, points: "11VB", icon: <Shield className="h-6 w-6" />, color: "from-blue-400 to-blue-600" },
   investitorski: { name: "Investitorski Paket", firstMonthPrice: 129, monthlyPrice: 79.99, oneTimeFee: 20, points: "8VB", icon: <TrendingUp className="h-6 w-6" />, color: "from-emerald-400 to-emerald-600" },
@@ -27,7 +27,6 @@ const Payment = () => {
   if (!isLoggedIn) return <Navigate to="/login" state={{ redirect: `/payment?package=${pkgId}` }} />;
   if (!pkg) return <Navigate to="/" />;
 
-  const totalFirst = pkg.firstMonthPrice + pkg.oneTimeFee;
 
   const handlePurchase = async () => {
     setLoading(true);
@@ -72,7 +71,7 @@ const Payment = () => {
               </div>
               <div className="flex justify-between text-sm border-t border-border pt-3">
                 <span className="font-semibold">Ukupno danas</span>
-                <span className="font-bold text-gold text-lg">{totalFirst}€</span>
+                <span className="font-bold text-gold text-lg">{pkg.firstMonthPrice}€</span>
               </div>
               <div className="text-xs text-muted-foreground text-center">
                 Zatim {pkg.monthlyPrice}€/mesečno
