@@ -12,11 +12,11 @@ import RankTitleBadge from "@/components/RankTitleBadge";
 
 const features = [
   { icon: <BarChart3 className="h-8 w-8 text-gold" />, title: "Tehnička Analiza", desc: "Naučite da čitate grafikone, prepoznajete paterne i donosite informisane odluke." },
-  { icon: <BookOpen className="h-8 w-8 text-gold" />, title: "Edukativni Materijali", desc: "Video lekcije, e-knjige i webinari dostupni 24/7 za sve nivoe znanja." },
-  { icon: <Shield className="h-8 w-8 text-gold" />, title: "Risk Management", desc: "Zaštitite svoj kapital sa proverenim strategijama upravljanja rizikom." },
-  { icon: <Target className="h-8 w-8 text-gold" />, title: "Live Trading", desc: "Pratite naše mentore uživo dok trguju i učite iz njihovih odluka u realnom vremenu." },
-  { icon: <Users className="h-8 w-8 text-gold" />, title: "Zajednica", desc: "Pridružite se zajednici od 1000+ aktivnih tradera koji dele iskustva i strategije." },
-  { icon: <Zap className="h-8 w-8 text-gold" />, title: "Signali", desc: "Dnevni trading signali sa jasnim ulaznim i izlaznim tačkama za brz start." },
+  { icon: <BookOpen className="h-8 w-8 text-gold" />, title: "Fundamentalna analiza da bude pored nje", desc: "Bez znanja o realnim pokretačima marketa, nikada nećete imati ispravan pogled na chart! Prave čari uspešnog trgovanja počinju tek kada savladate fundamentalnu analizu!" },
+  { icon: <Shield className="h-8 w-8 text-gold" />, title: "Sentimentalna analiza", desc: "Upoznavanje sa psihologijom mase i njihovim pozicijama otkriva ti smernice da budeš pametniji investitor i da trgujes poput onih 5% tradera koji rade suprotno od mase!" },
+  { icon: <Target className="h-8 w-8 text-gold" />, title: "Psihologija trgovanja", desc: "Možete imati sjajnu strategiju, medjutim bez adekvatne psihologije u ovom svetu berzanskog trgovanja, može jako skupo da vas košta! Kako je potrebno razumeti market, tako isto je potrebno razumeti sebe kako funkcionišemo." },
+  { icon: <Users className="h-8 w-8 text-gold" />, title: "Live trading", desc: "Jednostavnost i lepota online rada na marketu je u tome što možete pratiti iskusnije od sebe i ljude koji trguju nekoliko godina i prateći njihove odluke i korake, možete uvećavati sebi kapital i dok učite!" },
+  { icon: <Zap className="h-8 w-8 text-gold" />, title: "Benefiti naše zajednice", desc: "Biti deo istomišljenika koji su orjentisani na jedini pravi i ispravan put u trgovanju je najveća privilegija! U svetu velikih laži i manipulacija, Trading University bira svoje članove i gradi elitnu zajednicu tradera! Postani deo nas još danas!" },
 ];
 
 const stats = [
@@ -39,10 +39,10 @@ const testimonials = [
 ];
 
 const steps = [
-  { step: "01", title: "Registruj se", desc: "Napravi besplatan nalog i pristupi uvodnim materijalima." },
-  { step: "02", title: "Izaberi mentora", desc: "Pronađi mentora koji odgovara tvom stilu i ciljevima." },
-  { step: "03", title: "Uči i vežbaj", desc: "Prati kurseve, gledaj live sesije i vežbaj na demo računu." },
-  { step: "04", title: "Trguj profitabilno", desc: "Primeni naučeno i počni da ostvaruješ rezultate." },
+  { step: "01", title: "Faza Buđenja", desc: "Ovde prvi put stvarno ulaziš u svet tradinga i počinješ da trgovanje posmatraš kao profesiju. Učiš osnove, terminologiju, kako tržište diše i gradiš prvi ozbiljan mindset pobednika." },
+  { step: "02", title: "Faza Izgradnje", desc: "Počinje razvijanje sistema, discipline i navike da se trguje po pravilima, a ne po emociji. Tu se gradi temelj: analiza, risk management, strpljenje i rutina ozbiljnog tradera." },
+  { step: "03", title: "Faza Stabilizacije", desc: "Ovde više ne lutaš, ne skačeš sa strategije na strategiju i ne pucaš pod pritiskom. Rezultati postaju mirniji, konzistentniji i javlja se ono najvažnije — kontrola nad sobom i nad procesom." },
+  { step: "04", title: "Faza Profitabilnosti", desc: "Ovde više ne tražiš sreću, nego izvodiš rezultat. Imaš sistem, identitet, disciplinu i jasnu strukturu, pa profit postaje posledica znanja, iskustva i mentalne snage." },
 ];
 
 const Index = () => {
@@ -133,7 +133,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-20">
           <div className="text-center mb-12">
             <Badge variant="secondary" className="mb-4 text-gold">Kako funkcioniše</Badge>
-            <h2 className="text-3xl font-bold md:text-4xl">Počni za 4 koraka</h2>
+            <h2 className="text-3xl font-bold md:text-4xl">4 faze do tvoje profitabilnosti uz nas</h2>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 stagger-children">
             {steps.map((s) => (
