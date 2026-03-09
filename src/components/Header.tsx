@@ -12,7 +12,7 @@ const Header = () => {
   const navItems = [
     { to: "/", label: "Početna" },
     { to: "/mentori", label: "Mentori" },
-    { to: "/admin", label: "Admin" },
+    ...(isLoggedIn ? [{ to: "/admin", label: "Admin" }] : []),
     // ...(isAdmin ? [{ to: "/admin", label: "Admin" }] : []),
   ];
 
