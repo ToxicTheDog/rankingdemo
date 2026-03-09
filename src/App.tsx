@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Mentori from "./pages/Mentori";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
+import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import Payment from "./pages/Payment";
 import Tests from "./pages/pyramidVisualizer";
