@@ -61,6 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   const isLoggedIn = !!session;
+  const token = session?.access_token ?? null;
   const isAdmin = false; // TODO: implement role checking
 
   const fetchProfile = async (userId: string) => {
