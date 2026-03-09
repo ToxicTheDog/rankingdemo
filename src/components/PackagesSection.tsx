@@ -105,7 +105,7 @@ const PackagesSection = () => {
 
   const handleBuy = (pkg: Package) => {
     if (!isLoggedIn) {
-      navigate("/login", { state: { redirect: `/payment?package=${pkg.id}` } });
+      navigate(`/register?package=${pkg.id}`);
     } else {
       navigate(`/payment?package=${pkg.id}`);
     }

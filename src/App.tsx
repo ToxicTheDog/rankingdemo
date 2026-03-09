@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Mentori from "./pages/Mentori";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
+import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import Payment from "./pages/Payment";
 import Tests from "./pages/pyramidVisualizer";
@@ -29,6 +30,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/mentori" element={<Mentori />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/testing" element={<Tests />} />
