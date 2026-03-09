@@ -17,6 +17,7 @@ interface Profile {
 interface AuthContextType {
   isAdmin: boolean;
   isLoggedIn: boolean;
+  token: string | null;
   user: User | null;
   profile: Profile | null;
   session: Session | null;
