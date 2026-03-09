@@ -41,6 +41,7 @@ export interface RegisterData {
 const AuthContext = createContext<AuthContextType>({
   isAdmin: false,
   isLoggedIn: false,
+  token: null,
   user: null,
   profile: null,
   session: null,
