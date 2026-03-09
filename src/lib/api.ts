@@ -236,6 +236,14 @@ export interface DashboardStats {
   totalClients: number;
 }
 
+/* ═══════════════════════════════════════
+   USERNAME CHECK
+   ═══════════════════════════════════════ */
+
+/** GET /auth/check-username?username=... — Check if username is available */
+export const checkUsernameAvailability = (username: string) =>
+  request<{ available: boolean }>(`/auth/check-username?username=${encodeURIComponent(username)}`);
+
 /** GET /dashboard/stats — Fetch dashboard KPIs */
 export const getDashboardStats = (token: string) =>
   request<DashboardStats>("/dashboard/stats", { token });
