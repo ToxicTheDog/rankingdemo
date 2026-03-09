@@ -14,13 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          address: string
+          birth_date: string
+          city_country: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string
+          updated_at: string
+          user_id: string
+          username: string
+        }
+        Insert: {
+          address: string
+          birth_date: string
+          city_country: string
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          phone: string
+          updated_at?: string
+          user_id: string
+          username: string
+        }
+        Update: {
+          address?: string
+          birth_date?: string
+          city_country?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string
+          updated_at?: string
+          user_id?: string
+          username?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      check_username_available: {
+        Args: { requested_username: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
