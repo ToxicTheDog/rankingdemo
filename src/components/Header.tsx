@@ -12,7 +12,8 @@ const Header = () => {
   const navItems = [
     { to: "/", label: "Početna" },
     { to: "/mentori", label: "Mentori" },
-    ...(isAdmin ? [{ to: "/admin", label: "Admin" }] : []),
+    { to: "/admin", label: "Admin" },
+    // ...(isAdmin ? [{ to: "/admin", label: "Admin" }] : []),
   ];
 
   return (
