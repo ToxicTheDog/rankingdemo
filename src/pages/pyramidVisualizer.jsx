@@ -2,21 +2,21 @@ import { useState, useMemo, useRef, useCallback, useEffect, memo } from "react";
 
 // ─── KONFIGURACIJA ────────────────────────────────────────────────────────────
 const RANKS = {
-  none: { label: "Bez ranga", bonusPct: 0, minPts: 0, color: "#4a5568", dim: "#1a1f2e" },
-  rising: { label: "Rising Leader", bonusPct: 10, minPts: 75, color: "#68d391", dim: "#0f2a1a" },
-  teamLeader: { label: "Team Leader", bonusPct: 15, minPts: 150, color: "#4dc0b5", dim: "#0a2020" },
-  golden: { label: "Golden Leader", bonusPct: 20, minPts: 300, color: "#f6c90e", dim: "#221e00" },
-  silver: { label: "Silver Leader", bonusPct: 25, minPts: 600, color: "#94a3b8", dim: "#151d2a" },
-  platinum: { label: "Platinum Leader", bonusPct: 30, minPts: 1200, color: "#7dd3fc", dim: "#061520" },
-  elite: { label: "Elite Leader", bonusPct: 35, minPts: 2000, color: "#f97316", dim: "#200d00" },
+  none:        { label: "Bez ranga",         bonusPct: 0,  minPts: 0,    color: "#4a5568", dim: "#1a1f2e" },
+  rising:      { label: "Rising Leader",      bonusPct: 10, minPts: 75,   color: "#68d391", dim: "#0f2a1a" },
+  teamLeader:  { label: "Team Leader",        bonusPct: 15, minPts: 150,  color: "#4dc0b5", dim: "#0a2020" },
+  golden:      { label: "Golden Leader",      bonusPct: 20, minPts: 300,  color: "#f6c90e", dim: "#221e00" },
+  silver:      { label: "Silver Leader",      bonusPct: 25, minPts: 600,  color: "#94a3b8", dim: "#151d2a" },
+  platinum:    { label: "Platinum Leader",    bonusPct: 30, minPts: 1200, color: "#7dd3fc", dim: "#061520" },
+  elite:       { label: "Elite Leader",       bonusPct: 35, minPts: 2000, color: "#f97316", dim: "#200d00" },
   presidental: { label: "Presidental Leader", bonusPct: 40, minPts: 3500, color: "#f472b6", dim: "#200a15" },
-  diamond: { label: "Diamond Leader", bonusPct: 45, minPts: 5000, color: "#c084fc", dim: "#130820" },
+  diamond:     { label: "Diamond Leader",     bonusPct: 45, minPts: 5000, color: "#c084fc", dim: "#130820" },
 };
-const RANK_KEYS = Object.keys(RANKS);
-const RANK_TIERS = Object.entries(RANKS).filter(([, v]) => v.minPts > 0).sort(([, a], [, b]) => b.minPts - a.minPts);
-const TOP_RANK = "diamond";
-const DIAMOND_B = 5;
-const MAX_ITER = 20;
+const RANK_KEYS  = Object.keys(RANKS);
+const RANK_TIERS = Object.entries(RANKS).filter(([,v]) => v.minPts > 0).sort(([,a],[,b]) => b.minPts - a.minPts);
+const TOP_RANK   = "diamond";
+const DIAMOND_B  = 5;
+const MAX_ITER   = 20;
 
 // ─── RANK PARTICLE KONFIGURACIJA ─────────────────────────────────────────────
 // Svaki rang ima jedinstven vizuelni jezik:
@@ -29,20 +29,20 @@ const MAX_ITER = 20;
 //   presidental → eksplozija zvezda iz centra
 //   diamond     → 3 ukrštene orbite + veći dijamanti
 const RANK_CFG = {
-  none: null,
-  rising: { type: "bubbles", count: 7, color: "#68d391" },
-  teamLeader: { type: "dualOrbit", count: 8, color: "#4dc0b5" },
-  golden: { type: "stars", count: 8, color: "#f6c90e" },
-  silver: { type: "sparkle", count: 10, color: "#94a3b8" },
-  platinum: { type: "ringDots", count: 10, color: "#7dd3fc" },
-  elite: { type: "flames", count: 8, color: "#f97316" },
-  presidental: { type: "burst", count: 12, color: "#f472b6" },
-  diamond: { type: "triOrbit", count: 16, color: "#c084fc" },
+  none:        null,
+  rising:      { type: "bubbles",    count: 7,  color: "#68d391" },
+  teamLeader:  { type: "dualOrbit",  count: 8,  color: "#4dc0b5" },
+  golden:      { type: "stars",      count: 8,  color: "#f6c90e" },
+  silver:      { type: "sparkle",    count: 10, color: "#94a3b8" },
+  platinum:    { type: "ringDots",   count: 10, color: "#7dd3fc" },
+  elite:       { type: "flames",     count: 8,  color: "#f97316" },
+  presidental: { type: "burst",      count: 12, color: "#f472b6" },
+  diamond:     { type: "triOrbit",   count: 16, color: "#c084fc" },
 };
 
 const RankParticles = memo(({ x, y, rank }) => {
   const canvasRef = useRef(null);
-  const animRef = useRef(null);
+  const animRef   = useRef(null);
 
   useEffect(() => {
     const cfg = RANK_CFG[rank];
@@ -56,9 +56,9 @@ const RankParticles = memo(({ x, y, rank }) => {
 
     // --- Helper: hex to rgba ---
     function rgba(hex, a) {
-      const r = parseInt(hex.slice(1, 3), 16);
-      const g = parseInt(hex.slice(3, 5), 16);
-      const b = parseInt(hex.slice(5, 7), 16);
+      const r = parseInt(hex.slice(1,3),16);
+      const g = parseInt(hex.slice(3,5),16);
+      const b = parseInt(hex.slice(5,7),16);
       return `rgba(${r},${g},${b},${a})`;
     }
 
@@ -153,11 +153,11 @@ const RankParticles = memo(({ x, y, rank }) => {
     function drawStar(ctx, sx, sy, size) {
       ctx.beginPath();
       for (let i = 0; i < 5; i++) {
-        const a = (i * 4 * Math.PI / 5) - Math.PI / 2;
+        const a  = (i * 4 * Math.PI / 5) - Math.PI / 2;
         const a2 = ((i * 4 + 2) * Math.PI / 5) - Math.PI / 2;
-        if (i === 0) ctx.moveTo(sx + Math.cos(a) * size, sy + Math.sin(a) * size);
-        else ctx.lineTo(sx + Math.cos(a) * size, sy + Math.sin(a) * size);
-        ctx.lineTo(sx + Math.cos(a2) * size * 0.38, sy + Math.sin(a2) * size * 0.38);
+        if (i === 0) ctx.moveTo(sx + Math.cos(a)*size, sy + Math.sin(a)*size);
+        else         ctx.lineTo(sx + Math.cos(a)*size, sy + Math.sin(a)*size);
+        ctx.lineTo(sx + Math.cos(a2)*size*0.38, sy + Math.sin(a2)*size*0.38);
       }
       ctx.closePath();
       ctx.fill();
@@ -177,12 +177,12 @@ const RankParticles = memo(({ x, y, rank }) => {
         const a = arm * Math.PI / 2;
         ctx.beginPath();
         ctx.moveTo(sx, sy);
-        ctx.lineTo(sx + Math.cos(a) * size * 2, sy + Math.sin(a) * size * 2);
+        ctx.lineTo(sx + Math.cos(a)*size*2, sy + Math.sin(a)*size*2);
         ctx.lineWidth = size * 0.6;
         ctx.stroke();
       }
       ctx.beginPath();
-      ctx.arc(sx, sy, size * 0.5, 0, Math.PI * 2);
+      ctx.arc(sx, sy, size * 0.5, 0, Math.PI*2);
       ctx.fill();
     }
 
@@ -197,10 +197,10 @@ const RankParticles = memo(({ x, y, rank }) => {
         for (const p of pts) {
           p.y += p.vy;
           p.x = p.baseX + Math.sin(t * 1.5 + p.phase) * 4;
-          if (p.y < cy - NH * 0.6) { p.y = cy + NH * 0.25; p.x = p.baseX = cx + (Math.random() - 0.5) * NW * 0.65; }
+          if (p.y < cy - NH * 0.6) { p.y = cy + NH * 0.25; p.x = p.baseX = cx + (Math.random()-0.5)*NW*0.65; }
           const fade = Math.max(0, (cy - p.y) / (NH * 0.7));
           ctx.globalAlpha = p.alpha * fade;
-          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
           // Hollow bubble look
           ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.stroke();
           ctx.globalAlpha = p.alpha * fade * 0.25;
@@ -216,13 +216,13 @@ const RankParticles = memo(({ x, y, rank }) => {
           const flicker = 0.5 + 0.5 * Math.sin(t * 3 + p.phase);
           ctx.globalAlpha = p.alpha * (0.5 + 0.5 * flicker);
           ctx.fillStyle = col;
-          ctx.beginPath(); ctx.arc(px, py, p.size, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(px, py, p.size, 0, Math.PI*2); ctx.fill();
           // Tail
           const tailAngle = p.angle - 0.15 * p.orbit;
           const tx = cx + Math.cos(tailAngle) * rx;
           const ty = cy + Math.sin(tailAngle) * ry;
           ctx.globalAlpha = p.alpha * 0.25;
-          ctx.beginPath(); ctx.arc(tx, ty, p.size * 0.6, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(tx, ty, p.size * 0.6, 0, Math.PI*2); ctx.fill();
         }
       } else if (cfg.type === "stars") {
         for (const p of pts) {
@@ -235,7 +235,7 @@ const RankParticles = memo(({ x, y, rank }) => {
           drawStar(ctx, px, py, sz);
           // Glow dot below star
           ctx.globalAlpha = 0.2;
-          ctx.beginPath(); ctx.arc(px, py, sz * 1.8, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(px, py, sz * 1.8, 0, Math.PI*2); ctx.fill();
         }
       } else if (cfg.type === "sparkle") {
         for (const p of pts) {
@@ -252,7 +252,7 @@ const RankParticles = memo(({ x, y, rank }) => {
         // Rotirajući prsten sa svetlucavim tačkama
         const ringAngle = t * 0.6;
         ctx.globalAlpha = 0.25;
-        ctx.beginPath(); ctx.arc(cx, cy, 35, 0, Math.PI * 2);
+        ctx.beginPath(); ctx.arc(cx, cy, 35, 0, Math.PI*2);
         ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.stroke();
         for (const p of pts) {
           const a = p.angle + ringAngle;
@@ -261,28 +261,28 @@ const RankParticles = memo(({ x, y, rank }) => {
           const bright = (Math.sin(a * 2 + t * 2) + 1) / 2;
           ctx.globalAlpha = 0.3 + bright * 0.6;
           ctx.fillStyle = col;
-          ctx.beginPath(); ctx.arc(px, py, p.size * (0.7 + bright * 0.6), 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(px, py, p.size * (0.7 + bright * 0.6), 0, Math.PI*2); ctx.fill();
         }
       } else if (cfg.type === "flames") {
         for (const p of pts) {
-          p.y += p.vy;
-          p.x += p.vx;
+          p.y  += p.vy;
+          p.x  += p.vx;
           p.life += 0.02;
           if (p.life > p.maxLife) {
             p.life = 0;
-            p.x = cx + (Math.random() - 0.5) * NW * 0.55;
+            p.x = cx + (Math.random()-0.5)*NW*0.55;
             p.y = cy + NH * 0.25;
             p.vy = -(0.6 + Math.random() * 1.0);
-            p.vx = (Math.random() - 0.5) * 0.3;
+            p.vx = (Math.random()-0.5)*0.3;
           }
           const prog = p.life / p.maxLife;
-          const fadeA = prog < 0.3 ? prog / 0.3 : 1 - (prog - 0.3) / 0.7;
+          const fadeA = prog < 0.3 ? prog/0.3 : 1 - (prog-0.3)/0.7;
           // color: orange → yellow → transparent
           const r = 249, g = Math.round(115 + 140 * prog), b = 22;
           ctx.globalAlpha = fadeA * 0.8;
-          ctx.fillStyle = `rgb(${r},${Math.min(255, g)},${b})`;
+          ctx.fillStyle = `rgb(${r},${Math.min(255,g)},${b})`;
           ctx.beginPath();
-          ctx.ellipse(p.x, p.y, p.size * (1 - prog * 0.5), p.size * 1.5 * (1 - prog * 0.3), 0, 0, Math.PI * 2);
+          ctx.ellipse(p.x, p.y, p.size*(1-prog*0.5), p.size*1.5*(1-prog*0.3), 0, 0, Math.PI*2);
           ctx.fill();
         }
       } else if (cfg.type === "burst") {
@@ -292,7 +292,7 @@ const RankParticles = memo(({ x, y, rank }) => {
             if (p.r >= p.targetR) { p.expanding = false; }
           } else {
             p.r -= 0.3;
-            if (p.r <= 10) { p.r = 10; p.targetR = 28 + Math.random() * 16; p.expanding = true; }
+            if (p.r <= 10) { p.r = 10; p.targetR = 28 + Math.random()*16; p.expanding = true; }
           }
           p.angle += p.speed;
           const px = cx + Math.cos(p.angle) * p.r;
@@ -315,9 +315,9 @@ const RankParticles = memo(({ x, y, rank }) => {
             drawDiamond(ctx, px, py, p.size);
             // Inner glow
             ctx.globalAlpha = p.alpha * pulse * 0.3;
-            ctx.beginPath(); ctx.arc(px, py, p.size * 2, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(px, py, p.size * 2, 0, Math.PI*2); ctx.fill();
           } else {
-            ctx.beginPath(); ctx.arc(px, py, p.size, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(px, py, p.size, 0, Math.PI*2); ctx.fill();
           }
         }
       }
@@ -395,11 +395,11 @@ function runBonusPass(childrenOf, roots, ptsOf, rankOf) {
           } else { ndPts += subtotals.get(cid); maxND = Math.max(maxND, maxPctBelow.get(cid)); }
         }
         effectivePct = Math.max(0, myPct - maxND);
-        bonusPoints = (effectivePct / 100) * ndPts + diamondChildBonus;
-        bonusRule = diamondChildren.length > 0 ? "diamond-split" : "differential";
+        bonusPoints  = (effectivePct / 100) * ndPts + diamondChildBonus;
+        bonusRule    = diamondChildren.length > 0 ? "diamond-split" : "differential";
       } else {
         effectivePct = Math.max(0, myPct - maxPctChild);
-        bonusPoints = (effectivePct / 100) * subPts;
+        bonusPoints  = (effectivePct / 100) * subPts;
       }
 
       results.set(id, {
@@ -415,62 +415,86 @@ function runBonusPass(childrenOf, roots, ptsOf, rankOf) {
 }
 
 function computeBonuses(users) {
-  const childrenOf = new Map(), ptsOf = new Map(), roots = [];
+  const childrenOf = new Map(), ptsOf = new Map(), parentOf = new Map(), roots = [];
   for (const u of users) {
     childrenOf.set(u.id, []);
     ptsOf.set(u.id, u.directPoints ?? 0);
+    parentOf.set(u.id, u.invitedBy ?? null);
   }
   for (const u of users) {
     if (u.invitedBy && childrenOf.has(u.invitedBy)) childrenOf.get(u.invitedBy).push(u.id);
     else roots.push(u.id);
   }
 
-  // Početni rangovi = samo direktni poeni
   const rankOf = new Map();
   for (const u of users) rankOf.set(u.id, assignRank(u.directPoints ?? 0));
 
+  // BFS top-down: dete ne sme biti viši rang od roditelja
+  function applyRankCap() {
+    const queue = [...roots];
+    while (queue.length > 0) {
+      const id  = queue.shift();
+      const pid = parentOf.get(id);
+      if (pid && rankOf.has(pid)) {
+        const pi = RANK_KEYS.indexOf(rankOf.get(pid));
+        const ci = RANK_KEYS.indexOf(rankOf.get(id));
+        if (ci > pi) rankOf.set(id, rankOf.get(pid));
+      }
+      for (const cid of childrenOf.get(id)) queue.push(cid);
+    }
+  }
+
   let iteration = 0, passResults;
 
-  // Ponavljaj dok se rangovi ne stabilizuju
   while (iteration < MAX_ITER) {
     iteration++;
+    applyRankCap();
     passResults = runBonusPass(childrenOf, roots, ptsOf, rankOf);
+    // Rank = assignRank(subtotalPoints) — zbir cele mreže
     let changed = false;
     for (const u of users) {
-      const r = passResults.get(u.id);
-      const total = (u.directPoints ?? 0) + (r?.bonusPoints ?? 0);
-      const newRank = assignRank(total);
+      const r       = passResults.get(u.id);
+      const subtotal = r?.subtotalPoints ?? (u.directPoints ?? 0);
+      const rawIdx  = RANK_KEYS.indexOf(assignRank(subtotal));
+      const pid     = parentOf.get(u.id);
+      const capIdx  = pid && rankOf.has(pid) ? RANK_KEYS.indexOf(rankOf.get(pid)) : RANK_KEYS.length - 1;
+      const newRank = RANK_KEYS[Math.min(rawIdx, capIdx)];
       if (newRank !== rankOf.get(u.id)) { rankOf.set(u.id, newRank); changed = true; }
     }
     if (!changed) break;
   }
 
-  // Obogaćujemo rezultate
   const enriched = new Map();
   for (const u of users) {
-    const r = passResults.get(u.id);
-    const totalPts = (u.directPoints ?? 0) + (r?.bonusPoints ?? 0);
-    const myRank = rankOf.get(u.id);
-    const next = getNextRank(myRank);
-    const curMin = RANKS[myRank]?.minPts ?? 0;
-    const nextMin = next ? (RANKS[next]?.minPts ?? 0) : totalPts;
-    const ptsToNext = next ? Math.max(0, nextMin - totalPts) : 0;
-    const progress = next ? Math.min(1, (totalPts - curMin) / Math.max(1, nextMin - curMin)) : 1;
+    const r           = passResults.get(u.id);
+    const subtotal    = r?.subtotalPoints ?? (u.directPoints ?? 0);
+    const bonusPts    = r?.bonusPoints ?? 0;
+    const myRank      = rankOf.get(u.id);
+    const pid         = parentOf.get(u.id);
+    const rawRank     = assignRank(subtotal);
+    const cappedByParent = rawRank !== myRank && pid != null;
+    const next        = getNextRank(myRank);
+    const curMin      = RANKS[myRank]?.minPts ?? 0;
+    const nextMin     = next ? (RANKS[next]?.minPts ?? 0) : subtotal;
+    const ptsToNext   = next ? Math.max(0, nextMin - subtotal) : 0;
+    const progress    = next ? Math.min(1, (subtotal - curMin) / Math.max(1, nextMin - curMin)) : 1;
 
     enriched.set(u.id, {
       rank: myRank, rankPct: RANKS[myRank]?.bonusPct ?? 0, rankMinPts: curMin,
-      directPoints: u.directPoints ?? 0,
-      bonusPoints: r?.bonusPoints ?? 0,
-      totalPtsForRank: Math.round(totalPts * 100) / 100,
-      subtotalPoints: r?.subtotalPoints ?? 0,
-      maxPctBelowMe: r?.maxPctBelowMe ?? 0,
+      directPoints:   u.directPoints ?? 0,
+      subtotalPoints: subtotal,
+      bonusPoints:    bonusPts,
+      maxPctBelowMe:  r?.maxPctBelowMe ?? 0,
       myEffectivePct: r?.myEffectivePct ?? 0,
-      bonusRule: r?.bonusRule ?? "differential",
+      bonusRule:      r?.bonusRule ?? "differential",
       diamondChildren: r?.diamondChildren ?? [],
       nextRank: next, nextRankLabel: next ? RANKS[next]?.label : null,
       nextRankMinPts: next ? nextMin : null,
       ptsToNextRank: Math.round(ptsToNext * 100) / 100,
       progress,
+      cappedByParent,
+      parentRank: pid ? rankOf.get(pid) : null,
+      rawRankIfUncapped: cappedByParent ? rawRank : null,
     });
   }
 
@@ -479,13 +503,13 @@ function computeBonuses(users) {
 
 // ─── PODRAZUMEVANI PODACI ─────────────────────────────────────────────────────
 const DEFAULT_USERS = [
-  { id: "alice", directPoints: 4800, invitedBy: null },
-  { id: "bob", directPoints: 3400, invitedBy: "alice" },
-  { id: "carol", directPoints: 1100, invitedBy: "alice" },
-  { id: "mike", directPoints: 570, invitedBy: "bob" },
-  { id: "sarah", directPoints: 280, invitedBy: "bob" },
-  { id: "eve", directPoints: 100, invitedBy: "carol" },
-  { id: "frank", directPoints: 60, invitedBy: "mike" },
+  { id: "alice",  directPoints: 4800, invitedBy: null    },
+  { id: "bob",    directPoints: 3400, invitedBy: "alice" },
+  { id: "carol",  directPoints: 1100, invitedBy: "alice" },
+  { id: "mike",   directPoints: 570,  invitedBy: "bob"   },
+  { id: "sarah",  directPoints: 280,  invitedBy: "bob"   },
+  { id: "eve",    directPoints: 100,  invitedBy: "carol" },
+  { id: "frank",  directPoints: 60,   invitedBy: "mike"  },
 ];
 
 // ─── LAYOUT ───────────────────────────────────────────────────────────────────
@@ -507,87 +531,94 @@ function flattenTree(node, absX, absY, nodes, edges) {
   const childX = absX + NW + HGAP;
   for (const child of node.children) {
     const cAbsY = absY + node.cy - node.subtreeH / 2 + child.y;
-    const cMY = cAbsY + child.cy;
+    const cMY   = cAbsY + child.cy;
     edges.push({ x1: absX + NW, y1: myY + NH / 2, x2: childX, y2: cMY });
     flattenTree(child, childX, cAbsY, nodes, edges);
   }
 }
 
 // ─── SVG ČVOR ─────────────────────────────────────────────────────────────────
-function NodeRect({ x, y, id, rankOf, results, selected, onSelect }) {
+function NodeRect({ x, y, id, rankOf, results, selected, onSelect, highlighted }) {
   const myRank = rankOf.get(id) ?? "none";
-  const rank = RANKS[myRank] ?? RANKS.none;
-  const b = results.get(id);
-  const isSel = selected === id;
-  const isDia = myRank === TOP_RANK;
-  const prog = b?.progress ?? 0;
-  const bonus = b?.bonusPoints ?? 0;
-  const total = b?.totalPtsForRank ?? 0;
+  const rank   = RANKS[myRank] ?? RANKS.none;
+  const b      = results.get(id);
+  const isSel  = selected === id;
+  const isDia  = myRank === TOP_RANK;
+  const prog   = b?.progress ?? 0;
+  const bonus  = b?.bonusPoints ?? 0;
+  const subtotal = b?.subtotalPoints ?? 0;
+  const isCapped = b?.cappedByParent ?? false;
 
   return (
     <g onClick={e => { e.stopPropagation(); onSelect(id); }} style={{ cursor: "pointer" }}>
       {/* Particle animacije po rangu */}
       <RankParticles x={x} y={y} rank={myRank} nodeW={NW} nodeH={NH} />
 
+      {/* Search highlight — zlatni okvir */}
+      {highlighted && !isSel && (
+        <rect x={x-5} y={y-5} width={NW+10} height={NH+10} rx={14}
+          fill="none" stroke="#f6c90e" strokeWidth={2}
+          style={{ filter: "drop-shadow(0 0 8px #f6c90e99)" }} />
+      )}
+
       {/* Animirani glow za sve rangove iznad none */}
       {myRank !== "none" && (
         <rect
-          x={x - 8} y={y - 8} width={NW + 16} height={NH + 16} rx={17}
+          x={x-8} y={y-8} width={NW+16} height={NH+16} rx={17}
           fill={rank.color}
           className={`rank-glow-${myRank}`}
-          style={{
-            filter: `blur(${myRank === "diamond" ? 14 :
-              myRank === "presidental" ? 11 :
-                myRank === "elite" ? 10 :
-                  myRank === "platinum" ? 9 :
-                    myRank === "silver" ? 8 :
-                      myRank === "golden" ? 9 :
-                        myRank === "teamLeader" ? 7 : 6
-              }px)`
-          }}
+          style={{ filter: `blur(${
+            myRank === "diamond"    ? 14 :
+            myRank === "presidental"? 11 :
+            myRank === "elite"      ? 10 :
+            myRank === "platinum"   ? 9  :
+            myRank === "silver"     ? 8  :
+            myRank === "golden"     ? 9  :
+            myRank === "teamLeader" ? 7  : 6
+          }px)` }}
         />
       )}
       {isSel && (
-        <rect x={x - 4} y={y - 4} width={NW + 8} height={NH + 8} rx={14}
+        <rect x={x-4} y={y-4} width={NW+8} height={NH+8} rx={14}
           fill="none" stroke={rank.color} strokeWidth={2} opacity={0.35}
           style={{ filter: "blur(6px)" }} />
       )}
       <rect x={x} y={y} width={NW} height={NH} rx={10}
         fill={isSel ? rank.dim : "#0d1117"}
-        stroke={isSel ? rank.color : "#21262d"} strokeWidth={isSel ? 1.5 : 1} />
+        stroke={isSel ? rank.color : highlighted ? "#f6c90e44" : "#21262d"} strokeWidth={isSel ? 1.5 : highlighted ? 1 : 1} />
 
       {/* Leva traka */}
-      <rect x={x} y={y + 10} width={3} height={NH - 20} rx={2} fill={rank.color} />
+      <rect x={x} y={y+10} width={3} height={NH-20} rx={2} fill={rank.color} />
 
       {/* Ikonica */}
       {isDia
-        ? <rect x={x + 13} y={y + 22} width={11} height={11} rx={2} fill={rank.color} opacity={0.9} transform={`rotate(45,${x + 18.5},${y + 27.5})`} />
-        : <circle cx={x + 19} cy={y + 27} r={5} fill={rank.color} opacity={0.85} />}
+        ? <rect x={x+13} y={y+22} width={11} height={11} rx={2} fill={rank.color} opacity={0.9} transform={`rotate(45,${x+18.5},${y+27.5})`} />
+        : <circle cx={x+19} cy={y+27} r={5} fill={rank.color} opacity={0.85} />}
 
       {/* Ime */}
-      <text x={x + 34} y={y + 22} fill="#e6edf3" fontSize={13} fontWeight={700} fontFamily="monospace">
+      <text x={x+34} y={y+22} fill={highlighted ? "#f6c90e" : "#e6edf3"} fontSize={13} fontWeight={700} fontFamily="monospace">
         {id.length > 15 ? id.slice(0, 15) + "…" : id}
       </text>
 
-      {/* Rang */}
-      <text x={x + 34} y={y + 37} fill={rank.color} fontSize={10} fontFamily="monospace" opacity={0.9}>
-        {rank.label}  {rank.bonusPct}%
+      {/* Rang + capped oznaka */}
+      <text x={x+34} y={y+37} fill={rank.color} fontSize={10} fontFamily="monospace" opacity={0.9}>
+        {rank.label}  {rank.bonusPct}%{isCapped ? "  ⚠" : ""}
       </text>
 
-      {/* Poeni: direktni + bonus = ukupno */}
-      <text x={x + 34} y={y + 51} fill="#484f58" fontSize={9} fontFamily="monospace">
-        {b?.directPoints ?? 0} + {bonus} = {total} pts
+      {/* Poeni mreže i bonus */}
+      <text x={x+34} y={y+51} fill="#484f58" fontSize={9} fontFamily="monospace">
+        mreža: {subtotal} pts
       </text>
 
       {/* Bonus (desno) */}
-      <text x={x + NW - 10} y={y + 34} fill={bonus > 0 ? "#3fb950" : "#30363d"}
+      <text x={x+NW-10} y={y+34} fill={bonus > 0 ? "#3fb950" : "#30363d"}
         fontSize={13} fontWeight={700} fontFamily="monospace" textAnchor="end">
         +{bonus}
       </text>
 
       {/* Progres bara */}
-      <rect x={x + 8} y={y + NH - 13} width={NW - 16} height={4} rx={2} fill="#1c2128" />
-      <rect x={x + 8} y={y + NH - 13} width={Math.max(0, (NW - 16) * prog)} height={4} rx={2}
+      <rect x={x+8} y={y+NH-13} width={NW-16} height={4} rx={2} fill="#1c2128" />
+      <rect x={x+8} y={y+NH-13} width={Math.max(0, (NW-16) * prog)} height={4} rx={2}
         fill={b?.nextRank ? (RANKS[b.nextRank]?.color ?? rank.color) : rank.color} opacity={0.75} />
     </g>
   );
@@ -597,11 +628,12 @@ const IS = { background: "#0d1117", border: "1px solid #21262d", borderRadius: 8
 
 // ─── APP ──────────────────────────────────────────────────────────────────────
 export default function App() {
-  const [users, setUsers] = useState(DEFAULT_USERS);
-  const [selected, setSelected] = useState(null);
-  const [form, setForm] = useState({ id: "", pts: "", parent: "" });
+  const [users,     setUsers]     = useState(DEFAULT_USERS);
+  const [selected,  setSelected]  = useState(null);
+  const [form,      setForm]      = useState({ id: "", pts: "", parent: "" });
   const [transform, setTransform] = useState({ x: 40, y: 40, scale: 0.85 });
-  const svgRef = useRef(null);
+  const [search,    setSearch]    = useState("");
+  const svgRef    = useRef(null);
   const isPanning = useRef(false);
   const lastMouse = useRef({ x: 0, y: 0 });
 
@@ -620,7 +652,15 @@ export default function App() {
   }, [users]);
 
   const totalBonus = useMemo(() => { let t = 0; for (const r of results.values()) t += r.bonusPoints; return t; }, [results]);
-  const sel = selected ? results.get(selected) : null;
+
+  // Search — filtrira korisnike po username-u
+  const searchResults = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return [];
+    return users.filter(u => u.id.toLowerCase().includes(q));
+  }, [search, users]);
+  const highlightedIds = useMemo(() => new Set(searchResults.map(u => u.id)), [searchResults]);
+  const sel     = selected ? results.get(selected) : null;
   const selUser = selected ? users.find(u => u.id === selected) : null;
   const selRank = sel ? (RANKS[sel.rank] ?? RANKS.none) : null;
 
@@ -656,9 +696,9 @@ export default function App() {
     return () => el.removeEventListener("wheel", onWheel);
   }, [onWheel]);
 
-  const zoomTo = f => setTransform(t => ({ ...t, scale: Math.min(2.5, Math.max(0.1, t.scale * f)) }));
+  const zoomTo    = f  => setTransform(t => ({ ...t, scale: Math.min(2.5, Math.max(0.1, t.scale * f)) }));
   const resetView = () => setTransform({ x: 40, y: 40, scale: 0.85 });
-  const fitView = () => {
+  const fitView   = () => {
     const el = svgRef.current; if (!el) return;
     const { width, height } = el.getBoundingClientRect();
     const s = Math.min((width - 80) / canvasW, (height - 80) / canvasH, 1);
@@ -672,7 +712,7 @@ export default function App() {
     setForm({ id: "", pts: "", parent: "" });
   };
   const removeUser = id => { setUsers(u => u.filter(x => x.id !== id && x.invitedBy !== id)); if (selected === id) setSelected(null); };
-  const updatePts = (id, val) => setUsers(u => u.map(x => x.id === id ? { ...x, directPoints: parseInt(val) || 0 } : x));
+  const updatePts  = (id, val) => setUsers(u => u.map(x => x.id === id ? { ...x, directPoints: parseInt(val) || 0 } : x));
 
   const previewRank = form.pts ? assignRank(parseInt(form.pts) || 0) : null;
 
@@ -705,26 +745,80 @@ export default function App() {
       `}</style>
 
       {/* ZAGLAVLJE */}
-      <div style={{ padding: "10px 20px", borderBottom: "1px solid #21262d", display: "flex", alignItems: "center", gap: 20, flexShrink: 0, background: "#0d1117" }}>
+      <div style={{ padding: "12px 24px", borderBottom: "1px solid #21262d", display: "flex", alignItems: "center", gap: 18, flexShrink: 0, background: "#0d1117" }}>
         {/* Nazad dugme */}
-        <a href="/admin" style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", background: "#161b22", border: "1px solid #30363d", borderRadius: 8, color: "#8b949e", fontSize: 11, textDecoration: "none", whiteSpace: "nowrap", transition: "all 0.15s", flexShrink: 0 }}
-          onMouseOver={e => { e.currentTarget.style.borderColor = "#3fb950"; e.currentTarget.style.color = "#e6edf3"; }}
-          onMouseOut={e => { e.currentTarget.style.borderColor = "#30363d"; e.currentTarget.style.color = "#8b949e"; }}>
+        <a href="/admin" style={{ display:"flex", alignItems:"center", gap:7, padding:"8px 16px", background:"#161b22", border:"1px solid #30363d", borderRadius:9, color:"#8b949e", fontSize:13, fontWeight:600, textDecoration:"none", whiteSpace:"nowrap", transition:"all 0.15s", flexShrink:0 }}
+          onMouseOver={e=>{e.currentTarget.style.borderColor="#3fb950";e.currentTarget.style.color="#e6edf3";}}
+          onMouseOut={e=>{e.currentTarget.style.borderColor="#30363d";e.currentTarget.style.color="#8b949e";}}>
           ← Nazad na početnu
         </a>
+
+        {/* Branding */}
         <div>
-          <div style={{ fontSize: 9, letterSpacing: 3, color: "#3fb950", textTransform: "uppercase" }}>Network Marketing Sistem — v5</div>
-          <div style={{ fontSize: 15, fontWeight: 800, color: "#e6edf3" }}>Mapa Mreže · Iterativni Rang</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: "#3fb950", textTransform: "uppercase", marginBottom: 2 }}>Network Marketing Sistem</div>
+          <div style={{ fontSize: 20, fontWeight: 800, color: "#e6edf3", lineHeight: 1 }}>Mapa Mreže</div>
         </div>
-        <div style={{ fontSize: 10, color: "#484f58", display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ color: "#3fb950" }}>●</span> Stabilizovano za <span style={{ color: "#e6edf3", fontWeight: 700 }}>{iterations}</span> iteracija
+
+        {/* Divider */}
+        <div style={{ width: 1, height: 36, background: "#21262d", flexShrink: 0 }} />
+
+        {/* Search */}
+        <div style={{ position: "relative", flexShrink: 0, width: 220 }}>
+          <span style={{ position:"absolute", left:10, top:"50%", transform:"translateY(-50%)", color:"#484f58", fontSize:14, pointerEvents:"none" }}>⌕</span>
+          <input
+            placeholder="Traži korisnika..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            style={{ ...IS, paddingLeft: 30, width: "100%", fontSize: 13 }}
+          />
+          {search && (
+            <button onClick={() => setSearch("")}
+              style={{ position:"absolute", right:8, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:"#484f58", cursor:"pointer", fontSize:14, padding:0, lineHeight:1 }}>
+              ✕
+            </button>
+          )}
         </div>
-        <div style={{ fontSize: 10, color: "#8b949e", display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ color: "#c084fc" }}>💎</span> Diamond→Diamond: fiksnih <span style={{ color: "#c084fc", fontWeight: 700 }}>5%</span>
-        </div>
-        <div style={{ marginLeft: "auto", textAlign: "right" }}>
-          <div style={{ fontSize: 9, color: "#484f58", textTransform: "uppercase", letterSpacing: 2 }}>Ukupni bonusi</div>
-          <div style={{ fontSize: 18, fontWeight: 800, color: "#3fb950" }}>{totalBonus.toFixed(2)} pts</div>
+
+        {/* Search rezultati dropdown */}
+        {searchResults.length > 0 && (
+          <div style={{ position:"absolute", top:62, left:294, zIndex:100, background:"#161b22", border:"1px solid #30363d", borderRadius:9, overflow:"hidden", minWidth:220, boxShadow:"0 8px 24px #00000088" }}>
+            {searchResults.slice(0, 6).map(u => {
+              const r = results.get(u.id);
+              const rk = r ? RANKS[r.rank] : RANKS.none;
+              return (
+                <div key={u.id}
+                  onClick={() => { setSelected(u.id); setSearch(""); }}
+                  style={{ display:"flex", alignItems:"center", gap:8, padding:"9px 14px", cursor:"pointer", borderBottom:"1px solid #21262d" }}
+                  onMouseOver={e=>e.currentTarget.style.background="#1c2128"}
+                  onMouseOut={e=>e.currentTarget.style.background="transparent"}>
+                  <div style={{ width:7, height:7, borderRadius:"50%", background: rk.color, flexShrink:0 }} />
+                  <span style={{ fontSize:13, color:"#e6edf3", fontWeight:600 }}>{u.id}</span>
+                  <span style={{ fontSize:11, color: rk.color, marginLeft:"auto" }}>{rk.label}</span>
+                </div>
+              );
+            })}
+            {searchResults.length > 6 && (
+              <div style={{ padding:"7px 14px", fontSize:11, color:"#484f58" }}>+{searchResults.length - 6} još...</div>
+            )}
+          </div>
+        )}
+
+        {/* Statistike u navbaru */}
+        <div style={{ display:"flex", gap:20, marginLeft:"auto" }}>
+          <div style={{ textAlign:"center" }}>
+            <div style={{ fontSize:11, color:"#484f58", letterSpacing:1 }}>ITERACIJE</div>
+            <div style={{ fontSize:18, fontWeight:800, color:"#484f58" }}>{iterations}</div>
+          </div>
+          <div style={{ width:1, background:"#21262d" }} />
+          <div style={{ textAlign:"center" }}>
+            <div style={{ fontSize:11, color:"#484f58", letterSpacing:1 }}>UKUPNI BONUSI</div>
+            <div style={{ fontSize:18, fontWeight:800, color:"#3fb950" }}>{totalBonus.toFixed(2)} pts</div>
+          </div>
+          <div style={{ width:1, background:"#21262d" }} />
+          <div style={{ textAlign:"center" }}>
+            <div style={{ fontSize:11, color:"#484f58", letterSpacing:1 }}>ČLANOVA</div>
+            <div style={{ fontSize:18, fontWeight:800, color:"#e6edf3" }}>{users.length}</div>
+          </div>
         </div>
       </div>
 
@@ -769,24 +863,25 @@ export default function App() {
               {nodes.map(n => (
                 <NodeRect key={n.id} x={n.x} y={n.y} id={n.id}
                   rankOf={rankOf} results={results}
-                  selected={selected} onSelect={setSelected} />
+                  selected={selected} onSelect={setSelected}
+                  highlighted={highlightedIds.has(n.id)} />
               ))}
             </g>
           </svg>
 
           {/* Zoom */}
           <div style={{ position: "absolute", bottom: 20, right: 20, display: "flex", flexDirection: "column", gap: 6 }}>
-            {[{ l: "+", a: () => zoomTo(1.25), t: "Uvećaj" }, { l: "−", a: () => zoomTo(0.8), t: "Umanji" }, { l: "⊡", a: fitView, t: "Uklopi sve" }, { l: "↺", a: resetView, t: "Resetuj" }].map(b => (
+            {[{l:"+",a:()=>zoomTo(1.25),t:"Uvećaj"},{l:"−",a:()=>zoomTo(0.8),t:"Umanji"},{l:"⊡",a:fitView,t:"Uklopi sve"},{l:"↺",a:resetView,t:"Resetuj"}].map(b => (
               <button key={b.l} onClick={b.a} title={b.t}
-                style={{ width: 36, height: 36, background: "#0d1117", border: "1px solid #30363d", borderRadius: 8, color: "#e6edf3", fontSize: 16, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "monospace" }}
-                onMouseOver={e => e.currentTarget.style.borderColor = "#3fb950"}
-                onMouseOut={e => e.currentTarget.style.borderColor = "#30363d"}>
+                style={{ width:36,height:36,background:"#0d1117",border:"1px solid #30363d",borderRadius:8,color:"#e6edf3",fontSize:16,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace" }}
+                onMouseOver={e=>e.currentTarget.style.borderColor="#3fb950"}
+                onMouseOut={e=>e.currentTarget.style.borderColor="#30363d"}>
                 {b.l}
               </button>
             ))}
-            <div style={{ fontSize: 10, color: "#484f58", textAlign: "center" }}>{Math.round(transform.scale * 100)}%</div>
+            <div style={{ fontSize:10, color:"#484f58", textAlign:"center" }}>{Math.round(transform.scale*100)}%</div>
           </div>
-          <div style={{ position: "absolute", bottom: 20, left: 20, fontSize: 10, color: "#21262d" }}>
+          <div style={{ position:"absolute", bottom:20, left:20, fontSize:10, color:"#21262d" }}>
             Skrol = zoom · Vuci = pomeraj · Klikni = detalji
           </div>
         </div>
@@ -809,152 +904,173 @@ export default function App() {
               </div>
 
               {sel.bonusRule === "diamond-split" && (
-                <div style={{ background: "rgba(192,132,252,0.07)", border: "1px solid rgba(192,132,252,0.2)", borderRadius: 8, padding: "7px 10px", marginBottom: 10, fontSize: 10, color: "#c084fc" }}>
-                  💎 Diamond pravilo aktivno
+                <div style={{ background:"rgba(192,132,252,0.07)", border:"1px solid rgba(192,132,252,0.2)", borderRadius:8, padding:"7px 10px", marginBottom:10, fontSize:10, color:"#c084fc" }}>
+                  💎 Diamond tantijema aktivna
                   {sel.diamondChildren.map(dc => (
-                    <div key={dc.id} style={{ marginTop: 3, color: "#a855f7" }}>· {dc.id}: 5% × {dc.pts}pts = +{dc.bonus.toFixed(2)}</div>
+                    <div key={dc.id} style={{ marginTop:3, color:"#a855f7" }}>· {dc.id}: 5% × {dc.pts}pts = +{dc.bonus.toFixed(2)}</div>
                   ))}
                 </div>
               )}
 
-              {/* Pregled poena */}
-              <div style={{ background: "#0d1117", borderRadius: 8, padding: "10px 12px", marginBottom: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                  <span style={{ fontSize: 11, color: "#484f58" }}>Direktni poeni</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#e6edf3" }}>{sel.directPoints}</span>
+              {/* Rank cap upozorenje */}
+              {sel.cappedByParent && (
+                <div style={{ background:"rgba(248,199,78,0.07)", border:"1px solid rgba(248,199,78,0.3)", borderRadius:8, padding:"8px 11px", marginBottom:10, fontSize:10, color:"#e3b341" }}>
+                  ⚠ Rang ograničen roditeljom
+                  <div style={{ marginTop:4, color:"#8b949e", fontSize:9 }}>
+                    Bez ograničenja bi bio: <span style={{ color: RANKS[sel.rawRankIfUncapped]?.color ?? "#e3b341", fontWeight:700 }}>{RANKS[sel.rawRankIfUncapped]?.label ?? sel.rawRankIfUncapped}</span>
+                  </div>
+                  <div style={{ marginTop:2, color:"#8b949e", fontSize:9 }}>
+                    Max dozvoljeni rang: <span style={{ color: RANKS[sel.parentRank]?.color ?? "#e3b341", fontWeight:700 }}>{RANKS[sel.parentRank]?.label ?? sel.parentRank}</span>
+                  </div>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                  <span style={{ fontSize: 11, color: "#484f58" }}>+ Bonus poeni</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#3fb950" }}>+{sel.bonusPoints}</span>
+              )}
+
+              {/* Pregled bodova */}
+              <div style={{ background:"#0d1117", borderRadius:8, padding:"10px 12px", marginBottom:12 }}>
+                {/* Lični bodovi */}
+                <div style={{ display:"flex", justifyContent:"space-between", marginBottom:4 }}>
+                  <span style={{ fontSize:11, color:"#484f58" }}>Lični bodovi</span>
+                  <span style={{ fontSize:12, fontWeight:700, color:"#8b949e" }}>{sel.directPoints}</span>
                 </div>
-                <div style={{ borderTop: "1px solid #21262d", paddingTop: 5, display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: 11, color: "#e6edf3", fontWeight: 700 }}>= Ukupno za rang</span>
-                  <span style={{ fontSize: 13, fontWeight: 800, color: selRank.color }}>{sel.totalPtsForRank}</span>
+                {/* Bodovi mreže = subtotal */}
+                <div style={{ borderTop:"1px solid #21262d", paddingTop:6, marginBottom:2 }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline" }}>
+                    <span style={{ fontSize:11, color:"#e6edf3", fontWeight:700 }}>Bodovi mreže</span>
+                    <span style={{ fontSize:15, fontWeight:800, color: selRank.color }}>{sel.subtotalPoints}</span>
+                  </div>
+                  <div style={{ fontSize:9, color:"#30363d", marginTop:2 }}>
+                    (lični + svi u mreži ispod) → određuje rang · min za {selRank.label}: {sel.rankMinPts}
+                  </div>
                 </div>
-                <div style={{ fontSize: 9, color: "#30363d", marginTop: 4 }}>
-                  Min za {selRank.label}: {sel.rankMinPts} pts
+                {/* Bonus zarada */}
+                <div style={{ borderTop:"1px solid #21262d", paddingTop:6, marginTop:6, display:"flex", justifyContent:"space-between", alignItems:"baseline" }}>
+                  <span style={{ fontSize:11, color:"#484f58" }}>Zarada (bonus)</span>
+                  <span style={{ fontSize:15, fontWeight:800, color:"#3fb950" }}>+{sel.bonusPoints}</span>
+                </div>
+                <div style={{ fontSize:9, color:"#30363d", marginTop:2 }}>
+                  {sel.myEffectivePct}% × {sel.subtotalPoints} bodova mreže = {sel.bonusPoints}
                 </div>
               </div>
 
               {/* Bonus kalkulacija */}
-              <div style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 9, color: "#484f58", letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>Kako se računa bonus</div>
+              <div style={{ marginBottom:12 }}>
+                <div style={{ fontSize:9, color:"#484f58", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>Kako se računa bonus</div>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: "#484f58" }}>Tvoj rang %</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: selRank.color }}>{sel.rankPct}%</span>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+                  <span style={{ fontSize:11, color:"#484f58" }}>Tvoj rang %</span>
+                  <span style={{ fontSize:12, fontWeight:700, color: selRank.color }}>{sel.rankPct}%</span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: "#484f58" }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+                  <span style={{ fontSize:11, color:"#484f58" }}>
                     Max % ispod
-                    <span style={{ display: "block", fontSize: 9, color: "#30363d" }}>
+                    <span style={{ display:"block", fontSize:9, color:"#30363d" }}>
                       (najviši % već uzet od nekog ispod)
                     </span>
                   </span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#f85149" }}>−{sel.maxPctBelowMe}%</span>
+                  <span style={{ fontSize:12, fontWeight:700, color:"#f85149" }}>−{sel.maxPctBelowMe}%</span>
                 </div>
-                <div style={{ borderTop: "1px solid #21262d", paddingTop: 6, display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: "#e6edf3", fontWeight: 700 }}>
+                <div style={{ borderTop:"1px solid #21262d", paddingTop:6, display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+                  <span style={{ fontSize:11, color:"#e6edf3", fontWeight:700 }}>
                     Efektivni %
-                    <span style={{ display: "block", fontSize: 9, color: "#30363d", fontWeight: 400 }}>
+                    <span style={{ display:"block", fontSize:9, color:"#30363d", fontWeight:400 }}>
                       ({sel.rankPct}% − {sel.maxPctBelowMe}% = {sel.myEffectivePct}%)
                     </span>
                   </span>
-                  <span style={{ fontSize: 13, fontWeight: 800, color: "#e3b341" }}>{sel.myEffectivePct}%</span>
+                  <span style={{ fontSize:13, fontWeight:800, color:"#e3b341" }}>{sel.myEffectivePct}%</span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: "#484f58" }}>Poeni podstabla</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#8b949e" }}>× {sel.subtotalPoints}</span>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+                  <span style={{ fontSize:11, color:"#484f58" }}>Bodovi mreže</span>
+                  <span style={{ fontSize:12, fontWeight:700, color:"#8b949e" }}>× {sel.subtotalPoints}</span>
                 </div>
-                <div style={{ borderTop: "1px solid #21262d", paddingTop: 6, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 11, color: "#e6edf3", fontWeight: 700 }}>= Bonus</span>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: "#3fb950" }}>+{sel.bonusPoints}</span>
+                <div style={{ borderTop:"1px solid #21262d", paddingTop:6, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                  <span style={{ fontSize:11, color:"#e6edf3", fontWeight:700 }}>= Zarada</span>
+                  <span style={{ fontSize:14, fontWeight:800, color:"#3fb950" }}>+{sel.bonusPoints}</span>
                 </div>
               </div>
 
               {/* Progres ka sledećem rangu */}
               {sel.nextRank ? (
-                <div style={{ borderTop: "1px solid #21262d", paddingTop: 10 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                    <span style={{ fontSize: 10, color: "#484f58" }}>Do: {sel.nextRankLabel}</span>
-                    <span style={{ fontSize: 10, color: RANKS[sel.nextRank]?.color }}>još {sel.ptsToNextRank} pts</span>
+                <div style={{ borderTop:"1px solid #21262d", paddingTop:10 }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
+                    <span style={{ fontSize:10, color:"#484f58" }}>Do: {sel.nextRankLabel}</span>
+                    <span style={{ fontSize:10, color: RANKS[sel.nextRank]?.color }}>još {sel.ptsToNextRank} pts</span>
                   </div>
-                  <div style={{ background: "#21262d", borderRadius: 4, height: 6, overflow: "hidden" }}>
-                    <div style={{ height: "100%", borderRadius: 4, background: RANKS[sel.nextRank]?.color, width: `${sel.progress * 100}%`, transition: "width 0.3s" }} />
+                  <div style={{ background:"#21262d", borderRadius:4, height:6, overflow:"hidden" }}>
+                    <div style={{ height:"100%", borderRadius:4, background: RANKS[sel.nextRank]?.color, width:`${sel.progress*100}%`, transition:"width 0.3s" }} />
                   </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 3 }}>
-                    <span style={{ fontSize: 9, color: "#30363d" }}>{sel.rankMinPts} pts</span>
-                    <span style={{ fontSize: 9, color: "#30363d" }}>{sel.nextRankMinPts} pts</span>
+                  <div style={{ display:"flex", justifyContent:"space-between", marginTop:3 }}>
+                    <span style={{ fontSize:9, color:"#30363d" }}>{sel.rankMinPts} pts</span>
+                    <span style={{ fontSize:9, color:"#30363d" }}>{sel.nextRankMinPts} pts</span>
                   </div>
                 </div>
               ) : (
-                <div style={{ borderTop: "1px solid #21262d", paddingTop: 10, textAlign: "center", fontSize: 11, color: "#c084fc" }}>
+                <div style={{ borderTop:"1px solid #21262d", paddingTop:10, textAlign:"center", fontSize:11, color:"#c084fc" }}>
                   👑 Maksimalni rang dostignut!
                 </div>
               )}
 
               {/* Uredi */}
-              <div style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid #21262d", display: "flex", gap: 8 }}>
+              <div style={{ marginTop:12, paddingTop:12, borderTop:"1px solid #21262d", display:"flex", gap:8 }}>
                 <input type="number" key={selUser.id} defaultValue={selUser.directPoints}
                   onBlur={e => updatePts(selUser.id, e.target.value)}
-                  placeholder="Direktni poeni" style={{ ...IS, flex: 1, background: "#0d1117" }} />
+                  placeholder="Direktni poeni" style={{ ...IS, flex:1, background:"#0d1117" }} />
                 <button onClick={() => removeUser(selUser.id)}
-                  style={{ background: "rgba(248,81,73,0.1)", color: "#f85149", border: "1px solid rgba(248,81,73,0.3)", borderRadius: 8, padding: "6px 10px", fontSize: 10, cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap" }}>
+                  style={{ background:"rgba(248,81,73,0.1)", color:"#f85149", border:"1px solid rgba(248,81,73,0.3)", borderRadius:8, padding:"6px 10px", fontSize:10, cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap" }}>
                   Ukloni
                 </button>
               </div>
             </div>
           ) : (
-            <div style={{ background: "#161b22", border: "1px solid #21262d", borderRadius: 12, padding: 20, textAlign: "center", color: "#30363d", fontSize: 11 }}>
+            <div style={{ background:"#161b22", border:"1px solid #21262d", borderRadius:12, padding:20, textAlign:"center", color:"#30363d", fontSize:11 }}>
               Klikni čvor za detalje
             </div>
           )}
 
           {/* Dodaj člana */}
-          <div style={{ background: "#161b22", border: "1px solid #21262d", borderRadius: 12, padding: 14 }}>
-            <div style={{ fontSize: 9, color: "#484f58", letterSpacing: 3, marginBottom: 12, textTransform: "uppercase" }}>Dodaj Člana</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ background:"#161b22", border:"1px solid #21262d", borderRadius:12, padding:14 }}>
+            <div style={{ fontSize:9, color:"#484f58", letterSpacing:3, marginBottom:12, textTransform:"uppercase" }}>Dodaj Člana</div>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
               <input placeholder="Korisničko ime" value={form.id}
                 onChange={e => setForm(f => ({ ...f, id: e.target.value }))}
                 onKeyDown={e => e.key === "Enter" && addUser()}
-                style={{ ...IS, background: "#0d1117" }} />
-              <select value={form.parent} onChange={e => setForm(f => ({ ...f, parent: e.target.value }))} style={{ ...IS, background: "#0d1117" }}>
+                style={{ ...IS, background:"#0d1117" }} />
+              <select value={form.parent} onChange={e => setForm(f => ({ ...f, parent: e.target.value }))} style={{ ...IS, background:"#0d1117" }}>
                 <option value="">Bez roditelja (koren)</option>
                 {users.map(u => <option key={u.id} value={u.id}>{u.id} ({results.get(u.id)?.totalPtsForRank ?? 0} pts)</option>)}
               </select>
               <input type="number" placeholder="Direktni poeni" value={form.pts}
                 onChange={e => setForm(f => ({ ...f, pts: e.target.value }))}
                 onKeyDown={e => e.key === "Enter" && addUser()}
-                style={{ ...IS, background: "#0d1117" }} />
+                style={{ ...IS, background:"#0d1117" }} />
               {/* Preview ranga */}
               {previewRank && (() => {
                 const pr = RANKS[previewRank];
                 return (
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 8px", background: "#0d1117", border: `1px solid ${pr.color}44`, borderRadius: 6 }}>
-                    <div style={{ width: 6, height: 6, borderRadius: previewRank === TOP_RANK ? 1 : "50%", background: pr.color, flexShrink: 0, transform: previewRank === TOP_RANK ? "rotate(45deg)" : "none" }} />
-                    <span style={{ fontSize: 10, color: pr.color }}>{pr.label} ({pr.bonusPct}%)</span>
-                    <span style={{ fontSize: 9, color: "#484f58", marginLeft: "auto" }}>početni rang</span>
+                  <div style={{ display:"flex", alignItems:"center", gap:6, padding:"5px 8px", background:"#0d1117", border:`1px solid ${pr.color}44`, borderRadius:6 }}>
+                    <div style={{ width:6, height:6, borderRadius: previewRank===TOP_RANK?1:"50%", background:pr.color, flexShrink:0, transform:previewRank===TOP_RANK?"rotate(45deg)":"none" }} />
+                    <span style={{ fontSize:10, color:pr.color }}>{pr.label} ({pr.bonusPct}%)</span>
+                    <span style={{ fontSize:9, color:"#484f58", marginLeft:"auto" }}>početni rang</span>
                   </div>
                 );
               })()}
-              <button onClick={addUser} style={{ background: "#238636", color: "#f0f6fc", border: "1px solid #2ea043", borderRadius: 8, padding: "8px 16px", fontWeight: 800, fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}>
+              <button onClick={addUser} style={{ background:"#238636", color:"#f0f6fc", border:"1px solid #2ea043", borderRadius:8, padding:"8px 16px", fontWeight:800, fontSize:12, cursor:"pointer", fontFamily:"inherit" }}>
                 + Dodaj
               </button>
             </div>
           </div>
 
           {/* Statistika */}
-          <div style={{ background: "rgba(63,185,80,0.03)", border: "1px solid rgba(63,185,80,0.12)", borderRadius: 12, padding: 14 }}>
-            <div style={{ fontSize: 9, color: "#484f58", letterSpacing: 3, marginBottom: 10, textTransform: "uppercase" }}>Statistika</div>
+          <div style={{ background:"rgba(63,185,80,0.03)", border:"1px solid rgba(63,185,80,0.12)", borderRadius:12, padding:14 }}>
+            <div style={{ fontSize:9, color:"#484f58", letterSpacing:3, marginBottom:10, textTransform:"uppercase" }}>Statistika</div>
             {[
-              ["Ukupno članova", users.length, "#8b949e"],
-              ["Direktnih poena", users.reduce((s, u) => s + (u.directPoints ?? 0), 0), "#8b949e"],
-              ["Ukupni bonusi", totalBonus.toFixed(2), "#3fb950"],
-              ["Iteracija", iterations, "#484f58"],
-            ].map(([l, v, c]) => (
-              <div key={l} style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                <span style={{ fontSize: 11, color: "#484f58" }}>{l}</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: c }}>{v}</span>
+              ["Ukupno članova",   users.length,           "#8b949e"],
+              ["Direktnih poena",  users.reduce((s,u) => s+(u.directPoints??0), 0), "#8b949e"],
+              ["Ukupni bonusi",    totalBonus.toFixed(2),   "#3fb950"],
+              ["Iteracija",        iterations,              "#484f58"],
+            ].map(([l,v,c]) => (
+              <div key={l} style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
+                <span style={{ fontSize:11, color:"#484f58" }}>{l}</span>
+                <span style={{ fontSize:12, fontWeight:700, color:c }}>{v}</span>
               </div>
             ))}
           </div>
