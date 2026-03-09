@@ -197,7 +197,7 @@ const Admin = () => {
   const [payoutHistory, setPayoutHistory] = useState<PayoutHistoryItem[]>([]);
   const [requestDetail, setRequestDetail] = useState<PayoutRequest | null>(null);
 
-  if (!isAdmin) return <Navigate to="/login" replace />;
+  // if (!isAdmin) return <Navigate to="/login" replace />;
 
   const sorted = [...users].sort((a, b) => b.score - a.score);
 
