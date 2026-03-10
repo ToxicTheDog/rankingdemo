@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { UserPlus, Check, X, Loader2, User, Mail, Phone, MapPin, Globe, AtSign, Lock, Calendar } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { checkUsernameAvailability } from "@/lib/api";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -17,7 +17,8 @@ const Register = () => {
     phone: "",
     birthDate: "",
     address: "",
-    cityCountry: "",
+    city: "",
+    country: "",
     username: "",
     password: "",
     confirmPassword: "",
@@ -30,7 +31,7 @@ const Register = () => {
   const packageId = searchParams.get("package");
   const { toast } = useToast();
 
-  // Debounced username check via Supabase RPC
+  // Debounced username check via backend API
   useEffect(() => {
     if (formData.username.length < 3) {
       setUsernameStatus("idle");
@@ -39,11 +40,8 @@ const Register = () => {
     setUsernameStatus("checking");
     const timeout = setTimeout(async () => {
       try {
-        const { data, error } = await supabase.rpc("check_username_available", {
-          requested_username: formData.username,
-        });
-        if (error) throw error;
-        setUsernameStatus(data ? "available" : "taken");
+        const res = await checkUsernameAvailability(formData.username);
+        setUsernameStatus(res.available ? "available" : "taken");
       } catch {
         setUsernameStatus("idle");
       }
@@ -78,7 +76,8 @@ const Register = () => {
       phone: formData.phone,
       birthDate: formData.birthDate,
       address: formData.address,
-      cityCountry: formData.cityCountry,
+      city: formData.city,
+      country: formData.country,
       username: formData.username,
     };
     const success = await register(regData);
@@ -106,7 +105,8 @@ const Register = () => {
     { id: "phone", label: "Broj telefona", icon: <Phone className="h-4 w-4" />, type: "tel", placeholder: "+381 60 123 4567" },
     { id: "birthDate", label: "Datum rođenja", icon: <Calendar className="h-4 w-4" />, type: "date", placeholder: "" },
     { id: "address", label: "Ulica i broj", icon: <MapPin className="h-4 w-4" />, type: "text", placeholder: "Knez Mihailova 10" },
-    { id: "cityCountry", label: "Grad i država", icon: <Globe className="h-4 w-4" />, type: "text", placeholder: "Beograd, Srbija" },
+    { id: "city", label: "Grad", icon: <Globe className="h-4 w-4" />, type: "text", placeholder: "Beograd" },
+    { id: "country", label: "Država", icon: <Globe className="h-4 w-4" />, type: "text", placeholder: "Srbija" },
   ];
 
   return (
@@ -114,11 +114,8 @@ const Register = () => {
       <Header />
       <main className="container mx-auto flex max-w-xl items-center justify-center px-4 py-12">
         <Card className="w-full border-border/50 shadow-2xl shadow-gold/5 overflow-hidden">
-          {/* Header gradient bar */}
           <div className="h-1.5 bg-gradient-to-r from-gold via-amber-500 to-gold" />
-
           <div className="p-8">
-            {/* Title */}
             <div className="text-center mb-8">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gold/10 border border-gold/20">
                 <UserPlus className="h-7 w-7 text-gold" />
@@ -133,7 +130,6 @@ const Register = () => {
 
             <CardContent className="p-0">
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Two-column grid for standard fields */}
                 <div className="grid gap-4 sm:grid-cols-2">
                   {fields.map((f) => (
                     <div key={f.id} className="space-y-1.5">
@@ -158,7 +154,7 @@ const Register = () => {
                   ))}
                 </div>
 
-                {/* Username — full width */}
+                {/* Username */}
                 <div className="space-y-1.5">
                   <Label htmlFor="username" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Username
@@ -190,7 +186,7 @@ const Register = () => {
                   )}
                 </div>
 
-                {/* Password fields — two columns */}
+                {/* Password fields */}
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="password" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">

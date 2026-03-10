@@ -1,10 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    API SERVICE
    Central place for all backend calls.
-   Change BASE_URL to point to your backend.
    ═══════════════════════════════════════════════════════════════ */
 
-const BASE_URL = "http://localhost:3000/api/v2";
+const BASE_URL = "http://localhost:5000/api/v2";
 
 /** Helper: make a fetch call with JSON body and auth header */
 async function request<T>(
@@ -33,14 +32,14 @@ async function request<T>(
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.message || `Request failed: ${res.status}`);
+    throw new Error(errorData.error || `Request failed: ${res.status}`);
   }
 
   return res.json();
 }
 
 /* ═══════════════════════════════════════
-   AUTH ENDPOINTS
+   AUTH ENDPOINTS (/auth)
    ═══════════════════════════════════════ */
 
 export interface LoginRequest {
@@ -50,53 +49,54 @@ export interface LoginRequest {
 
 export interface RegisterRequest {
   mail: string;
+  fullName: string;
   password: string;
-  name: string;
+  phoneNumber?: string;
+  date?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  username?: string;
 }
 
 export interface AuthResponse {
-  error: any;
+  success: boolean;
   token: string;
   user: {
     id: string;
-    mail: string;
-    name: string;
-    role: string; // "admin" | "user" etc.
+    username: string;
+    email: string;
+    role: string;
   };
 }
 
-/** POST /authorization/login
- * Body: { email: string, password: string }
- * Returns: { token, user: { id, email, name, role } }
- */
-export const authLogin = async (data: LoginRequest) => {
-  const res = await request<AuthResponse>("/auth/login", { method: "POST", body: data });
-  if (res.error) {
-    throw new Error(res.error);
-  }
-  return res;
-};
-
-/** POST /authorization/register
- * Body: { email: string, password: string, name: string }
- * Returns: { token, user: { id, email, name, role } }
- */
-export const authRegister = async (data: RegisterRequest) => {
-  const res = await request<AuthResponse>("/auth/register", { method: "POST", body: data });
-  if (res.error) {
-    throw new Error(res.error);
-  }
-  return res;
+export interface MeResponse {
+  success: boolean;
+  user: Record<string, any>;
 }
 
+/** POST /auth/login */
+export const authLogin = (data: LoginRequest) =>
+  request<AuthResponse>("/auth/login", { method: "POST", body: data });
+
+/** POST /auth/register */
+export const authRegister = (data: RegisterRequest) =>
+  request<AuthResponse>("/auth/register", { method: "POST", body: data });
+
+/** GET /auth/me — get current user from token */
+export const authMe = (token: string) =>
+  request<MeResponse>("/auth/me", { token });
+
+/** GET /auth/check-username?username=... — Check if username is available
+ *  NOTE: You need to implement this endpoint on your backend */
+export const checkUsernameAvailability = (username: string) =>
+  request<{ available: boolean }>(`/auth/check-username?username=${encodeURIComponent(username)}`);
+
 /* ═══════════════════════════════════════
-   IMAGE UPLOAD
+   IMAGE UPLOAD (/upload)
    ═══════════════════════════════════════ */
 
-/** POST /upload/image
- * Body: FormData with field "image" (file)
- * Returns: { url: string }
- */
+/** POST /upload/image — FormData with "image" field */
 export const uploadImage = async (file: File, token: string): Promise<{ url: string }> => {
   const formData = new FormData();
   formData.append("image", file);
@@ -113,14 +113,14 @@ export const uploadImage = async (file: File, token: string): Promise<{ url: str
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.message || `Upload failed: ${res.status}`);
+    throw new Error(errorData.error || `Upload failed: ${res.status}`);
   }
 
   return res.json();
 };
 
 /* ═══════════════════════════════════════
-   MENTORS ENDPOINTS
+   MENTORS (/mentors)
    ═══════════════════════════════════════ */
 
 export interface MentorData {
@@ -133,28 +133,24 @@ export interface MentorData {
   students: number;
 }
 
-/** GET /mentors — Fetch all mentors */
-export const getMentors = (token: string) =>
-  request<MentorData[]>("/mentors", { token });
+/** GET /mentors */
+export const getMentors = () =>
+  request<{ success: boolean; data: MentorData[] }>("/mentors");
 
-/** POST /mentors — Create a new mentor
- * Body: { name, description, score, imageUrl, specialty, students }
- */
+/** POST /mentors (zaštićeno) */
 export const createMentor = (data: Omit<MentorData, "id">, token: string) =>
-  request<MentorData>("/mentors", { method: "POST", body: data, token });
+  request<{ success: boolean; data: MentorData }>("/mentors", { method: "POST", body: data, token });
 
-/** PUT /mentors/:id — Update a mentor
- * Body: { name, description, score, imageUrl, specialty, students }
- */
+/** PUT /mentors/:id (zaštićeno) */
 export const updateMentor = (id: string, data: Omit<MentorData, "id">, token: string) =>
-  request<MentorData>(`/mentors/${id}`, { method: "PUT", body: data, token });
+  request<{ success: boolean; data: MentorData }>(`/mentors/${id}`, { method: "PUT", body: data, token });
 
-/** DELETE /mentors/:id — Delete a mentor */
+/** DELETE /mentors/:id (zaštićeno) */
 export const deleteMentor = (id: string, token: string) =>
   request<{ success: boolean }>(`/mentors/${id}`, { method: "DELETE", token });
 
 /* ═══════════════════════════════════════
-   AFFILIATES ENDPOINTS
+   AFFILIATES (/affiliates)
    ═══════════════════════════════════════ */
 
 export interface AffiliateData {
@@ -168,12 +164,24 @@ export interface AffiliateData {
   referrals: AffiliateData[];
 }
 
-/** GET /affiliates — Fetch all affiliate users */
+/** GET /affiliates */
 export const getAffiliates = (token: string) =>
-  request<AffiliateData[]>("/affiliates", { token });
+  request<{ success: boolean; data: AffiliateData[] }>("/affiliates", { token });
 
 /* ═══════════════════════════════════════
-   PAYOUT ENDPOINTS
+   RANKINGS (/rankings)
+   ═══════════════════════════════════════ */
+
+/** GET /rankings — top 50 by totalPoints */
+export const getRankings = () =>
+  request<{ success: boolean; data: any[] }>("/rankings");
+
+/** GET /rankings/me (zaštićeno) */
+export const getMyRanking = (token: string) =>
+  request<{ success: boolean; data: any }>("/rankings/me", { token });
+
+/* ═══════════════════════════════════════
+   PAYOUTS (/payouts)
    ═══════════════════════════════════════ */
 
 export interface PayoutRequestData {
@@ -200,53 +208,37 @@ export interface PayoutHistoryData extends PayoutRequestData {
   approvedDate: string;
 }
 
-/** GET /payouts/requests — Fetch pending payout requests */
+/** GET /payouts/requests (zaštićeno) */
 export const getPayoutRequests = (token: string) =>
-  request<PayoutRequestData[]>("/payouts/requests", { token });
+  request<{ success: boolean; data: PayoutRequestData[] }>("/payouts/requests", { token });
 
-/** POST /payouts/approve — Approve a payout request
- * Body: { requestId: string }
- */
+/** POST /payouts/requests (zaštićeno) — submit payout request */
+export const submitPayoutRequest = (
+  data: { id: string; payout: { amount: number; type: string; details: Record<string, string> } },
+  token: string
+) =>
+  request<{ success: boolean }>("/payouts/requests", { method: "POST", body: data, token });
+
+/** POST /payouts/approve (zaštićeno — admin) */
 export const approvePayout = (requestId: string, token: string) =>
   request<{ success: boolean }>("/payouts/approve", { method: "POST", body: { requestId }, token });
 
-/** GET /payouts/history — Fetch payout history */
+/** GET /payouts/history (zaštićeno) */
 export const getPayoutHistory = (token: string) =>
-  request<PayoutHistoryData[]>("/payouts/history", { token });
-
-/** POST /payouts/request — Submit a new payout request
- * Body: { method, amount, bankName?, iban?, swift?, walletAddress?, network? }
- */
-export const submitPayoutRequest = (
-  data: { method: string; amount: number; bankName?: string; iban?: string; swift?: string; walletAddress?: string; network?: string },
-  token: string
-) =>
-  request<{ success: boolean }>("/payouts/request", { method: "POST", body: data, token });
+  request<{ success: boolean; data: PayoutHistoryData[] }>("/payouts/history", { token });
 
 /* ═══════════════════════════════════════
-   DASHBOARD ENDPOINTS
+   DASHBOARD (/dashboard)
    ═══════════════════════════════════════ */
 
 export interface DashboardStats {
-  totalRevenue: number;
-  totalExpenses: number;
-  profit: number;
-  deactivated: number;
-  banned: number;
-  totalClients: number;
+  totalAffiliates: number;
+  pendingPayouts: number;
 }
 
-/* ═══════════════════════════════════════
-   USERNAME CHECK
-   ═══════════════════════════════════════ */
-
-/** GET /auth/check-username?username=... — Check if username is available */
-export const checkUsernameAvailability = (username: string) =>
-  request<{ available: boolean }>(`/auth/check-username?username=${encodeURIComponent(username)}`);
-
-/** GET /dashboard/stats — Fetch dashboard KPIs */
+/** GET /dashboard/stats (zaštićeno) */
 export const getDashboardStats = (token: string) =>
-  request<DashboardStats>("/dashboard/stats", { token });
+  request<{ success: boolean; data: DashboardStats }>("/dashboard/stats", { token });
 
 export interface TransactionData {
   id: string;
@@ -258,6 +250,6 @@ export interface TransactionData {
   status: "pending" | "completed" | "cancelled";
 }
 
-/** GET /dashboard/transactions — Fetch recent transactions */
+/** GET /dashboard/transactions (zaštićeno) */
 export const getTransactions = (token: string) =>
-  request<TransactionData[]>("/dashboard/transactions", { token });
+  request<{ success: boolean; data: TransactionData[] }>("/dashboard/transactions", { token });
