@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { getMentors, createMentor, updateMentor, deleteMentor, MentorData } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface RankedUser {
   id: string;
@@ -12,45 +14,88 @@ export interface RankedUser {
 
 interface RankingContextType {
   users: RankedUser[];
-  addUser: (user: Omit<RankedUser, "id">) => void;
-  updateUser: (id: string, user: Omit<RankedUser, "id">) => void;
-  deleteUser: (id: string) => void;
+  loading: boolean;
+  addUser: (user: Omit<RankedUser, "id">) => Promise<void>;
+  updateUser: (id: string, user: Omit<RankedUser, "id">) => Promise<void>;
+  deleteUser: (id: string) => Promise<void>;
+  refreshUsers: () => Promise<void>;
 }
-
-const initialUsers: RankedUser[] = [
-  { id: "1", name: "Marko Petrović", description: "Ekspert za forex tržište sa 12 godina iskustva. Specijalizovan za price action i smart money koncepte.", score: 98, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marko", specialty: "Forex", students: 342 },
-  { id: "2", name: "Ana Jovanović", description: "Profesionalni trader kripto tržišta. Fokus na tehničku analizu i swing trading strategije.", score: 95, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ana", specialty: "Kripto", students: 278 },
-  { id: "3", name: "Nikola Đorđević", description: "Mentor za berzu i akcije. Fundamentalna analiza i dugoročno investiranje.", score: 91, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Nikola", specialty: "Akcije", students: 215 },
-  { id: "4", name: "Jelena Nikolić", description: "Specijalista za commodities i futures tržište. Risk management ekspert.", score: 87, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jelena", specialty: "Commodities", students: 156 },
-  { id: "5", name: "Stefan Ilić", description: "Day trader sa fokusom na indekse. Scalping i intraday strategije.", score: 82, imageUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Stefan", specialty: "Indeksi", students: 189 },
-];
 
 const RankingContext = createContext<RankingContextType>({
   users: [],
-  addUser: () => {},
-  updateUser: () => {},
-  deleteUser: () => {},
+  loading: true,
+  addUser: async () => {},
+  updateUser: async () => {},
+  deleteUser: async () => {},
+  refreshUsers: async () => {},
 });
 
 export const useRanking = () => useContext(RankingContext);
 
 export const RankingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [users, setUsers] = useState<RankedUser[]>(initialUsers);
+  const [users, setUsers] = useState<RankedUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { token } = useAuth();
 
-  const addUser = (user: Omit<RankedUser, "id">) => {
-    setUsers((prev) => [...prev, { ...user, id: crypto.randomUUID() }]);
+  const fetchUsers = useCallback(async () => {
+    try {
+      const res = await getMentors();
+      setUsers(res.data.map((m: MentorData) => ({
+        id: m.id,
+        name: m.name,
+        description: m.description,
+        score: m.score,
+        imageUrl: m.imageUrl,
+        specialty: m.specialty,
+        students: m.students,
+      })));
+    } catch (err) {
+      console.error("Failed to fetch mentors:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  const addUser = async (user: Omit<RankedUser, "id">) => {
+    if (!token) throw new Error("Niste ulogovani");
+    const res = await createMentor(user, token);
+    setUsers((prev) => [...prev, {
+      id: res.data.id,
+      name: res.data.name,
+      description: res.data.description,
+      score: res.data.score,
+      imageUrl: res.data.imageUrl,
+      specialty: res.data.specialty,
+      students: res.data.students,
+    }]);
   };
 
-  const updateUser = (id: string, data: Omit<RankedUser, "id">) => {
-    setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...data } : u)));
+  const updateUserFn = async (id: string, data: Omit<RankedUser, "id">) => {
+    if (!token) throw new Error("Niste ulogovani");
+    const res = await updateMentor(id, data, token);
+    setUsers((prev) => prev.map((u) => (u.id === id ? {
+      id: res.data.id,
+      name: res.data.name,
+      description: res.data.description,
+      score: res.data.score,
+      imageUrl: res.data.imageUrl,
+      specialty: res.data.specialty,
+      students: res.data.students,
+    } : u)));
   };
 
-  const deleteUser = (id: string) => {
+  const deleteUserFn = async (id: string) => {
+    if (!token) throw new Error("Niste ulogovani");
+    await deleteMentor(id, token);
     setUsers((prev) => prev.filter((u) => u.id !== id));
   };
 
   return (
-    <RankingContext.Provider value={{ users, addUser, updateUser, deleteUser }}>
+    <RankingContext.Provider value={{ users, loading, addUser, updateUser: updateUserFn, deleteUser: deleteUserFn, refreshUsers: fetchUsers }}>
       {children}
     </RankingContext.Provider>
   );
