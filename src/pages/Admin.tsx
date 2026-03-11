@@ -586,6 +586,33 @@ const Admin = () => {
 
           {/* ═══ PAYOUT TAB ═══ */}
           <TabsContent value="payout" className="space-y-6">
+            {/* Stat Cards */}
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+              <Card className="border-gold/30">
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                  <Coins className="h-6 w-6 text-gold mb-2" />
+                  <div className="text-3xl font-bold text-gold">{myRanking?.totalPoints ?? myRanking?.points ?? 0}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Ukupno poena</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-gold/30">
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                  <Wallet className="h-6 w-6 text-gold mb-2" />
+                  <div className="text-3xl font-bold text-gold">${myRanking?.availablePayout ?? Math.floor((myRanking?.totalPoints ?? 0) / 2)}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Dostupno za payout</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-gold/30">
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                  <Users className="h-6 w-6 text-gold mb-2" />
+                  <div className="text-3xl font-bold text-gold">{myRanking?.referralCount ?? affiliates.length}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Ukupno korisnika</p>
+                </CardContent>
+              </Card>
+            </div>
+
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
