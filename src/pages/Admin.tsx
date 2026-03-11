@@ -105,9 +105,10 @@ const Admin = () => {
   const [payoutHistory, setPayoutHistory] = useState<PayoutHistoryData[]>([]);
   const [requestsLoading, setRequestsLoading] = useState(true);
   const [historyLoading, setHistoryLoading] = useState(true);
-  const [dashboardStats, setDashboardStats] = useState({ totalAffiliates: 0, pendingPayouts: 0 });
+  const [dashboardStats, setDashboardStats] = useState<any>({ totalAffiliates: 0, pendingPayouts: 0 });
   const [transactions, setTransactions] = useState<TransactionData[]>([]);
   const [requestDetail, setRequestDetail] = useState<PayoutRequestData | null>(null);
+  const [myRanking, setMyRanking] = useState<any>(null);
 
   // Fetch all data on mount
   useEffect(() => {
