@@ -21,23 +21,9 @@ import { uploadImage, getAffiliates, AffiliateData, getPayoutRequests, getPayout
 import { Link, useLocation } from "react-router-dom";
 
 import {
-  PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
-} from "recharts";
-import {
   DollarSign, TrendingUp, TrendingDown, AlertTriangle, ArrowUpRight, ArrowDownRight,
 } from "lucide-react";
 import { getRankTitle } from "@/lib/rank-titles";
-
-/* ═══════════════════════════════════════
-   SUB-COMPONENTS
-   ═══════════════════════════════════════ */
-
-const pieData = [
-  { name: "Forex", value: 32, color: "hsl(43, 77%, 38%)" },
-  { name: "Crypto", value: 75, color: "hsl(43, 77%, 55%)" },
-  { name: "Commodities", value: 12, color: "hsl(43, 40%, 25%)" },
-  { name: "Metals", value: 34, color: "hsl(30, 60%, 45%)" },
-];
 
 /** Affiliate user card with rank badge */
 const UserCard = ({ user, rank, onPreview }: { user: AffiliateData; rank: number; onPreview: (u: AffiliateData) => void }) => (
