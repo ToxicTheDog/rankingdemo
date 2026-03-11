@@ -234,6 +234,15 @@ export const getPayoutHistory = (token: string) =>
 export interface DashboardStats {
   totalAffiliates: number;
   pendingPayouts: number;
+  totalRevenue?: number;
+  totalPayout?: number;
+  profit?: number;
+  revenueChange?: number;
+  payoutChange?: number;
+  profitChange?: number;
+  totalClients?: number;
+  deactivated?: number;
+  expelled?: number;
 }
 
 /** GET /dashboard/stats (zaštićeno) */

@@ -17,27 +17,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, CheckCircle, Clock, History, Upload, ImageIcon, Network, Loader2 } from "lucide-react";
-import { uploadImage, getAffiliates, AffiliateData, getPayoutRequests, getPayoutHistory, approvePayout, submitPayoutRequest, getDashboardStats, getTransactions, PayoutRequestData, PayoutHistoryData, TransactionData } from "@/lib/api";
+import { uploadImage, getAffiliates, AffiliateData, getPayoutRequests, getPayoutHistory, approvePayout, submitPayoutRequest, getDashboardStats, getTransactions, getMyRanking, PayoutRequestData, PayoutHistoryData, TransactionData } from "@/lib/api";
 import { Link, useLocation } from "react-router-dom";
 
-import {
-  PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
-} from "recharts";
 import {
   DollarSign, TrendingUp, TrendingDown, AlertTriangle, ArrowUpRight, ArrowDownRight,
 } from "lucide-react";
 import { getRankTitle } from "@/lib/rank-titles";
-
-/* ═══════════════════════════════════════
-   SUB-COMPONENTS
-   ═══════════════════════════════════════ */
-
-const pieData = [
-  { name: "Forex", value: 32, color: "hsl(43, 77%, 38%)" },
-  { name: "Crypto", value: 75, color: "hsl(43, 77%, 55%)" },
-  { name: "Commodities", value: 12, color: "hsl(43, 40%, 25%)" },
-  { name: "Metals", value: 34, color: "hsl(30, 60%, 45%)" },
-];
 
 /** Affiliate user card with rank badge */
 const UserCard = ({ user, rank, onPreview }: { user: AffiliateData; rank: number; onPreview: (u: AffiliateData) => void }) => (
@@ -105,9 +91,10 @@ const Admin = () => {
   const [payoutHistory, setPayoutHistory] = useState<PayoutHistoryData[]>([]);
   const [requestsLoading, setRequestsLoading] = useState(true);
   const [historyLoading, setHistoryLoading] = useState(true);
-  const [dashboardStats, setDashboardStats] = useState({ totalAffiliates: 0, pendingPayouts: 0 });
+  const [dashboardStats, setDashboardStats] = useState<any>({ totalAffiliates: 0, pendingPayouts: 0 });
   const [transactions, setTransactions] = useState<TransactionData[]>([]);
   const [requestDetail, setRequestDetail] = useState<PayoutRequestData | null>(null);
+  const [myRanking, setMyRanking] = useState<any>(null);
 
   // Fetch all data on mount
   useEffect(() => {
@@ -135,6 +122,10 @@ const Admin = () => {
     getTransactions(token)
       .then((res) => setTransactions(res.data))
       .catch((err) => console.error("Transactions error:", err));
+
+    getMyRanking(token)
+      .then((res) => setMyRanking(res.data))
+      .catch((err) => console.error("My ranking error:", err));
   }, [token]);
 
   // if (!isAdmin) return <Navigate to="/login" replace />;
@@ -297,101 +288,126 @@ const Admin = () => {
 
           {/* ═══ DASHBOARD TAB ═══ */}
           <TabsContent value="dashboard" className="space-y-6">
+            {/* Row 1: Financial KPIs */}
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
-              <Card className="border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
+              <Card className="border-border/50">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Ukupno affiliate-a</CardTitle>
-                  <Users className="h-4 w-4 text-gold" />
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Ukupni prihodi</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{dashboardStats.totalAffiliates}</div>
+                  <div className="text-2xl font-bold">{formatCurrency(dashboardStats.totalRevenue || 0)}</div>
+                  {dashboardStats.revenueChange != null && (
+                    <p className={`text-xs mt-1 flex items-center gap-1 ${dashboardStats.revenueChange >= 0 ? "text-green-500" : "text-destructive"}`}>
+                      {dashboardStats.revenueChange >= 0 ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+                      {dashboardStats.revenueChange >= 0 ? "+" : ""}{dashboardStats.revenueChange}% od prošlog meseca
+                    </p>
+                  )}
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-border/50">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Pending payouts</CardTitle>
-                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Ukupni payout</CardTitle>
+                  <TrendingDown className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{dashboardStats.pendingPayouts}</div>
+                  <div className="text-2xl font-bold">{formatCurrency(dashboardStats.totalPayout || 0)}</div>
+                  {dashboardStats.payoutChange != null && (
+                    <p className={`text-xs mt-1 flex items-center gap-1 ${dashboardStats.payoutChange >= 0 ? "text-destructive" : "text-green-500"}`}>
+                      {dashboardStats.payoutChange >= 0 ? <ArrowDownRight className="h-3 w-3" /> : <ArrowUpRight className="h-3 w-3" />}
+                      {dashboardStats.payoutChange >= 0 ? "+" : ""}{dashboardStats.payoutChange}% od prošlog meseca
+                    </p>
+                  )}
                 </CardContent>
               </Card>
 
-              <Card className="border-gold/20">
+              <Card className="border-border/50">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Mentora</CardTitle>
-                  <TrendingUp className="h-4 w-4 text-gold" />
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Profit</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-gold">{users.length}</div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Charts row */}
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Struktura prihoda</CardTitle>
-                  <CardDescription>Po kategorijama</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <PieChart>
-                      <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={85} paddingAngle={5} dataKey="value">
-                        {pieData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px" }}
-                        formatter={(value: number) => `${value}`}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className="flex flex-wrap justify-center gap-3 mt-2">
-                    {pieData.map((entry, i) => (
-                      <div key={i} className="flex items-center gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: entry.color }} />
-                        <span className="text-xs text-muted-foreground">{entry.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Nedavne transakcije</CardTitle>
-                  <CardDescription>Poslednja kretanja</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {transactions.length === 0 ? (
-                    <p className="text-sm text-muted-foreground text-center py-8">Nema transakcija.</p>
-                  ) : (
-                    <div className="space-y-3">
-                      {transactions.slice(0, 5).map((t) => (
-                        <div key={t.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${t.type === "income" ? "bg-green-500/15" : "bg-destructive/15"}`}>
-                              {t.type === "income" ? <ArrowUpRight className="h-4 w-4 text-green-500" /> : <ArrowDownRight className="h-4 w-4 text-destructive" />}
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-sm font-medium truncate">{t.description}</p>
-                              <p className="text-xs text-muted-foreground">{t.category}</p>
-                            </div>
-                          </div>
-                          <div className={`shrink-0 text-sm font-medium ${t.type === "income" ? "text-green-500" : "text-destructive"}`}>
-                            {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="text-2xl font-bold text-green-500">{formatCurrency(dashboardStats.profit || 0)}</div>
+                  {dashboardStats.profitChange != null && (
+                    <p className="text-xs mt-1 flex items-center gap-1 text-green-500">
+                      <ArrowUpRight className="h-3 w-3" />
+                      +{dashboardStats.profitChange}% od prošlog meseca
+                    </p>
                   )}
                 </CardContent>
               </Card>
             </div>
+
+            {/* Row 2: Count KPIs */}
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+              <Card className="border-border/50">
+                <CardContent className="flex items-center gap-3 p-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gold/15">
+                    <Users className="h-5 w-5 text-gold" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold">{dashboardStats.totalClients ?? dashboardStats.totalAffiliates}</div>
+                    <p className="text-xs text-muted-foreground">Ukupno klijenata</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-border/50">
+                <CardContent className="flex items-center gap-3 p-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                    <Ban className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold">{dashboardStats.deactivated ?? 0}</div>
+                    <p className="text-xs text-muted-foreground">Deaktivirani</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-border/50">
+                <CardContent className="flex items-center gap-3 p-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-destructive/15">
+                    <AlertTriangle className="h-5 w-5 text-destructive" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-destructive">{dashboardStats.expelled ?? 0}</div>
+                    <p className="text-xs text-muted-foreground">Izbačeni</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Transactions */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Nedavne transakcije</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {transactions.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-8">Nema transakcija.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {transactions.slice(0, 5).map((t) => (
+                      <div key={t.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${t.type === "income" ? "bg-green-500/15" : "bg-destructive/15"}`}>
+                            {t.type === "income" ? <ArrowUpRight className="h-4 w-4 text-green-500" /> : <ArrowDownRight className="h-4 w-4 text-destructive" />}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium truncate">{t.description}</p>
+                            <p className="text-xs text-muted-foreground">{t.category}</p>
+                          </div>
+                        </div>
+                        <div className={`shrink-0 text-sm font-medium ${t.type === "income" ? "text-green-500" : "text-destructive"}`}>
+                          {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* ═══ MENTORI TAB ═══ */}
@@ -498,12 +514,42 @@ const Admin = () => {
 
           {/* ═══ AFFILIATE TAB ═══ */}
           <TabsContent value="affiliate" className="space-y-6">
+            {/* Admin Profile Header */}
+            {myRanking && (
+              <Card className="border-gold/30">
+                <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border-2 border-gold/40">
+                      <AvatarImage src={myRanking.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${myRanking.fullName || authUser?.username}`} alt={myRanking.fullName} />
+                      <AvatarFallback>{(myRanking.fullName || authUser?.username || "A").slice(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="text-lg font-bold">{myRanking.fullName || authUser?.username || "Admin Profil"}</h3>
+                      <p className="text-sm text-muted-foreground">{myRanking.email || authUser?.email}</p>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <Badge className="bg-gold/15 text-gold border-gold/30 text-xs">
+                          <Coins className="h-3 w-3 mr-1" /> {myRanking.totalPoints ?? myRanking.points ?? 0} poena
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          <Users className="h-3 w-3 mr-1" /> {myRanking.referralCount ?? affiliates.length} korisnika
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  {myRanking.affiliateLink && (
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground mb-1">Affiliate link</p>
+                      <code className="text-xs bg-muted px-2 py-1 rounded font-mono">{myRanking.affiliateLink}</code>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input placeholder="Pretraži korisnike..." value={affSearch} onChange={(e) => setAffSearch(e.target.value)} className="pl-9" />
             </div>
-
-            <p className="text-sm text-muted-foreground">Korisnici ({filteredAffiliates.length})</p>
 
             {affiliatesLoading ? (
               <div className="flex items-center justify-center py-12">
@@ -526,6 +572,33 @@ const Admin = () => {
 
           {/* ═══ PAYOUT TAB ═══ */}
           <TabsContent value="payout" className="space-y-6">
+            {/* Stat Cards */}
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+              <Card className="border-gold/30">
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                  <Coins className="h-6 w-6 text-gold mb-2" />
+                  <div className="text-3xl font-bold text-gold">{myRanking?.totalPoints ?? myRanking?.points ?? 0}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Ukupno poena</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-gold/30">
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                  <Wallet className="h-6 w-6 text-gold mb-2" />
+                  <div className="text-3xl font-bold text-gold">${myRanking?.availablePayout ?? Math.floor((myRanking?.totalPoints ?? 0) / 2)}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Dostupno za payout</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-gold/30">
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                  <Users className="h-6 w-6 text-gold mb-2" />
+                  <div className="text-3xl font-bold text-gold">{myRanking?.referralCount ?? affiliates.length}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Ukupno korisnika</p>
+                </CardContent>
+              </Card>
+            </div>
+
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
