@@ -60,6 +60,13 @@ const Index = () => {
         <div className="absolute top-20 -right-40 h-80 w-80 rounded-full bg-gold/5 blur-3xl" />
         <div className="absolute bottom-10 -left-40 h-80 w-80 rounded-full bg-gold/5 blur-3xl" />
         <div className="container relative mx-auto px-4 py-24 text-center md:py-36">
+          {/* Centered Logo */}
+          <div className="animate-slide-up mb-8 flex justify-center">
+            <Link to="/" className="inline-flex items-center gap-2 text-2xl font-bold tracking-tight">
+              <TrendingUp className="h-7 w-7 text-gold" />
+              <span>TradeAcademy</span>
+            </Link>
+          </div>
           <div className="animate-slide-up mx-auto inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm text-muted-foreground mb-6">
             <TrendingUp className="h-4 w-4 text-gold" />
             Akademija Tradinga — Uči od najboljih
