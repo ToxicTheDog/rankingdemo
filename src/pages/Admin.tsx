@@ -136,6 +136,10 @@ const Admin = () => {
     getTransactions(token)
       .then((res) => setTransactions(res.data))
       .catch((err) => console.error("Transactions error:", err));
+
+    getMyRanking(token)
+      .then((res) => setMyRanking(res.data))
+      .catch((err) => console.error("My ranking error:", err));
   }, [token]);
 
   // if (!isAdmin) return <Navigate to="/login" replace />;
