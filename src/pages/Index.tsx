@@ -69,7 +69,10 @@ const Index = () => {
             <span className="bg-gradient-to-r from-gold to-yellow-500 bg-clip-text text-transparent">
               trader
             </span>
-            {" "}uz naše mentore
+            {" "}uz{" "}
+            <span className="bg-gradient-to-r from-gold to-yellow-500 bg-clip-text text-transparent">
+              TRADING UNIVERSITY
+            </span>
           </h1>
           <p className="animate-slide-up mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl" style={{ animationDelay: '0.2s' }}>
             Nauči trading od iskusnih edukatora kroz struktuirane nivoe znanja i napredovanja, live sesije i podršku zajednice. Bez obzira da li si početnik ili napredni trader. Zaradi dok učiš, jer sve što trguju oni, trguj i ti - sve je transparentno.
