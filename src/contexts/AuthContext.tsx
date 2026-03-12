@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { authLogin, authRegister } from "@/lib/api";
+import { authRegister } from "@/lib/api";           // tvoja originalna funkcija iz main branch-a
 import { apiRequest } from "@/lib/apiClient";
 import { TEST_TOKEN, testUser } from "@/lib/testData";
 
@@ -19,7 +19,7 @@ interface AuthContextType {
   token: string | null;
   user: UserData | null;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (data: any) => Promise<boolean>;        // ← ispravljen tip
+  register: (data: any) => Promise<boolean>;
   logout: () => void;
   loginError: string | null;
 }
@@ -54,11 +54,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isLoggedIn = !!token && !!user;
   const isAdmin = user?.role === "admin";
 
+  // Restore session
   useEffect(() => {
     const isTestMode = localStorage.getItem("testMode") === "true";
     if (isTestMode) {
       setLoading(false);
-      console.log("✅ TEST MODE AKTIVIRAN – odmah logged in");
+      console.log("✅ TEST MODE AKTIVIRAN – odmah logged in (bez refresh-a)");
       return;
     }
 
@@ -100,11 +101,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // ←←← REGISTER – sada vraća Promise<boolean> (kao login)
   const register = async (data: any): Promise<boolean> => {
     setLoginError(null);
     try {
-      await authRegister(data);           // tvoja originalna funkcija
+      await authRegister(data);
       return true;
     } catch (err: any) {
       setLoginError(err.message || "Greška pri registraciji");
