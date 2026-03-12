@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TrendingUp, Trophy, Users, Star, Search, Filter } from "lucide-react";
+import { resolveImageUrl } from "@/lib/api";
 
 const Mentori = () => {
   const { users } = useRanking();

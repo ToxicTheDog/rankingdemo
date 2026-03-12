@@ -37,7 +37,7 @@ const RankingCard = ({ user, rank }: RankingCardProps) => {
         <RankBadge rank={rank} size="md" />
 
         <Avatar className="h-12 w-12 sm:h-14 sm:w-14 shrink-0">
-          <AvatarImage src={user.imageUrl} alt={user.name} />
+          <AvatarImage src={resolveImageUrl(user.imageUrl)} alt={user.name} />
           <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
 
