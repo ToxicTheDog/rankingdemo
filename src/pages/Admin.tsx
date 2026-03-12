@@ -808,7 +808,7 @@ const Admin = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <Avatar className={`h-14 w-14 sm:h-16 sm:w-16 shrink-0 ${!previewUser.active ? "grayscale" : ""}`}>
-                  <AvatarImage src={previewUser.imageUrl} alt={previewUser.name} />
+                  <AvatarImage src={resolveImageUrl(previewUser.imageUrl)} alt={previewUser.name} />
                   <AvatarFallback>{previewUser.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">
