@@ -4,6 +4,14 @@
    ═══════════════════════════════════════════════════════════════ */
 
 const BASE_URL = "http://localhost:5000/api/v2";
+export const BACKEND_URL = "http://localhost:5000";
+
+/** Resolve image URL — prepends backend base for relative paths like /uploads/... */
+export function resolveImageUrl(url: string | undefined | null): string {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) return url;
+  return `${BACKEND_URL}${url.startsWith("/") ? "" : "/"}${url}`;
+}
 
 /** Helper: make a fetch call with JSON body and auth header */
 async function request<T>(
@@ -87,8 +95,7 @@ export const authRegister = (data: RegisterRequest) =>
 export const authMe = (token: string) =>
   request<MeResponse>("/auth/me", { token });
 
-/** GET /auth/check-username?username=... — Check if username is available
- *  NOTE: You need to implement this endpoint on your backend */
+/** GET /auth/check-username?username=... */
 export const checkUsernameAvailability = (username: string) =>
   request<{ available: boolean }>(`/auth/check-username?username=${encodeURIComponent(username)}`);
 

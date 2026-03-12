@@ -17,7 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, CheckCircle, Clock, History, Upload, ImageIcon, Network, Loader2 } from "lucide-react";
-import { uploadImage, getAffiliates, AffiliateData, getPayoutRequests, getPayoutHistory, approvePayout, submitPayoutRequest, getDashboardStats, getTransactions, getMyRanking, PayoutRequestData, PayoutHistoryData, TransactionData } from "@/lib/api";
+import { uploadImage, getAffiliates, AffiliateData, getPayoutRequests, getPayoutHistory, approvePayout, submitPayoutRequest, getDashboardStats, getTransactions, getMyRanking, PayoutRequestData, PayoutHistoryData, TransactionData, resolveImageUrl } from "@/lib/api";
 import { Link, useLocation } from "react-router-dom";
 
 import {
@@ -31,7 +31,7 @@ const UserCard = ({ user, rank, onPreview }: { user: AffiliateData; rank: number
     <CardContent className="flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
       <RankBadge rank={rank} size="sm" />
       <Avatar className={`h-10 w-10 sm:h-12 sm:w-12 shrink-0 ${!user.active ? "grayscale" : ""}`}>
-        <AvatarImage src={user.imageUrl} alt={user.name} />
+        <AvatarImage src={resolveImageUrl(user.imageUrl)} alt={user.name} />
         <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
       </Avatar>
       <div className="flex-1 min-w-0">
@@ -520,7 +520,7 @@ const Admin = () => {
                 <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-4">
                     <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border-2 border-gold/40">
-                      <AvatarImage src={myRanking.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${myRanking.fullName || authUser?.username}`} alt={myRanking.fullName} />
+                      <AvatarImage src={resolveImageUrl(myRanking.imageUrl) || `https://api.dicebear.com/7.x/avataaars/svg?seed=${myRanking.fullName || authUser?.username}`} alt={myRanking.fullName} />
                       <AvatarFallback>{(myRanking.fullName || authUser?.username || "A").slice(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div>
@@ -702,7 +702,7 @@ const Admin = () => {
                     <Card key={req.id} className="hover:border-gold/30 transition-all">
                       <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
                         <Avatar className="h-10 w-10 shrink-0">
-                          <AvatarImage src={req.imageUrl} alt={req.name} />
+                          <AvatarImage src={resolveImageUrl(req.imageUrl)} alt={req.name} />
                           <AvatarFallback>{req.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
@@ -768,7 +768,7 @@ const Admin = () => {
                           <CheckCircle className="h-5 w-5 text-green-500" />
                         </div>
                         <Avatar className="h-10 w-10 shrink-0">
-                          <AvatarImage src={item.imageUrl} alt={item.name} />
+                          <AvatarImage src={resolveImageUrl(item.imageUrl)} alt={item.name} />
                           <AvatarFallback>{item.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
@@ -808,7 +808,7 @@ const Admin = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <Avatar className={`h-14 w-14 sm:h-16 sm:w-16 shrink-0 ${!previewUser.active ? "grayscale" : ""}`}>
-                  <AvatarImage src={previewUser.imageUrl} alt={previewUser.name} />
+                  <AvatarImage src={resolveImageUrl(previewUser.imageUrl)} alt={previewUser.name} />
                   <AvatarFallback>{previewUser.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">
@@ -834,7 +834,7 @@ const Admin = () => {
                       <Card key={ref.id} className={`${!ref.active ? "opacity-60" : ""}`}>
                         <CardContent className="flex items-center gap-3 p-3">
                           <Avatar className={`h-8 w-8 shrink-0 ${!ref.active ? "grayscale" : ""}`}>
-                            <AvatarImage src={ref.imageUrl} alt={ref.name} />
+                            <AvatarImage src={resolveImageUrl(ref.imageUrl)} alt={ref.name} />
                             <AvatarFallback className="text-xs">{ref.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                           </Avatar>
                           <div className="flex-1 min-w-0">
@@ -877,7 +877,7 @@ const Admin = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
                   <Avatar className="h-14 w-14 shrink-0">
-                    <AvatarImage src={requestDetail.imageUrl} alt={requestDetail.name} />
+                    <AvatarImage src={resolveImageUrl(requestDetail.imageUrl)} alt={requestDetail.name} />
                     <AvatarFallback>{requestDetail.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div>
