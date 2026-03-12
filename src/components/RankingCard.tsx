@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Award, Users } from "lucide-react";
 import RankBadge from "@/components/RankBadge";
 import RankTitleBadge from "@/components/RankTitleBadge";
+import { resolveImageUrl } from "@/lib/api";
 
 interface RankingCardProps {
   user: RankedUser;
