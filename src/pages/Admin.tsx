@@ -520,7 +520,7 @@ const Admin = () => {
                 <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-4">
                     <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border-2 border-gold/40">
-                      <AvatarImage src={myRanking.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${myRanking.fullName || authUser?.username}`} alt={myRanking.fullName} />
+                      <AvatarImage src={resolveImageUrl(myRanking.imageUrl) || `https://api.dicebear.com/7.x/avataaars/svg?seed=${myRanking.fullName || authUser?.username}`} alt={myRanking.fullName} />
                       <AvatarFallback>{(myRanking.fullName || authUser?.username || "A").slice(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div>
