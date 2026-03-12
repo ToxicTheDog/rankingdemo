@@ -834,7 +834,7 @@ const Admin = () => {
                       <Card key={ref.id} className={`${!ref.active ? "opacity-60" : ""}`}>
                         <CardContent className="flex items-center gap-3 p-3">
                           <Avatar className={`h-8 w-8 shrink-0 ${!ref.active ? "grayscale" : ""}`}>
-                            <AvatarImage src={ref.imageUrl} alt={ref.name} />
+                            <AvatarImage src={resolveImageUrl(ref.imageUrl)} alt={ref.name} />
                             <AvatarFallback className="text-xs">{ref.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                           </Avatar>
                           <div className="flex-1 min-w-0">
