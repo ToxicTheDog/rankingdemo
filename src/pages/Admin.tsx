@@ -877,7 +877,7 @@ const Admin = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
                   <Avatar className="h-14 w-14 shrink-0">
-                    <AvatarImage src={requestDetail.imageUrl} alt={requestDetail.name} />
+                    <AvatarImage src={resolveImageUrl(requestDetail.imageUrl)} alt={requestDetail.name} />
                     <AvatarFallback>{requestDetail.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div>
