@@ -702,7 +702,7 @@ const Admin = () => {
                     <Card key={req.id} className="hover:border-gold/30 transition-all">
                       <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
                         <Avatar className="h-10 w-10 shrink-0">
-                          <AvatarImage src={req.imageUrl} alt={req.name} />
+                          <AvatarImage src={resolveImageUrl(req.imageUrl)} alt={req.name} />
                           <AvatarFallback>{req.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
