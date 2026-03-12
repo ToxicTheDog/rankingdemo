@@ -17,7 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, CheckCircle, Clock, History, Upload, ImageIcon, Network, Loader2 } from "lucide-react";
-import { uploadImage, getAffiliates, AffiliateData, getPayoutRequests, getPayoutHistory, approvePayout, submitPayoutRequest, getDashboardStats, getTransactions, getMyRanking, PayoutRequestData, PayoutHistoryData, TransactionData } from "@/lib/api";
+import { uploadImage, getAffiliates, AffiliateData, getPayoutRequests, getPayoutHistory, approvePayout, submitPayoutRequest, getDashboardStats, getTransactions, getMyRanking, PayoutRequestData, PayoutHistoryData, TransactionData, resolveImageUrl } from "@/lib/api";
 import { Link, useLocation } from "react-router-dom";
 
 import {
