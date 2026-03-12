@@ -31,7 +31,7 @@ const UserCard = ({ user, rank, onPreview }: { user: AffiliateData; rank: number
     <CardContent className="flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
       <RankBadge rank={rank} size="sm" />
       <Avatar className={`h-10 w-10 sm:h-12 sm:w-12 shrink-0 ${!user.active ? "grayscale" : ""}`}>
-        <AvatarImage src={user.imageUrl} alt={user.name} />
+        <AvatarImage src={resolveImageUrl(user.imageUrl)} alt={user.name} />
         <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
       </Avatar>
       <div className="flex-1 min-w-0">
