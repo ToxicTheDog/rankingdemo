@@ -70,7 +70,7 @@ const Mentori = () => {
             <CardContent className="flex flex-col items-center gap-6 p-8 sm:flex-row">
               <div className="relative">
                 <Avatar className="h-24 w-24 ring-4 ring-gold/30">
-                  <AvatarImage src={topMentor.imageUrl} alt={topMentor.name} />
+                  <AvatarImage src={resolveImageUrl(topMentor.imageUrl)} alt={topMentor.name} />
                   <AvatarFallback className="text-xl">{topMentor.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-gold text-gold-foreground shadow-lg">
