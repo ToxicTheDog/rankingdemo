@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, LogOut, LogIn, Menu, X } from "lucide-react";
+import { LogOut, LogIn, Menu, X } from "lucide-react";
+import logo from "@/assets/trading-university-logo.png";
 
 const Header = () => {
   const { isLoggedIn, isAdmin, logout } = useAuth();
@@ -13,15 +14,13 @@ const Header = () => {
     { to: "/", label: "Početna" },
     { to: "/mentori", label: "Mentori" },
     ...(isLoggedIn ? [{ to: "/admin", label: "Admin" }] : []),
-    // ...(isAdmin ? [{ to: "/admin", label: "Admin" }] : []),
   ];
 
   return (
     <header className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
-          <TrendingUp className="h-6 w-6 text-gold" />
-          <span>TradeAcademy</span>
+        <Link to="/" className="flex items-center gap-2">
+          <img src={logo} alt="Trading University" className="h-10 w-auto" />
         </Link>
 
         {/* Desktop nav */}
