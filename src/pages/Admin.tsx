@@ -768,7 +768,7 @@ const Admin = () => {
                           <CheckCircle className="h-5 w-5 text-green-500" />
                         </div>
                         <Avatar className="h-10 w-10 shrink-0">
-                          <AvatarImage src={item.imageUrl} alt={item.name} />
+                          <AvatarImage src={resolveImageUrl(item.imageUrl)} alt={item.name} />
                           <AvatarFallback>{item.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
