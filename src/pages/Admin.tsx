@@ -138,13 +138,12 @@ const Admin = () => {
       .catch((err) => console.error("My ranking error:", err));
 
     // Fetch plan purchases - fallback to test data
-    import("@/lib/api").then(({ default: _, ...api }) => {
-      const fetchUrl = `http://localhost:5000/api/v2/dashboard/plan-purchases`;
-      fetch(fetchUrl, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } })
-        .then(res => res.ok ? res.json() : Promise.reject())
-        .then(res => setPlanPurchases(res.data || []))
-        .catch(() => setPlanPurchases(testPlanPurchases));
-    });
+    fetch(`http://localhost:5000/api/v2/dashboard/plan-purchases`, {
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    })
+      .then(res => res.ok ? res.json() : Promise.reject())
+      .then(res => setPlanPurchases(res.data || []))
+      .catch(() => setPlanPurchases(testPlanPurchases));
   }, [token]);
 
   // if (!isAdmin) return <Navigate to="/login" replace />;
