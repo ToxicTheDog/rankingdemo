@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
+import { TEST_TOKEN, testUser, testRankingsMe, testDashboardStats, testAffiliates } from '../lib/testData';
 
 const Login = () => {
   const [email, setEmail] = useState("");
