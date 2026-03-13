@@ -24,7 +24,7 @@ const packages: Package[] = [
   {
     id: "elitni",
     name: "Elitni Paket",
-    firstMonthPrice: 230,
+    firstMonthPrice: 239,
     monthlyPrice: 189.99,
     oneTimeFee: 50,
     points: "19VB",
@@ -34,7 +34,8 @@ const packages: Package[] = [
     features: [
       "Pristup svim kursevima i materijalima",
       "1-na-1 mentorske sesije (neograničeno)",
-      "Dnevni VIP trading signali",
+      "Dnevne Trading Ideje",
+      "VIP Pass 50% OFF",
       "Ekskluzivna Elitna zajednica",
       "Live trading sesije sa mentorima",
       "Personalizovani trading plan",
@@ -54,7 +55,7 @@ const packages: Package[] = [
     features: [
       "Pristup svim kursevima i materijalima",
       "1-na-1 mentorske sesije (4x mesečno)",
-      "Dnevni trading signali",
+      "Dnevne Trading Ideje",
       "Premium zajednica",
       "Live trading sesije sa mentorima",
       "Personalizovani trading plan",
@@ -73,7 +74,7 @@ const packages: Package[] = [
     features: [
       "Pristup svim kursevima",
       "1-na-1 mentorske sesije (2x mesečno)",
-      "Trading signali",
+      "Dnevne Trading Ideje",
       "Zajednica tradera",
       "Live trading sesije",
       "Pristup affiliate programu",
@@ -91,7 +92,7 @@ const packages: Package[] = [
     features: [
       "Pristup osnovnim kursevima",
       "Grupne mentorske sesije",
-      "Osnovni trading signali",
+      "Dnevne Trading Ideje",
       "Zajednica tradera",
       "Pristup affiliate programu",
     ],
@@ -125,9 +126,8 @@ const PackagesSection = () => {
         {packages.map((pkg) => (
           <Card
             key={pkg.id}
-            className={`relative transition-all hover:shadow-xl hover:shadow-gold/5 hover:-translate-y-1 ${
-              pkg.popular ? "border-gold/50 shadow-lg shadow-gold/10" : "hover:border-gold/30"
-            }`}
+            className={`relative transition-all hover:shadow-xl hover:shadow-gold/5 hover:-translate-y-1 ${pkg.popular ? "border-gold/50 shadow-lg shadow-gold/10" : "hover:border-gold/30"
+              }`}
           >
             {pkg.popular && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
