@@ -55,7 +55,7 @@ const getMockResponse = (endpoint: string) => {
     if (endpoint.includes('/dashboard/stats')) {
         return { success: true, data: testDashboardStats };
     }
-    if (endpoint.includes('/affiliates') || endpoint.includes('/mentors') || endpoint.includes('/payouts')) {
+    if (endpoint.includes('/mentors') || endpoint.includes('/payouts')) {
         return { success: true, data: [] };
     }
     if (endpoint.includes('/affiliates')) {
