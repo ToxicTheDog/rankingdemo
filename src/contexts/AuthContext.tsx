@@ -87,16 +87,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoginError(null);
     try {
       const res = await apiRequest("/auth/login", "post", { mail: email, password });
-      localStorage.setItem("token", res.token);
-      setToken(res.token);
-      setUser(res.user);
+      const t = res.token;
+      const u = res.user;
+      localStorage.setItem("token", t);
+      localStorage.removeItem("testMode");
+      setUser(u);
+      setToken(t);
       return true;
     } catch {
       console.log("🔄 Backend nedostupan → TEST MODE AKTIVIRAN");
       localStorage.setItem("testMode", "true");
       localStorage.setItem("token", TEST_TOKEN);
-      setToken(TEST_TOKEN);
+      // Set both synchronously so React batches the update
       setUser(testUser);
+      setToken(TEST_TOKEN);
       return true;
     }
   };

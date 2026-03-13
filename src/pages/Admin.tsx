@@ -378,36 +378,59 @@ const Admin = () => {
               </Card>
             </div>
 
-            {/* Transactions */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Nedavne transakcije</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {transactions.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-8">Nema transakcija.</p>
-                ) : (
-                  <div className="space-y-3">
-                    {transactions.slice(0, 5).map((t) => (
-                      <div key={t.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${t.type === "income" ? "bg-green-500/15" : "bg-destructive/15"}`}>
-                            {t.type === "income" ? <ArrowUpRight className="h-4 w-4 text-green-500" /> : <ArrowDownRight className="h-4 w-4 text-destructive" />}
+            {/* Transactions + Chart side by side */}
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Nedavne transakcije</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {transactions.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-8">Nema transakcija.</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {transactions.slice(0, 5).map((t) => (
+                        <div key={t.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${t.type === "income" ? "bg-green-500/15" : "bg-destructive/15"}`}>
+                              {t.type === "income" ? <ArrowUpRight className="h-4 w-4 text-green-500" /> : <ArrowDownRight className="h-4 w-4 text-destructive" />}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium truncate">{t.description}</p>
+                              <p className="text-xs text-muted-foreground">{t.category}</p>
+                            </div>
                           </div>
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium truncate">{t.description}</p>
-                            <p className="text-xs text-muted-foreground">{t.category}</p>
+                          <div className={`shrink-0 text-sm font-medium ${t.type === "income" ? "text-green-500" : "text-destructive"}`}>
+                            {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                           </div>
                         </div>
-                        <div className={`shrink-0 text-sm font-medium ${t.type === "income" ? "text-green-500" : "text-destructive"}`}>
-                          {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Kupljeni planovi po korisniku</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {planPurchases.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-8">Nema podataka.</p>
+                  ) : (
+                    <ResponsiveContainer width="100%" height={250}>
+                      <BarChart data={planPurchases}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                        <XAxis dataKey="username" tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} />
+                        <YAxis tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} allowDecimals={false} />
+                        <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px", color: "hsl(var(--foreground))" }} />
+                        <Bar dataKey="plansBought" fill="hsl(var(--gold, 45 93% 47%))" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           {/* ═══ MENTORI TAB ═══ */}
