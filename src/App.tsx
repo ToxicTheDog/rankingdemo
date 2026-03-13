@@ -17,7 +17,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const Register = lazy(() => import("./pages/Register"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Payment = lazy(() => import("./pages/Payment"));
-const Tests = lazy(() => import("./pages/pyramidVisualizer"));
+const Network = lazy(() => import("./pages/pyramidVisualizer"));
 
 const queryClient = new QueryClient();
 
@@ -39,7 +39,7 @@ const App = () => {
                     <Route path="/register" element={<Register />} />
                     <Route path="/admin" element={<Admin />} />
                     <Route path="/payment" element={<Payment />} />
-                    <Route path="/tests" element={<Tests />} />
+                    <Route path="/network" element={<Network />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>

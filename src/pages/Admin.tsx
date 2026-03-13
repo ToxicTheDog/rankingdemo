@@ -296,7 +296,7 @@ const Admin = () => {
             <TabsTrigger value="history" className="flex-1 min-w-[70px] text-xs sm:text-sm">
               <History className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> History
             </TabsTrigger>
-            <Link key="/testing" to="/testing">
+            <Link key="/network" to="/network">
               <TabsTrigger value="network" className="flex-1 min-w-[70px] text-xs sm:text-sm">
                 <Network className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Network
               </TabsTrigger>
