@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Pie, Cell, PieChart } from "recharts";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRanking, RankedUser } from "@/contexts/RankingContext";
@@ -96,14 +96,13 @@ const Admin = () => {
   const [transactions, setTransactions] = useState<TransactionData[]>([]);
   const [requestDetail, setRequestDetail] = useState<PayoutRequestData | null>(null);
   const [myRanking, setMyRanking] = useState<any>(null);
-  const [planPurchases, setPlanPurchases] = useState<{ username: string; plansBought: number }[]>([]);
+  const [planPurchases, setPlanPurchases] = useState<{ name: string; value: number; color: any }[]>([]);
 
   const testPlanPurchases = [
-    { username: "Marko", plansBought: 5 },
-    { username: "Ana", plansBought: 8 },
-    { username: "Stefan", plansBought: 3 },
-    { username: "Jovana", plansBought: 12 },
-    { username: "Nikola", plansBought: 7 },
+    { name: "Elitni Paket", value: 5, color: "#f4bc12" },
+    { name: "Premium Paket", value: 8, color: "#b977f9" },
+    { name: "Liderski Paket", value: 3, color: "#5598f7" },
+    { name: "Investitorski Paket", value: 12, color: "#2fcc93" }
   ];
 
   // Fetch all data on mount
@@ -433,19 +432,48 @@ const Admin = () => {
                   <CardTitle className="text-base">Kupljeni planovi po korisniku</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {planPurchases.length === 0 ? (
-                    <p className="text-sm text-muted-foreground text-center py-8">Nema podataka.</p>
-                  ) : (
-                    <ResponsiveContainer width="100%" height={250}>
-                      <BarChart data={planPurchases}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey="username" tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} />
-                        <YAxis tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} allowDecimals={false} />
-                        <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px", color: "hsl(var(--foreground))" }} />
-                        <Bar dataKey="plansBought" fill="hsl(var(--gold, 45 93% 47%))" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  )}
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={planPurchases}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={100}
+                        paddingAngle={5}
+                        dataKey="value"
+                      >
+                        {planPurchases.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: '#3B82F6',
+                          border: '1px solid #591674',
+                          borderRadius: '8px',
+                          color: '#ffffff',               // dodatno za sigurnost
+                        }}
+                        itemStyle={{
+                          color: '#ffffff',               // ← OVO JE NAJVAŽNIJE (boja vrednosti)
+                          fontWeight: 500
+                        }}
+                        labelStyle={{
+                          color: '#ffffff',               // ← OVO JE NAJVAŽNIJE (boja naziva)
+                          fontWeight: 'bold'
+                        }}
+                        formatter={(value: number) => `${value}`}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="flex flex-wrap justify-center gap-4 mt-4">
+                    {planPurchases.map((entry, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
+                        <span className="text-sm text-muted-foreground">{entry.name}</span>
+                      </div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             </div>
