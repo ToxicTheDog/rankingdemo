@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { authRegister } from "@/lib/api";           // tvoja originalna funkcija iz main branch-a
 import { apiRequest } from "@/lib/apiClient";
 import { TEST_TOKEN, testUser } from "@/lib/testData";
 
@@ -39,6 +38,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(() => {
+    // sinkrona inicijalizacija – najvažnije za test mode
     if (localStorage.getItem("testMode") === "true") return TEST_TOKEN;
     return localStorage.getItem("token");
   });
@@ -54,12 +54,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isLoggedIn = !!token && !!user;
   const isAdmin = user?.role === "admin";
 
-  // Restore session
+  const login = async (email: string, password: string): Promise<boolean> => {
+    setLoginError(null);
+    try {
+      const res = await apiRequest("/auth/login", "post", { mail: email, password });
+      localStorage.setItem("token", res.token);
+      setToken(res.token);
+      setUser(res.user);
+      return true;
+    } catch {
+      localStorage.setItem("testMode", "true");
+      setToken(TEST_TOKEN);
+      setUser(testUser);
+      return true;
+    }
+  };
+
+  const register = async (data: any): Promise<boolean> => {
+    try {
+      await apiRequest("/auth/register", "post", data);
+      return true;
+    } catch (err: any) {
+      setLoginError(err.message || "Greška pri registraciji");
+      return false;
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("testMode");
+    setToken(null);
+    setUser(null);
+  };
+
+  // OVO JE KLJUČ – value je memoizovan i zavisi samo od promenjenih vrednosti
+  const value = useMemo(() => ({
+    isAdmin,
+    isLoggedIn,
+    token,
+    user,
+    login,
+    register,
+    logout,
+    loginError,
+  }), [isAdmin, isLoggedIn, token, user, loginError]);
+
   useEffect(() => {
     const isTestMode = localStorage.getItem("testMode") === "true";
+
     if (isTestMode) {
+      console.log("TEST MODE – stanje postavljeno sinkrono");
       setLoading(false);
-      console.log("✅ TEST MODE AKTIVIRAN – odmah logged in (bez refresh-a)");
       return;
     }
 
@@ -83,62 +128,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .finally(() => setLoading(false));
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    setLoginError(null);
-    try {
-      const res = await apiRequest("/auth/login", "post", { mail: email, password });
-      const t = res.token;
-      const u = res.user;
-      localStorage.setItem("token", t);
-      localStorage.removeItem("testMode");
-      setUser(u);
-      setToken(t);
-      return true;
-    } catch {
-      console.log("🔄 Backend nedostupan → TEST MODE AKTIVIRAN");
-      localStorage.setItem("testMode", "true");
-      localStorage.setItem("token", TEST_TOKEN);
-      // Set both synchronously so React batches the update
-      setUser(testUser);
-      setToken(TEST_TOKEN);
-      return true;
-    }
-  };
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "token" || e.key === "testMode" || e.key === "user") {
+        const newToken = localStorage.getItem("token");
+        const newUserStr = localStorage.getItem("user");
 
-  const register = async (data: any): Promise<boolean> => {
-    setLoginError(null);
-    try {
-      await authRegister(data);
-      return true;
-    } catch (err: any) {
-      setLoginError(err.message || "Greška pri registraciji");
-      return false;
-    }
-  };
+        if (newToken && newUserStr) {
+          try {
+            const newUser = JSON.parse(newUserStr);
+            setToken(newToken);
+            setUser(newUser);
+            setLoading(false);
+            console.log("AuthContext ažuriran iz storage event-a");
+          } catch (err) {
+            console.error("Greška pri parsiranju user-a iz storage-a", err);
+          }
+        }
+      }
+    };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("testMode");
-    setToken(null);
-    setUser(null);
-  };
+    window.addEventListener("storage", handleStorageChange);
 
-  const contextValue = useMemo(
-    () => ({
-      isAdmin,
-      isLoggedIn,
-      token,
-      user,
-      login,
-      register,
-      logout,
-      loginError,
-    }),
-    [isAdmin, isLoggedIn, token, user, loginError]
-  );
+    // Polling fallback za isti tab (storage event radi samo za druge tabove)
+    const interval = setInterval(() => {
+      const currentTestMode = localStorage.getItem("testMode") === "true";
+      if (currentTestMode && !user) {
+        setUser(testUser);
+        setToken(TEST_TOKEN);
+        setLoading(false);
+        console.log("Polling detektovao test mode – forsiran update");
+      }
+    }, 500); // svakih 0.5s – možeš povećati na 1000ms
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [user]); // zavisnost od user-a da ne loop-uje beskonačno
 
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={value}>
       {!loading && children}
     </AuthContext.Provider>
   );

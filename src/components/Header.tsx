@@ -16,6 +16,11 @@ const Header = () => {
     ...(isLoggedIn ? [{ to: "/admin", label: "Admin" }] : []),
   ];
 
+  console.log("Navbar vidi:", {
+    isLoggedIn: isLoggedIn,
+    isAdmin: isAdmin
+  });
+
   return (
     <header className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">

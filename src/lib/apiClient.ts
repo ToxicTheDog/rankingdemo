@@ -1,17 +1,18 @@
 import axios from 'axios';
 import { TEST_TOKEN, testUser, testRankingsMe, testDashboardStats, testAffiliates } from './testData';
 
+let isTestMode = localStorage.getItem('testMode') === 'true';
+
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v2',
     timeout: 8000,
 });
 
-let isTestMode = localStorage.getItem('testMode') === 'true';
-
 // Interceptor – automatski ulazi u test mode ako backend nije dostupan
 api.interceptors.response.use(
     (response) => response,
     (error) => {
+        
         const isNetworkError =
             !error.response ||
             error.code === 'ERR_NETWORK' ||
@@ -31,23 +32,6 @@ api.interceptors.response.use(
     }
 );
 
-// Glavna funkcija koju ćeš koristiti svuda
-export const apiRequest = async (endpoint: string, method: 'get' | 'post' = 'get', data?: any) => {
-    try {
-        if (isTestMode) {
-            return getMockResponse(endpoint);
-        }
-
-        const res = await api({ url: endpoint, method, data });
-        return res.data;
-    } catch {
-        // fallback
-        isTestMode = true;
-        localStorage.setItem('testMode', 'true');
-        return getMockResponse(endpoint);
-    }
-};
-
 const getMockResponse = (endpoint: string) => {
     if (endpoint.includes('/affiliates')) {
         return { success: true, data: testAffiliates };
@@ -62,6 +46,29 @@ const getMockResponse = (endpoint: string) => {
         return { success: true, data: [] };
     }
     return { success: true, data: {} };
+};
+
+// Glavna funkcija koju ćeš koristiti svuda
+export const apiRequest = async (endpoint: string, method: 'get' | 'post' = 'get', data?: any) => {
+    if (isTestMode) {
+        const mock = getMockResponse(endpoint);
+        if (mock) return mock;
+    }
+
+    try {
+        const res = await api({ url: endpoint, method, data });
+        return res.data;
+    } catch (err) {
+        // fallback na test mode ako prvi put padne
+        if (!isTestMode) {
+            isTestMode = true;
+            localStorage.setItem('testMode', 'true');
+            localStorage.setItem('token', TEST_TOKEN);
+            localStorage.setItem('user', JSON.stringify(testUser));
+            window.dispatchEvent(new Event('auth-update')); // custom event za re-render
+        }
+        return getMockResponse(endpoint);
+    }
 };
 
 export default api;
