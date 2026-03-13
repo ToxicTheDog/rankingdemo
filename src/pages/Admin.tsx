@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRanking, RankedUser } from "@/contexts/RankingContext";

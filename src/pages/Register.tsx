@@ -69,7 +69,7 @@ const Register = () => {
     }
 
     setLoading(true);
-    const regData: RegisterData = {
+    const regData = {
       email: formData.email,
       password: formData.password,
       fullName: formData.fullName,
