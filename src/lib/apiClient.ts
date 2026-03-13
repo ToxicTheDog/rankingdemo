@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TEST_TOKEN, testUser, testRankingsMe, testDashboardStats } from './testData';
+import { TEST_TOKEN, testUser, testRankingsMe, testDashboardStats, testAffiliates } from './testData';
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v2',
@@ -57,6 +57,9 @@ const getMockResponse = (endpoint: string) => {
     }
     if (endpoint.includes('/affiliates') || endpoint.includes('/mentors') || endpoint.includes('/payouts')) {
         return { success: true, data: [] };
+    }
+    if (endpoint.includes('/affiliates')) {
+        return { success: true, data: testAffiliates };
     }
     return { success: true, data: {} };
 };
