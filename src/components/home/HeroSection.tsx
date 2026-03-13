@@ -41,7 +41,6 @@ const HeroSection = () => (
         </Button>
       </div>
       <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
-        <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-gold" /> Besplatan početak</span>
         <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-gold" /> Live podrška</span>
         <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-gold" /> 1000+ studenata</span>
       </div>

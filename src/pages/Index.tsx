@@ -1,4 +1,3 @@
-import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/home/HeroSection";
 import StatsSection from "@/components/home/StatsSection";

@@ -86,7 +86,7 @@ const BannerSections = () => (
             </Link>
             <Link to="/register">
               <Button size="lg" variant="outline">
-                Besplatan početak
+                Registruj Se
               </Button>
             </Link>
           </div>
