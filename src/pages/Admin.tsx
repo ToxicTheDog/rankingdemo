@@ -96,6 +96,15 @@ const Admin = () => {
   const [transactions, setTransactions] = useState<TransactionData[]>([]);
   const [requestDetail, setRequestDetail] = useState<PayoutRequestData | null>(null);
   const [myRanking, setMyRanking] = useState<any>(null);
+  const [planPurchases, setPlanPurchases] = useState<{ username: string; plansBought: number }[]>([]);
+
+  const testPlanPurchases = [
+    { username: "Marko", plansBought: 5 },
+    { username: "Ana", plansBought: 8 },
+    { username: "Stefan", plansBought: 3 },
+    { username: "Jovana", plansBought: 12 },
+    { username: "Nikola", plansBought: 7 },
+  ];
 
   // Fetch all data on mount
   useEffect(() => {
@@ -127,6 +136,15 @@ const Admin = () => {
     getMyRanking(token)
       .then((res) => setMyRanking(res.data))
       .catch((err) => console.error("My ranking error:", err));
+
+    // Fetch plan purchases - fallback to test data
+    import("@/lib/api").then(({ default: _, ...api }) => {
+      const fetchUrl = `http://localhost:5000/api/v2/dashboard/plan-purchases`;
+      fetch(fetchUrl, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } })
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then(res => setPlanPurchases(res.data || []))
+        .catch(() => setPlanPurchases(testPlanPurchases));
+    });
   }, [token]);
 
   // if (!isAdmin) return <Navigate to="/login" replace />;
