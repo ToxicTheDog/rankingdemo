@@ -49,6 +49,9 @@ export const apiRequest = async (endpoint: string, method: 'get' | 'post' = 'get
 };
 
 const getMockResponse = (endpoint: string) => {
+    if (endpoint.includes('/affiliates')) {
+        return { success: true, data: testAffiliates };
+    }
     if (endpoint.includes('/auth/me') || endpoint.includes('/rankings/me')) {
         return { success: true, user: testUser, data: testRankingsMe };
     }
@@ -57,9 +60,6 @@ const getMockResponse = (endpoint: string) => {
     }
     if (endpoint.includes('/mentors') || endpoint.includes('/payouts')) {
         return { success: true, data: [] };
-    }
-    if (endpoint.includes('/affiliates')) {
-        return { success: true, data: testAffiliates };
     }
     return { success: true, data: {} };
 };
