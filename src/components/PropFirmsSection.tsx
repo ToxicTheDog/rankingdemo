@@ -15,12 +15,19 @@ import payout3 from "@/assets/payout3.png";
 import payout4 from "@/assets/payout4.png";
 import result1 from "@/assets/result1.png";
 
+import ftmoL from "@/assets/ftmoLogo.png";
+import pipsL from "@/assets/fundingpipsLogo.jpg";
+import startL from "@/assets/startraderLogo.png";
+import exnessL from "@/assets/exnessLogo.jpg";
+
+import duke from "@/assets/dukeimage2.png";
+
 
 const propFirms = [
   {
     name: "FTMO",
     desc: "Najpoznatija prop firma sa rigoroznim evaluation procesom. Do 90% profit split i računi do $200,000.",
-    logo: ftmoLogo,
+    logo: ftmoL,
     url: "https://trader.ftmo.com/?affiliates=xfnfBWhNTMzpWYOiZlIi",
     highlight: "Do $200K račun",
     stats: [
@@ -31,7 +38,7 @@ const propFirms = [
   {
     name: "Funding Pips",
     desc: "Moderna prop firma sa odličnim uslovima i brzim isplatama. Fleksibilni challenge-i za sve nivoe tradera.",
-    logo: null,
+    logo: pipsL,
     url: "https://app.fundingpips.com/register?ref=8c98be68",
     highlight: "Brze isplate",
     stats: [
@@ -42,7 +49,7 @@ const propFirms = [
   {
     name: "Star Trader",
     desc: "Globalni broker sa naprednom platformom za profesionalne tradere. Izvrsna podrška i konkurentni uslovi.",
-    logo: null,
+    logo: startL,
     url: "https://www.startrader.com/live-account/?affid=MzAzMjcz&ibpRebateCode=MzAzMjczU1QxMDIwMQ==",
     highlight: "Pro platforma",
     stats: [
@@ -53,7 +60,7 @@ const propFirms = [
   {
     name: "Exness",
     desc: "Jedan od najvećih brokera na svetu sa instant povlačenjem sredstava i ultra niskim spreadovima.",
-    logo: null,
+    logo: exnessL,
     url: "https://one.exnessonelink.com/a/igsd0hn29q",
     highlight: "Instant withdrawal",
     stats: [
@@ -91,58 +98,81 @@ const PropFirmsSection = () => {
           </p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 max-w-5xl mx-auto stagger-children">
-          {propFirms.map((p) => (
-            <a
-              key={p.name}
-              href={p.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block"
-            >
-              <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-gold/5 hover:border-gold/40 hover:-translate-y-1 h-full">
-                {/* Subtle gradient overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-gold/0 to-gold/0 group-hover:from-gold/5 group-hover:to-transparent transition-all duration-300" />
+        {/* === PREMIUM BLEND CONTAINER (tačno kao na slici koju si poslao) === */}
+        <div className="relative max-w-7xl mx-auto rounded-3xl overflow-hidden shadow-2xl border border-zinc-800 min-h-[620px]">
 
-                <CardContent className="relative p-6">
-                  <div className="flex items-start gap-4">
-                    {/* Logo */}
-                    <div className="flex-shrink-0 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted/80 border border-border/50 group-hover:border-gold/30 transition-colors p-2.5">
-                      {p.logo ? (
-                        <img src={p.logo} alt={`${p.name} logo`} className="h-full w-full object-contain" />
-                      ) : (
-                        <span className="text-base font-bold text-gold">{p.name.split(" ").map(w => w[0]).join("")}</span>
-                      )}
-                    </div>
+          {/* 1. SLIKA (duke) – puna pozadina */}
+          <img
+            src={duke}
+            alt="Duke"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
 
-                    <div className="flex-1 min-w-0">
-                      {/* Header */}
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-lg truncate">{p.name}</h3>
-                        <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-gold transition-colors flex-shrink-0" />
-                      </div>
+          {/* 2. KLJUČNI BLEND GRADIENT – polako se tamni KA DESNOJ STRANI (kao na tvojoj novoj slici) */}
+          {/* Levo: slika se vidi iza kartica (samo 30% tame), desno: tamnije da kartice "lebde" */}
+          <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/30 via-zinc-950/65 to-zinc-950/95" />
 
-                      {/* Highlight badge */}
-                      <Badge variant="outline" className="text-xs text-gold border-gold/30 mb-3">{p.highlight}</Badge>
+          {/* 3. PLAVI HLADNI OVERLAY (isti premium vibe kao FTMO) */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-950/35 via-transparent to-transparent" />
 
-                      {/* Description */}
-                      <p className="text-sm text-muted-foreground leading-relaxed mb-4">{p.desc}</p>
+          {/* 4. KARTICE PREKO SLIKE */}
+          <div className="relative z-10 h-full p-8 lg:p-12">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full items-center">
 
-                      {/* Stats pills */}
-                      <div className="flex flex-wrap gap-2">
-                        {p.stats.map((stat, i) => (
-                          <div key={i} className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 border border-border/50 px-3 py-1 text-xs text-muted-foreground">
-                            <span className="text-gold">{stat.icon}</span>
-                            {stat.label}
+              {/* LEVA STRANA – KARTICE (glassmorphism da se vidi slika iza njih) */}
+              <div className="hidden lg:block lg:col-span-5" />
+
+
+              {/* DESNA STRANA – prazna (da gradient može da radi svoj posao) */}
+              <div className="lg:col-span-7">
+                <div className="grid gap-5 sm:grid-cols-2 stagger-children">
+                  {propFirms.map((p) => (
+                    <a
+                      key={p.name}
+                      href={p.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group block"
+                    >
+                      <Card className="h-full bg-zinc-950/70 backdrop-blur-2xl border border-white/10 hover:border-gold/40 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                        <CardContent className="p-6">
+                          <div className="flex items-start gap-4">
+                            {/* Logo */}
+                            <div className="flex-shrink-0 flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-900/80 border border-white/10 group-hover:border-gold/30 transition-colors p-2.5">
+                              {p.logo ? (
+                                <img src={p.logo} alt={`${p.name} logo`} className="h-full w-full object-contain" />
+                              ) : (
+                                <span className="text-xl font-bold text-gold">{p.name[0]}</span>
+                              )}
+                            </div>
+
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-2">
+                                <h3 className="font-semibold text-white text-lg truncate">{p.name}</h3>
+                                <ArrowUpRight className="h-4 w-4 text-gold group-hover:rotate-45 transition-transform" />
+                              </div>
+
+                              <Badge variant="outline" className="text-xs text-gold border-gold/30 mb-3">{p.highlight}</Badge>
+                              <p className="text-sm text-zinc-300 leading-relaxed mb-4">{p.desc}</p>
+
+                              <div className="flex flex-wrap gap-2">
+                                {p.stats.map((stat, i) => (
+                                  <div key={i} className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900/80 border border-white/10 px-3 py-1 text-xs text-zinc-400">
+                                    <span className="text-gold">{stat.icon}</span>
+                                    {stat.label}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </a>
-          ))}
+                        </CardContent>
+                      </Card>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

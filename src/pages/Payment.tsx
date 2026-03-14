@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Crown, Star, Shield, TrendingUp, ArrowRight, Check } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import kartice from "@/assets/Kartice_Logo.png";
 
 const packageData: Record<string, { name: string; firstMonthPrice: number; monthlyPrice: number; oneTimeFee: number; points: string; icon: React.ReactNode; color: string }> = {
   elitni: { name: "Elitni Paket", firstMonthPrice: 239, monthlyPrice: 189.99, oneTimeFee: 50, points: "19VB", icon: <Crown className="h-6 w-6" />, color: "from-yellow-400 to-amber-600" },
@@ -93,7 +94,10 @@ const Payment = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+      <div className="flex items-center justify-center gap-2 mb-2">
+        <img src={kartice} alt="Kartice" className="h-10 w-auto" />
+      </div>
+    </div >
   );
 };
 
