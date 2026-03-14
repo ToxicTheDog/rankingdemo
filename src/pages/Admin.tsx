@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, CheckCircle, Clock, History, Upload, ImageIcon, Network, Loader2 } from "lucide-react";
+import { Plus, Clipboard, Pencil, Trash2, Save, X, Search, Eye, Users, Coins, Wallet, Ban, Link2, CreditCard, Bitcoin, CheckCircle, Clock, History, Upload, ImageIcon, Network, Loader2 } from "lucide-react";
 import { uploadImage, getAffiliates, AffiliateData, getPayoutRequests, getPayoutHistory, approvePayout, submitPayoutRequest, getDashboardStats, getTransactions, getMyRanking, PayoutRequestData, PayoutHistoryData, TransactionData, resolveImageUrl } from "@/lib/api";
 import { Link, useLocation } from "react-router-dom";
 
@@ -617,7 +617,19 @@ const Admin = () => {
                       </div>
                       <div className="sm:text-right">
                         <p className="text-xs text-muted-foreground mb-1">Affiliate link</p>
-                        <code className="text-xs bg-muted px-3 py-1.5 rounded-md font-mono border border-border inline-block">{profileData.affiliateLink}</code>
+                        <div className="flex items-center gap-1">
+                          <code className="text-xs bg-muted px-3 py-1.5 rounded-md font-mono border border-border inline-block">{profileData.affiliateLink}</code>
+                          <button className="p-1 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors" onClick={() => {
+                            navigator.clipboard.writeText(profileData.affiliateLink).then(() => {
+                              toast({
+                                title: "✅ Affiliate link kopiran",
+                                description: "Link je kopiran u privremenu memoriju.",
+                              })
+                            })
+                          }}>
+                            <Clipboard className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>

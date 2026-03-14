@@ -1160,6 +1160,13 @@ export default function App() {
           <span><b>Diamond pravilo:</b> fiksnih 5% izmedju dva Diamond</span>
         </div>
 
+        <div style={{ marginLeft: "auto", marginRight: 12 }}>
+          <button onClick={function () { window.location.replace("/admin"); }}
+            style={{ backgroundColor: "rgba(13, 17, 23, 0.1)", borderRadius: 6, color: "#e6edf3", fontFamily: "monospace", fontSize: 11, padding: "5px 10px", width: "fit-content" }}>
+            Dashboard
+          </button>
+        </div>
+
         {/* User search */}
         <div style={{ marginLeft: "auto", position: "relative" }}>
           <input
