@@ -600,7 +600,8 @@ const Admin = () => {
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-4">
                         <Avatar className="h-14 w-14 sm:h-16 sm:w-16 border-2 border-gold/40 shrink-0">
-                          <AvatarImage src={resolveImageUrl(profileData.imageUrl) || tompus} alt={profileData.fullName} />
+                          {/* <AvatarImage src={resolveImageUrl(profileData.imageUrl) || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profileData.fullName}`} alt={profileData.fullName} /> */}
+                          <AvatarImage src={tompus} alt={profileData.fullName} />
                           <AvatarFallback className="text-lg">{profileData.fullName.slice(0, 2).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div>
