@@ -278,29 +278,23 @@ const Admin = () => {
         <h1 className="mb-6 text-2xl font-bold sm:text-3xl">Admin Panel</h1>
 
         <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList className="flex w-full overflow-x-auto">
-            <TabsTrigger value="dashboard" className="flex-1 min-w-[70px] text-xs sm:text-sm">Dashboard</TabsTrigger>
-            <TabsTrigger value="mentori" className="flex-1 min-w-[70px] text-xs sm:text-sm">Mentori</TabsTrigger>
-            <TabsTrigger value="affiliate" className="flex-1 min-w-[70px] text-xs sm:text-sm">
-              <Link2 className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Affiliate
-            </TabsTrigger>
-            <TabsTrigger value="payout" className="flex-1 min-w-[70px] text-xs sm:text-sm">
-              <Wallet className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Payout
-            </TabsTrigger>
-            <TabsTrigger value="requests" className="flex-1 min-w-[70px] text-xs sm:text-sm">
-              <Clock className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Requests
+          <TabsList className="grid w-full grid-cols-4 sm:grid-cols-7 gap-1 h-auto p-1">
+            <TabsTrigger value="dashboard" className="text-xs sm:text-sm py-2">Dashboard</TabsTrigger>
+            <TabsTrigger value="mentori" className="text-xs sm:text-sm py-2">Mentori</TabsTrigger>
+            <TabsTrigger value="affiliate" className="text-xs sm:text-sm py-2">Affiliate</TabsTrigger>
+            <TabsTrigger value="payout" className="text-xs sm:text-sm py-2">Payout</TabsTrigger>
+            <TabsTrigger value="requests" className="text-xs sm:text-sm py-2 relative">
+              Requests
               {payoutRequests.length > 0 && (
-                <Badge className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-gold text-gold-foreground border-0">{payoutRequests.length}</Badge>
+                <Badge className="ml-1 h-4 w-4 p-0 flex items-center justify-center text-[9px] bg-gold text-gold-foreground border-0 absolute -top-1 -right-1 sm:static sm:ml-1">{payoutRequests.length}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="history" className="flex-1 min-w-[70px] text-xs sm:text-sm">
-              <History className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> History
+            <TabsTrigger value="history" className="text-xs sm:text-sm py-2">History</TabsTrigger>
+            <TabsTrigger value="network" className="text-xs sm:text-sm py-2" asChild>
+              <Link to="/network" className="flex items-center justify-center gap-1">
+                <Network className="h-3.5 w-3.5 hidden sm:inline" /> Network
+              </Link>
             </TabsTrigger>
-            <Link key="/network" to="/network">
-              <TabsTrigger value="network" className="flex-1 min-w-[70px] text-xs sm:text-sm">
-                <Network className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Network
-              </TabsTrigger>
-            </Link>
           </TabsList>
 
           {/* ═══ DASHBOARD TAB ═══ */}
@@ -583,37 +577,47 @@ const Admin = () => {
 
           {/* ═══ AFFILIATE TAB ═══ */}
           <TabsContent value="affiliate" className="space-y-6">
-            {/* Admin Profile Header */}
-            {myRanking && (
-              <Card className="border-gold/30">
-                <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border-2 border-gold/40">
-                      <AvatarImage src={resolveImageUrl(myRanking.imageUrl) || `https://api.dicebear.com/7.x/avataaars/svg?seed=${myRanking.fullName || authUser?.username}`} alt={myRanking.fullName} />
-                      <AvatarFallback>{(myRanking.fullName || authUser?.username || "A").slice(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <h3 className="text-lg font-bold">{myRanking.fullName || authUser?.username || "Admin Profil"}</h3>
-                      <p className="text-sm text-muted-foreground">{myRanking.email || authUser?.email}</p>
-                      <div className="flex items-center gap-2 mt-1 flex-wrap">
-                        <Badge className="bg-gold/15 text-gold border-gold/30 text-xs">
-                          <Coins className="h-3 w-3 mr-1" /> {myRanking.totalPoints ?? myRanking.points ?? 0} poena
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          <Users className="h-3 w-3 mr-1" /> {myRanking.referralCount ?? affiliates.length} korisnika
-                        </Badge>
+            {/* Admin Profile Header - always visible */}
+            {(() => {
+              const profileData = {
+                fullName: myRanking?.fullName || authUser?.fullName || authUser?.username || "Admin Profil",
+                email: myRanking?.email || authUser?.email || "admin@ranking.com",
+                imageUrl: myRanking?.imageUrl || authUser?.imageUrl || "",
+                totalPoints: myRanking?.totalPoints ?? myRanking?.points ?? 1450,
+                referralCount: myRanking?.referralCount ?? affiliates.length ?? 4,
+                affiliateLink: myRanking?.affiliateLink || `tradeacademy.com/ref/${authUser?.username || "admin"}`,
+              };
+              return (
+                <Card className="border-gold/30 bg-card">
+                  <CardContent className="p-4 sm:p-5">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex items-center gap-4">
+                        <Avatar className="h-14 w-14 sm:h-16 sm:w-16 border-2 border-gold/40 shrink-0">
+                          <AvatarImage src={resolveImageUrl(profileData.imageUrl) || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profileData.fullName}`} alt={profileData.fullName} />
+                          <AvatarFallback className="text-lg">{profileData.fullName.slice(0, 2).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <h3 className="text-lg font-bold sm:text-xl">{profileData.fullName}</h3>
+                          <p className="text-sm text-muted-foreground">{profileData.email}</p>
+                          <div className="flex items-center gap-2 mt-2 flex-wrap">
+                            <Badge className="bg-gold/15 text-gold border-gold/30 text-xs">
+                              <Coins className="h-3 w-3 mr-1" /> {profileData.totalPoints} poena
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              <Users className="h-3 w-3 mr-1" /> {profileData.referralCount} korisnika
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="sm:text-right">
+                        <p className="text-xs text-muted-foreground mb-1">Affiliate link</p>
+                        <code className="text-xs bg-muted px-3 py-1.5 rounded-md font-mono border border-border inline-block">{profileData.affiliateLink}</code>
                       </div>
                     </div>
-                  </div>
-                  {myRanking.affiliateLink && (
-                    <div className="text-right">
-                      <p className="text-xs text-muted-foreground mb-1">Affiliate link</p>
-                      <code className="text-xs bg-muted px-2 py-1 rounded font-mono">{myRanking.affiliateLink}</code>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                  </CardContent>
+                </Card>
+              );
+            })()}
 
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
