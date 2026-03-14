@@ -281,15 +281,21 @@ const Admin = () => {
           <TabsList className="grid w-full grid-cols-4 sm:grid-cols-7 gap-1 h-auto p-1">
             <TabsTrigger value="dashboard" className="text-xs sm:text-sm py-2">Dashboard</TabsTrigger>
             <TabsTrigger value="mentori" className="text-xs sm:text-sm py-2">Mentori</TabsTrigger>
-            <TabsTrigger value="affiliate" className="text-xs sm:text-sm py-2">Affiliate</TabsTrigger>
-            <TabsTrigger value="payout" className="text-xs sm:text-sm py-2">Payout</TabsTrigger>
+            <TabsTrigger value="affiliate" className="text-xs sm:text-sm py-2">
+              <Link2 className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Affiliate
+            </TabsTrigger>
+            <TabsTrigger value="payout" className="text-xs sm:text-sm py-2">
+              <Wallet className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Payout
+            </TabsTrigger>
             <TabsTrigger value="requests" className="text-xs sm:text-sm py-2 relative">
-              Requests
+              <Clock className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Requests
               {payoutRequests.length > 0 && (
                 <Badge className="ml-1 h-4 w-4 p-0 flex items-center justify-center text-[9px] bg-gold text-gold-foreground border-0 absolute -top-1 -right-1 sm:static sm:ml-1">{payoutRequests.length}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="history" className="text-xs sm:text-sm py-2">History</TabsTrigger>
+            <TabsTrigger value="history" className="text-xs sm:text-sm py-2">
+              <History className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> History
+            </TabsTrigger>
             <TabsTrigger value="network" className="text-xs sm:text-sm py-2" asChild>
               <Link to="/network" className="flex items-center justify-center gap-1">
                 <Network className="h-3.5 w-3.5 hidden sm:inline" /> Network
