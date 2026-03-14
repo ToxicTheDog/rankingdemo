@@ -278,29 +278,23 @@ const Admin = () => {
         <h1 className="mb-6 text-2xl font-bold sm:text-3xl">Admin Panel</h1>
 
         <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList className="flex w-full overflow-x-auto">
-            <TabsTrigger value="dashboard" className="flex-1 min-w-[70px] text-xs sm:text-sm">Dashboard</TabsTrigger>
-            <TabsTrigger value="mentori" className="flex-1 min-w-[70px] text-xs sm:text-sm">Mentori</TabsTrigger>
-            <TabsTrigger value="affiliate" className="flex-1 min-w-[70px] text-xs sm:text-sm">
-              <Link2 className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Affiliate
-            </TabsTrigger>
-            <TabsTrigger value="payout" className="flex-1 min-w-[70px] text-xs sm:text-sm">
-              <Wallet className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Payout
-            </TabsTrigger>
-            <TabsTrigger value="requests" className="flex-1 min-w-[70px] text-xs sm:text-sm">
-              <Clock className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Requests
+          <TabsList className="grid w-full grid-cols-4 sm:grid-cols-7 gap-1 h-auto p-1">
+            <TabsTrigger value="dashboard" className="text-xs sm:text-sm py-2">Dashboard</TabsTrigger>
+            <TabsTrigger value="mentori" className="text-xs sm:text-sm py-2">Mentori</TabsTrigger>
+            <TabsTrigger value="affiliate" className="text-xs sm:text-sm py-2">Affiliate</TabsTrigger>
+            <TabsTrigger value="payout" className="text-xs sm:text-sm py-2">Payout</TabsTrigger>
+            <TabsTrigger value="requests" className="text-xs sm:text-sm py-2 relative">
+              Requests
               {payoutRequests.length > 0 && (
-                <Badge className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-gold text-gold-foreground border-0">{payoutRequests.length}</Badge>
+                <Badge className="ml-1 h-4 w-4 p-0 flex items-center justify-center text-[9px] bg-gold text-gold-foreground border-0 absolute -top-1 -right-1 sm:static sm:ml-1">{payoutRequests.length}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="history" className="flex-1 min-w-[70px] text-xs sm:text-sm">
-              <History className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> History
+            <TabsTrigger value="history" className="text-xs sm:text-sm py-2">History</TabsTrigger>
+            <TabsTrigger value="network" className="text-xs sm:text-sm py-2" asChild>
+              <Link to="/network" className="flex items-center justify-center gap-1">
+                <Network className="h-3.5 w-3.5 hidden sm:inline" /> Network
+              </Link>
             </TabsTrigger>
-            <Link key="/network" to="/network">
-              <TabsTrigger value="network" className="flex-1 min-w-[70px] text-xs sm:text-sm">
-                <Network className="h-3.5 w-3.5 mr-1 hidden sm:inline" /> Network
-              </TabsTrigger>
-            </Link>
           </TabsList>
 
           {/* ═══ DASHBOARD TAB ═══ */}
