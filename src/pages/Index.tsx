@@ -11,6 +11,7 @@ import FooterSection from "@/components/home/FooterSection";
 import MarketTicker from "@/components/MarketTicker";
 import PropFirmsSection from "@/components/PropFirmsSection";
 import PackagesSection from "@/components/PackagesSection";
+import TeamBuildingSection from "@/components/home/TeamBuildingSection";
 
 const Index = () => {
   return (
@@ -24,6 +25,7 @@ const Index = () => {
       <HowItWorksSection />
       <TopMentorsSection />
       <TestimonialsSection />
+      <TeamBuildingSection />
       <PackagesSection />
       <PropFirmsSection />
       <CTASection />
